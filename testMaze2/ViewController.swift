@@ -10,10 +10,11 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout {
+class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout, SCNPhysicsContactDelegate {
     var tap = UITapGestureRecognizer()
     var ringsFound = 0
     var currentScene = SCNScene()
+    var playerNode:SCNNode?
     // Create a new scene
     let sceneDict : [String:SCNScene] = [
         
@@ -27,6 +28,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout 
     let ringLabel = UILabel()
     var count = 0
     let back = UIButton()
+    
     @IBOutlet var sceneView: ARSCNView!
     
     override func viewDidLoad() {
@@ -69,6 +71,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout 
         Global.delay(bySeconds: 1.0) {
         self.sceneView.session.pause()
       //  self.sceneView.removeFromSuperview()
+        }
+        
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        
+        if let camPos = sceneView.pointOfView?.position {
+       // let camPos = sceneView.scene.rootNode.convertPosition(rawCamPos, to: level.container)
+            guard playerNode != nil else {print("guard player node is nil");return}
+        playerNode!.position.x = camPos.x
+        playerNode!.position.z = camPos.z
         }
         
     }
@@ -149,7 +162,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout 
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         sceneView.addGestureRecognizer(tap)
-        // Set the view's delegate
+        
+        let localCamPos = sceneView.scene.rootNode.position
+        playerNode?.removeFromParentNode()
+        playerNode = Player.node()
+        playerNode!.position = localCamPos
+        playerNode!.position.y = Float(Player.HEIGHT * 0.5)
         
         currentScene = sceneDict[myscene]!
         sceneView.scene = currentScene
@@ -256,6 +274,64 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout 
                     self.ringLabel.removeFromSuperview()
                     
                 }
+            } else {
+                //fire weapon
+                
+//                if isPlaying, playerState != nil,
+//                    let pickup = playerState.pickup,
+//                    case .fireballPowerUp = pickup,
+//                    !wandIsRecharging {
+                    // spawn fireballs!
+                    //let pov = sceneView.pointOfView!
+                    let fireballNode = Fireball.node()
+                    //fireballNode.position =sceneView.scene.rootNode.convertPosition(pov.position,
+                    //                                                                            to: level!.container)
+                    //level!.container.addChildNode(fireballNode)
+                    sceneView.scene.rootNode.addChildNode(fireballNode)
+                    // we need camera direction vector
+                    // https://developer.apple.com/videos/play/wwdc2017/602/
+                    let currentFrame = sceneView.session.currentFrame!
+                    let n = SCNNode()
+                    sceneView.scene.rootNode.addChildNode(n)
+                    
+                    var closeTranslation = matrix_identity_float4x4
+                    closeTranslation.columns.3.z = -0.5
+                    
+                    var translation = matrix_identity_float4x4
+                    translation.columns.3.z = -1.5
+                    
+                    n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
+                    fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
+                    // n.simdTransform = matrix_multiply(pov.simdTransform, translation)
+                    
+                    let direction = (n.position - fireballNode.position).normalized
+                    
+                    // fireball should come FROM THE TIP of the wand!
+                    if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
+                        let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
+                        // all we need to do is to give the fireballNode the right starting position!!
+                        // use same direction vector
+                        fireballNode.position = wandNode.convertPosition(tipNode.position, to: sceneView.scene.rootNode)
+                     //   wandIsRecharging = true
+                        wandNode.position.z = -0.2
+                        wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
+                        tipNode.scale = SCNVector3(0,0,0)
+//                        tipNode.runAction(SCNAction.scale(to: 1, duration: Wand.RECHARGE_TIME)) {
+//                            self.wandIsRecharging = false
+//                        }
+                    }
+                    
+                    fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY, asImpulse: true)
+                    n.removeFromParentNode()
+                    
+                    fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
+                        fireballNode.removeFromParentNode()
+                    }
+                    
+//                    playerNode!.runAction(SCNAction.playAudio(Sound.fireball.source, waitForCompletion: false))
+                    
+                    return
+             
             }
             
         }
@@ -311,5 +387,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout 
     func sessionInterruptionEnded(_ session: ARSession) {
         // Reset tracking and/or remove existing anchors if consistent tracking is required
         
+    }
+    
+    // MARK: - SCNPhysicsContactDelegate
+    
+    func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
+  
     }
 }

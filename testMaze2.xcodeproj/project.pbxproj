@@ -15,6 +15,12 @@
 		A96E62981F3B3FAD006620F8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A96E62961F3B3FAD006620F8 /* LaunchScreen.storyboard */; };
 		A96E62A31F3B3FAD006620F8 /* testMaze2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E62A21F3B3FAD006620F8 /* testMaze2Tests.swift */; };
 		A96E62AE1F3B3FAD006620F8 /* testMaze2UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96E62AD1F3B3FAD006620F8 /* testMaze2UITests.swift */; };
+		A97F0FE21F4B324A001D84FC /* CollisionTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE11F4B324A001D84FC /* CollisionTypes.swift */; };
+		A97F0FE41F4B3283001D84FC /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE31F4B3283001D84FC /* Player.swift */; };
+		A97F0FE71F4B38CE001D84FC /* Fireball.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE61F4B38CE001D84FC /* Fireball.swift */; };
+		A97F0FE91F4B3949001D84FC /* Wand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE81F4B3949001D84FC /* Wand.swift */; };
+		A97F0FEC1F4B3B49001D84FC /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FEB1F4B3B49001D84FC /* Shaders.swift */; };
+		A97F0FEE1F4B3D7E001D84FC /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FED1F4B3D7E001D84FC /* Extensions.swift */; };
 		A99F62BF1F3D68B100DD6027 /* MenuButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F62BC1F3D68B100DD6027 /* MenuButtons.swift */; };
 		A99F62C01F3D68B100DD6027 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F62BA1F3D68B100DD6027 /* CustomColor.swift */; };
 		A99F62C11F3D68B100DD6027 /* UIProtocolExtentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F62BD1F3D68B100DD6027 /* UIProtocolExtentions.swift */; };
@@ -56,6 +62,13 @@
 		A96E62A91F3B3FAD006620F8 /* testMaze2UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = testMaze2UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96E62AD1F3B3FAD006620F8 /* testMaze2UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testMaze2UITests.swift; sourceTree = "<group>"; };
 		A96E62AF1F3B3FAD006620F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A97F0FE11F4B324A001D84FC /* CollisionTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionTypes.swift; sourceTree = "<group>"; };
+		A97F0FE31F4B3283001D84FC /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		A97F0FE61F4B38CE001D84FC /* Fireball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireball.swift; sourceTree = "<group>"; };
+		A97F0FE81F4B3949001D84FC /* Wand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wand.swift; sourceTree = "<group>"; };
+		A97F0FEA1F4B3A6A001D84FC /* Shader */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shader; sourceTree = "<group>"; };
+		A97F0FEB1F4B3B49001D84FC /* Shaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shaders.swift; sourceTree = "<group>"; };
+		A97F0FED1F4B3D7E001D84FC /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A99F62B91F3D68B100DD6027 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		A99F62BA1F3D68B100DD6027 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
 		A99F62BC1F3D68B100DD6027 /* MenuButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButtons.swift; sourceTree = "<group>"; };
@@ -123,10 +136,13 @@
 				A96E628D1F3B3FAD006620F8 /* art.scnassets */,
 				A96E628F1F3B3FAD006620F8 /* ViewController.swift */,
 				A99F630F1F40EED700DD6027 /* SettingsViewController.swift */,
+				A97F0FED1F4B3D7E001D84FC /* Extensions.swift */,
 				A96E62911F3B3FAD006620F8 /* Main.storyboard */,
 				A96E62941F3B3FAD006620F8 /* Assets.xcassets */,
 				A96E62961F3B3FAD006620F8 /* LaunchScreen.storyboard */,
 				A96E62991F3B3FAD006620F8 /* Info.plist */,
+				A97F0FE51F4B36A5001D84FC /* PhysicsNodes */,
+				A97F0FE11F4B324A001D84FC /* CollisionTypes.swift */,
 			);
 			path = testMaze2;
 			sourceTree = "<group>";
@@ -147,6 +163,18 @@
 				A96E62AF1F3B3FAD006620F8 /* Info.plist */,
 			);
 			path = testMaze2UITests;
+			sourceTree = "<group>";
+		};
+		A97F0FE51F4B36A5001D84FC /* PhysicsNodes */ = {
+			isa = PBXGroup;
+			children = (
+				A97F0FEA1F4B3A6A001D84FC /* Shader */,
+				A97F0FE31F4B3283001D84FC /* Player.swift */,
+				A97F0FEB1F4B3B49001D84FC /* Shaders.swift */,
+				A97F0FE61F4B38CE001D84FC /* Fireball.swift */,
+				A97F0FE81F4B3949001D84FC /* Wand.swift */,
+			);
+			path = PhysicsNodes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -281,14 +309,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A97F0FE91F4B3949001D84FC /* Wand.swift in Sources */,
+				A97F0FE41F4B3283001D84FC /* Player.swift in Sources */,
 				A99F62BF1F3D68B100DD6027 /* MenuButtons.swift in Sources */,
 				A96E62901F3B3FAD006620F8 /* ViewController.swift in Sources */,
 				A99F62C01F3D68B100DD6027 /* CustomColor.swift in Sources */,
 				A99F62C11F3D68B100DD6027 /* UIProtocolExtentions.swift in Sources */,
+				A97F0FEC1F4B3B49001D84FC /* Shaders.swift in Sources */,
 				A99F62C61F3D737600DD6027 /* Dot.swift in Sources */,
 				A96E628C1F3B3FAD006620F8 /* AppDelegate.swift in Sources */,
 				A99F63101F40EED800DD6027 /* SettingsViewController.swift in Sources */,
+				A97F0FEE1F4B3D7E001D84FC /* Extensions.swift in Sources */,
 				A99F62C41F3D68B100DD6027 /* GameOverView.swift in Sources */,
+				A97F0FE21F4B324A001D84FC /* CollisionTypes.swift in Sources */,
+				A97F0FE71F4B38CE001D84FC /* Fireball.swift in Sources */,
 				A99F62C31F3D68B100DD6027 /* Global.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
