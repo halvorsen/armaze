@@ -9,14 +9,16 @@
 import UIKit
 
 protocol DotTap: class {
-    func tap(colorScheme: ColorScheme)
+    func tap(colorScheme: ColorScheme, myIndex: Int)
 }
 
 class Dot: UIView {
+    var myIndex = Int()
     var dotColor = UIColor()
     var _colorScheme:ColorScheme?
     var tap = UITapGestureRecognizer()
     var tapDelegate:DotTap?
+    var shapeLayer = CAShapeLayer()
     init(size: CGSize = CGSize(width: 45*UIScreen.main.bounds.width/375, height: 45*UIScreen.main.bounds.width/375), color: UIColor, origin: CGPoint, colorScheme: ColorScheme) {
         super.init(frame: CGRect(origin: origin, size: size))
         dotColor = color
@@ -28,13 +30,15 @@ class Dot: UIView {
         print("dotframe: \(self.frame), scheme \(_colorScheme!)")
         let circlePath = UIBezierPath(arcCenter: CGPoint(x: 22.5*UIScreen.main.bounds.width/375, y: 22.5*UIScreen.main.bounds.width/375 ), radius: 15*UIScreen.main.bounds.width/375, startAngle: 0, endAngle:2 * .pi, clockwise: true)
         
-        let shapeLayer = CAShapeLayer()
+        
         shapeLayer.path = circlePath.cgPath
         
         //change the fill color
         shapeLayer.fillColor = dotColor.cgColor
         //you can change the stroke color
-        
+        shapeLayer.strokeColor = UIColor.clear.cgColor
+        shapeLayer.lineWidth = 3
+      //  shapeLayer.borderColor = UIColor.black.cgColor
         self.layer.addSublayer(shapeLayer)
         
         
@@ -46,7 +50,8 @@ class Dot: UIView {
     
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
         print("tapped: \(_colorScheme!)")
-        tapDelegate?.tap(colorScheme: _colorScheme!)
+        tapDelegate?.tap(colorScheme: _colorScheme!, myIndex: self.myIndex)
+        
     }
    
 //    override func draw(_ rect: CGRect) {

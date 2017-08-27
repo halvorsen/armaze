@@ -79,10 +79,18 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     
     
     
-    
+    var tierLabel = UILabel()
     var myColorScheme:ColorScheme?
-    
-    func tap(colorScheme: ColorScheme) {
+    var currentDotIndex = 0
+    var dotsContainer = [Dot]()
+    func tap(colorScheme: ColorScheme, myIndex: Int) {
+        
+        dotsContainer[currentDotIndex].shapeLayer.strokeColor = UIColor.clear.cgColor
+        dotsContainer[myIndex].shapeLayer.strokeColor = UIColor.black.cgColor
+        currentDotIndex = myIndex
+        tierLabel.text = "Tier \(myIndex + 1)"
+        
+        //old tap dot to get into a maze, change is above to just change the tier label and queue up the correct maze
         if Global.isColorThemes == true || colorScheme.rawValue == 0  || colorScheme.rawValue == 1 || colorScheme.rawValue == 5 || true { //hack
             
             //maze from raw-colorscheme value
@@ -94,13 +102,11 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         CustomColor.changeCustomColor(colorScheme: colorScheme)
         myColorScheme = colorScheme
  
-        self.gameCenter.backgroundColor = CustomColor.color2
-        self.extraLife.layer.borderColor = CustomColor.color2.cgColor
-        self.extraLife.setTitleColor(CustomColor.color2, for: .normal)
-        self.noAds.backgroundColor = CustomColor.color2
-        self.replay.backgroundColor = CustomColor.color2
-        } else {
-        //    colorThemesFunc()
+//        self.gameCenter.backgroundColor = CustomColor.color2
+//        self.extraLife.layer.borderColor = CustomColor.color2.cgColor
+//        self.extraLife.setTitleColor(CustomColor.color2, for: .normal)
+//        self.noAds.backgroundColor = CustomColor.color2
+//        self.replay.backgroundColor = CustomColor.color2
         }
         
     }
@@ -182,10 +188,19 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
             let myDot = Dot(color: CustomColor.colorDictionary[scheme]!.1, origin: CGPoint(x:45*CGFloat(count)*sw,y:0), colorScheme: scheme)
             scrollView.addSubview(myDot)
             myDot.tapDelegate = self
+            dotsContainer.append(myDot)
+            myDot.myIndex = count
+            if count == 0 {
+                myDot.shapeLayer.strokeColor = UIColor.black.cgColor
+            }
             count += 1
         }
         self.addSubview(scrollView)
         scrollView.contentOffset.x = sw*22.5
+        
+        tierLabel.text = "Tier 1"
+        tierLabel.frame = CGRect(x: 20*sw, y: 550*sh, width: 100*sw, height: 50*sh)
+        addSubview(tierLabel)
        
     }
     
