@@ -16,14 +16,16 @@ class SubscribeToPremiumButton: UIButton, BrothersUIAutoLayout {
     init() {super.init(frame: .zero)}
     init(color: UIColor, origin: CGPoint) {
         super.init(frame: .zero)
-        self.setTitle("REMOVE ADS", for: .normal)
         
+        self.setTitle("UNLOCK WEAPONS", for: .normal)
+        self.setTitleColor(color, for: .normal)
         self.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 19*fontSizeMultiplier)
-        self.setTitleColor(.black, for: .normal)
+        self.setTitleColor(.white, for: .normal)
         self.backgroundColor = color
-        self.frame.size = CGSize(width: 176*sw, height: 42*sh)
+        self.frame.size = CGSize(width: 243*sw, height: 42*sh)
         self.frame.origin = origin
         self.addTextSpacing(spacing: 1.46*fontSizeMultiplier)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -56,11 +58,11 @@ class ReplayButton: UIButton, BrothersUIAutoLayout {
     init() {super.init(frame: .zero)}
     init(color: UIColor, origin: CGPoint) {
         super.init(frame: .zero)
-        self.setTitle("MAZE", for: .normal)
+        self.setTitle("DROP MAZE", for: .normal)
         self.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 19*fontSizeMultiplier)
-        self.setTitleColor(.black, for: .normal)
+        self.setTitleColor(.white, for: .normal)
         self.backgroundColor = color
-        self.frame.size = CGSize(width: 194*sw, height: 42*sh)
+        self.frame.size = CGSize(width: 173*sw, height: 42*sh)
         self.frame.origin = origin
         self.addTextSpacing(spacing: 1.46*fontSizeMultiplier)
     }
@@ -76,11 +78,11 @@ class GameCenterButton: UIButton, BrothersUIAutoLayout {
     init() {super.init(frame: .zero)}
     init(color: UIColor, origin: CGPoint) {
         super.init(frame: .zero)
-        self.setTitle("BUTTON", for: .normal)
+        self.setTitle("INSTRUCTIONS", for: .normal)
         self.titleLabel?.font = UIFont(name: "HelveticaNeue-Bold", size: 19*fontSizeMultiplier)
-        self.setTitleColor(.black, for: .normal)
+        self.setTitleColor(.white, for: .normal)
         self.backgroundColor = color
-        self.frame.size = CGSize(width: 194*sw, height: 42*sh)
+        self.frame.size = CGSize(width: 203*sw, height: 42*sh)
         self.frame.origin = origin
         self.addTextSpacing(spacing: 1.46*fontSizeMultiplier)
     }
@@ -115,14 +117,14 @@ class OneMoreLife: UIButton, BrothersUIAutoLayout {
     init() {super.init(frame: .zero)}
     init(color: UIColor, origin: CGPoint) {
         super.init(frame: .zero)
-        self.setTitle("ONE MORE LIFE  5", for: .normal)
+        self.setTitle("UNLOCK WEAPONS", for: .normal)
         self.setTitleColor(color, for: .normal)
         self.titleLabel?.font = UIFont(name: "HelveticaNeue-Medium", size: 18*fontSizeMultiplier)
-        self.setTitleColor(.black, for: .normal)
+        self.setTitleColor(.white, for: .normal)
         self.layer.borderColor = color.cgColor
         self.layer.borderWidth = 2
         self.backgroundColor = .clear
-        self.frame.size = CGSize(width: 185*sw, height: 42*sh)
+        self.frame.size = CGSize(width: 243*sw, height: 42*sh)
         self.frame.origin = origin
     }
     

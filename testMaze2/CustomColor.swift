@@ -14,7 +14,9 @@ public struct CustomColor {
     public static var color1: UIColor = UIColor(red: 255/255, green: 194/255, blue: 205/255, alpha: 1.0)
     public static var color3: UIColor = UIColor(red: 255/255, green: 147/255, blue: 172/255, alpha: 1.0)
     public static var color4: UIColor = UIColor(red: 255/255, green: 8/255, blue: 74/255, alpha: 1.0)
-   
+    
+    public static var purple: UIColor = UIColor(red: 149/255, green: 100/255, blue: 255/255, alpha: 1.0)
+    
     
     public static let colorDictionary: [ColorScheme:(UIColor,UIColor,UIColor,UIColor)] = [
         

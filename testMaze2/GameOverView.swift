@@ -88,7 +88,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         dotsContainer[currentDotIndex].shapeLayer.strokeColor = UIColor.clear.cgColor
         dotsContainer[myIndex].shapeLayer.strokeColor = UIColor.black.cgColor
         currentDotIndex = myIndex
-        tierLabel.text = "Tier \(myIndex + 1)"
+        tierLabel.text = "TIER \(myIndex + 1)"
         
         //old tap dot to get into a maze, change is above to just change the tier label and queue up the correct maze
         if Global.isColorThemes == true || colorScheme.rawValue == 0  || colorScheme.rawValue == 1 || colorScheme.rawValue == 5 || true { //hack
@@ -115,8 +115,9 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     
     var viewC = UIViewController()
     init() {super.init(frame: .zero)}
+    var (bestScoreLabel, thisScoreLabel) = (UILabel(),UILabel())
     
-    init(backgroundColor: UIColor, buttonsColor: UIColor, colorScheme: ColorScheme, vc: UIViewController) {
+    init(backgroundColor: UIColor, buttonsColor: UIColor, colorScheme: ColorScheme, vc: UIViewController, bestScore: Int, thisScore: Int) {
         super.init(frame: .zero)
         viewC = vc
         self.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 667*sh)
@@ -129,8 +130,9 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         noAds = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 264*sh))
   //      extraLife = OneMoreLife(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 317*sh))
         self.addSubview(replay)
-     //   self.addSubview(menu)
+   
         self.addSubview(gameCenter)
+        self.addSubview(noAds)
 
   
 
@@ -198,9 +200,25 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         self.addSubview(scrollView)
         scrollView.contentOffset.x = sw*22.5
         
-        tierLabel.text = "Tier 1"
-        tierLabel.frame = CGRect(x: 20*sw, y: 550*sh, width: 100*sw, height: 50*sh)
+        tierLabel.text = "TIER 1"
+        tierLabel.frame = CGRect(x: 37*sw, y: 557*sh, width: 100*sw, height: 28*sh)
+        tierLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 24*fontSizeMultiplier)
+        
         addSubview(tierLabel)
+        
+        bestScoreLabel.frame = CGRect(x: 43*sw, y: 106*sh, width: 200*sw, height: 31*sh)
+        bestScoreLabel.text = "BEST \(Global.topScore)"
+        bestScoreLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 24*fontSizeMultiplier)
+        bestScoreLabel.textColor = buttonsColor
+        bestScoreLabel.addTextSpacing(spacing: 1.85*fontSizeMultiplier)
+        self.addSubview(bestScoreLabel)
+        
+        thisScoreLabel.frame = CGRect(x: 43*sw, y: 29*sh, width: 200*sw, height: 84*sh)
+        thisScoreLabel.text = "\(Global.points)"
+        thisScoreLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 68*fontSizeMultiplier)
+        thisScoreLabel.textColor = buttonsColor
+        thisScoreLabel.addTextSpacing(spacing: 5.23*fontSizeMultiplier)
+        self.addSubview(thisScoreLabel)
        
     }
     

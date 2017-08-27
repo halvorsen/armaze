@@ -26,20 +26,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     ]
     let invisibleCover = UIView()
     let ringLabel = UILabel()
-    var count = 0
-    let back = UIButton()
+    var points = 0
+    let back = UILabel()
+    let tier = UILabel()
     
     @IBOutlet var sceneView: ARSCNView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        back.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        back.setTitle("X", for: .normal)
-        back.titleLabel!.font = UIFont(name: "HelveticaNeue-Bold", size: 80)
-        back.addTarget(self, action: #selector(ViewController.backFunc(_:)), for: .touchUpInside)
+        back.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
+        back.text = "FORCE TOUCH TO CLOSE"
+        back.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
+        back.backgroundColor = .black
+     //   back.addTarget(self, action: #selector(ViewController.backFunc(_:)), for: .touchUpInside)
+        tier.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
+        tier.text = "FORCE TOUCH TO CLOSE"
+        tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
+        tier.backgroundColor = .black
         
-        myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: .red, colorScheme: .red, vc: self)
+        
+        myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .lightBlue, vc: self, bestScore: 10000, thisScore: 0)
         
         invisibleCover.isUserInteractionEnabled = false
         
@@ -207,8 +214,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         configuration.planeDetection = .horizontal
         // Run the view's session
         sceneView.session.run(configuration)
-        print("toruscount:")
-        print(torusAll.count)
+        
+        
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)!
         
         let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 3))!
@@ -221,8 +228,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         sceneView.addSubview(invisibleCover)
         sceneView.addSubview(back)
+        sceneView.addSubview(tier)
         
-        
+        Global.delay(bySeconds: 3.0) {
+            
+            UIView.animate(withDuration: 0.5){
+                self.back.alpha = 0.0
+                self.tier.alpha = 0.0
+            }
+            Global.delay(bySeconds: 0.5) {
+                self.back.removeFromSuperview()
+                self.tier.removeFromSuperview()
+            }
+            
+        }
         
         
         
@@ -255,8 +274,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if torusNames.contains(result.node.name!) {
                 
                 let n = result.node
-                count += 1
-                ringLabel.text = "\(count)/10"
+                points += 1000
+                ringLabel.text = "\(points)"
                 invisibleCover.addSubview(ringLabel)
                 
                 UIView.animate(withDuration: 1.0) {
