@@ -54,11 +54,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tier.textAlignment = .center
         
         
-        myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .lightBlue, vc: self, bestScore: 10000, thisScore: 0)
+        myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
         
         invisibleCover.isUserInteractionEnabled = false
         
-        ringLabel.frame = CGRect(x: 0, y: 667*sh/4, width: 375*sw, height: 667*sh/2)
+        ringLabel.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 100*sh)
         ringLabel.text = ""
         ringLabel.textAlignment = .center
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
@@ -76,17 +76,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     //let myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: .black, colorScheme: .red, vc: self)
     
     @objc private func backFunc(_ button: UIButton) {
+       backToVC()
+    }
+    
+    private func backToVC() {
         print("!!!!!Done!!!!!")
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
         
         UIView.animate(withDuration: 1.0) {
-      //      self.sceneView.frame.origin.x = 375*self.sw
+            //      self.sceneView.frame.origin.x = 375*self.sw
             self.myGameOverView.frame.origin.x = 0
         }
         Global.delay(bySeconds: 1.0) {
-        self.sceneView.session.pause()
-      //  self.sceneView.removeFromSuperview()
+            self.sceneView.session.pause()
+            //  self.sceneView.removeFromSuperview()
         }
         
     }
@@ -117,7 +121,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 //        wrapper.position = SCNVector3Make(node.position.x, node.position.x, node.position.x)
 //    }
     
-   
+    var maze: String = ""
 
     @objc private func play(_ button: UIButton) {
         
@@ -129,20 +133,33 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 //            _ -> Void in
         
             switch self.myGameOverView.myColorScheme! {
-            case .lightBlue:
-                self.currentScene = self.sceneDict["maze3"]!
-                self.startScene(myscene: "maze3")
-            case .white:
-                self.currentScene = self.sceneDict["maze1"]!
-                self.startScene(myscene: "maze1")
-            case .teal:
-                self.currentScene = self.sceneDict["maze4"]!
-                self.startScene(myscene: "maze4")
-            default:
-                self.currentScene = self.sceneDict["maze2"]!
-                self.startScene(myscene: "maze2")
+            case .tier1:
+                maze = "maze1"
+            case .tier2:
+                maze = "maze2"
+            case .tier3:
+                maze = "maze3"
+            case .tier4:
+                maze = "maze4"
+            case .tier5:
+                maze = "maze5"
+            case .tier6:
+                maze = "maze6"
+            case .tier7:
+                maze = "maze7"
+            case .tier8:
+                maze = "maze8"
+            case .tier9:
+                maze = "maze9"
+            case .tier10:
+                maze = "maze10"
+            case .tier11:
+                maze = "maze11"
+           
             }
         
+        self.currentScene = self.sceneDict[maze]!
+        self.startScene(myscene: maze)
         
         
 //            }
@@ -290,13 +307,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if torusNames.contains(result.node.name!) {
                 
                 let n = result.node
-                points += 1000
-                ringLabel.text = "\(points)"
-                
-                
-                UIView.animate(withDuration: 1.0) {
-                    self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 130)
+                for i in 0...9 {
+                Global.delay(bySeconds: 0.3*Double(i)) {
+                self.points += 100
+                self.ringLabel.text = "\(self.points)"
+                    }
                 }
+                
                 
                 let action = SCNAction.move(to: SCNVector3(n.position.x, n.position.y + 10, n.position.z), duration: 2.0)
                 let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
@@ -305,8 +322,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 result.node.runAction(action1)
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     result.node.removeFromParentNode()
-                    self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
-                 //   self.ringLabel.removeFromSuperview()
+                    if result.node.name! == "torus10" {
+                        self.endGameSequence()
+                    }
                     
                 }
             } else {
@@ -380,7 +398,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
     }
     
-  
+    private func endGameSequence() {
+        let currentHighScore = Global.highScores[maze] ?? 0
+        if points > currentHighScore {
+            Global.highScores[maze] = points
+        }
+        backToVC()
+    }
    
     
     override func viewWillAppear(_ animated: Bool) {

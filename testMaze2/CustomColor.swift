@@ -20,58 +20,58 @@ public struct CustomColor {
     
     public static let colorDictionary: [ColorScheme:(UIColor,UIColor,UIColor,UIColor)] = [
         
-        .lightBlue:
+        .tier1:
             (UIColor(red: 22/255, green: 146/255, blue: 254/255, alpha: 1.0),
              UIColor(red: 56/255, green: 160/255, blue: 254/255, alpha: 1.0),
              UIColor(red: 124/255, green: 191/255, blue: 254/255, alpha: 1.0),
              UIColor(red: 189/255, green: 222/255, blue: 254/255, alpha: 1.0)),
         
-        .white:
+        .tier2:
             (UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1.0),
              UIColor(red: 235/255, green: 235/255, blue: 235/255, alpha: 1.0),
              UIColor(red: 215/255, green: 215255, blue: 215/255, alpha: 1.0),
              UIColor(red: 195/255, green: 195/255, blue: 195/255, alpha: 1.0)),
-        .teal:
+        .tier3:
             (UIColor(red: 18/255, green: 239/255, blue: 248/255, alpha: 1.0),
              UIColor(red: 52/255, green: 244/255, blue: 252/255, alpha: 1.0),
              UIColor(red: 134/255, green: 245/255, blue: 250/255, alpha: 1.0),
              UIColor(red: 187/255, green: 246/255, blue: 249/255, alpha: 1.0)),
-        .darkPurple:
+        .tier4:
             (UIColor(red: 141/255, green: 21/255, blue: 251/255, alpha: 1.0),
              UIColor(red: 156/255, green: 52/255, blue: 252/255, alpha: 1.0),
              UIColor(red: 193/255, green: 132/255, blue: 249/255, alpha: 1.0),
              UIColor(red: 220/255, green: 190/255, blue: 248/255, alpha: 1.0)),
-        .lightPurple:
+        .tier5:
             (UIColor(red: 207/255, green: 19/255, blue: 251/255, alpha: 1.0),
              UIColor(red: 213/255, green: 55/255, blue: 250/255, alpha: 1.0),
              UIColor(red: 228/255, green: 129/255, blue: 251/255, alpha: 1.0),
              UIColor(red: 237/255, green: 188/255, blue: 248/255, alpha: 1.0)),
-        .pink:
+        .tier6:
             (UIColor(red: 255/255, green: 8/255, blue: 74/255, alpha: 1.0),
              UIColor(red: 249/255, green: 52/255, blue: 104/255, alpha: 1.0),
              UIColor(red: 252/255, green: 147/255, blue: 172/255, alpha: 1.0),
              UIColor(red: 255/255, green: 194/255, blue: 205/255, alpha: 1.0)),
-        .red:
+        .tier7:
             (UIColor(red: 251/255, green: 20/255, blue: 20/255, alpha: 1.0),
              UIColor(red: 252/255, green: 60/255, blue: 60/255, alpha: 1.0),
              UIColor(red: 252/255, green: 126/255, blue: 126/255, alpha: 1.0),
              UIColor(red: 252/255, green: 194/255, blue: 194/255, alpha: 1.0)),
-        .orange:
+        .tier8:
             (UIColor(red: 253/255, green: 179/255, blue: 18/255, alpha: 1.0),
              UIColor(red: 250/255, green: 192/255, blue: 65/255, alpha: 1.0),
              UIColor(red: 248/255, green: 213/255, blue: 136/255, alpha: 1.0),
              UIColor(red: 251/255, green: 231/255, blue: 190/255, alpha: 1.0)),
-        .yellow:
+        .tier9:
             (UIColor(red: 250/255, green: 231/255, blue: 17/255, alpha: 1.0),
              UIColor(red: 252/255, green: 236/255, blue: 52/255, alpha: 1.0),
              UIColor(red: 254/255, green: 243/255, blue: 122/255, alpha: 1.0),
              UIColor(red: 247/255, green: 243/255, blue: 188/255, alpha: 1.0)),
-        .lime:
+        .tier10:
             (UIColor(red: 177/255, green: 250/255, blue: 21/255, alpha: 1.0),
              UIColor(red: 191/255, green: 251/255, blue: 63/255, alpha: 1.0),
              UIColor(red: 212/255, green: 249/255, blue: 133/255, alpha: 1.0),
              UIColor(red: 231/255, green: 251/255, blue: 188/255, alpha: 1.0)),
-        .green:
+        .tier11:
             (UIColor(red: 38/255, green: 250/255, blue: 17/255, alpha: 1.0),
              UIColor(red: 74/255, green: 253/255, blue: 57/255, alpha: 1.0),
              UIColor(red: 139/255, green: 247/255, blue: 128/255, alpha: 1.0),
@@ -91,17 +91,17 @@ public struct CustomColor {
 }
 
 public enum ColorScheme: Int {
-    case lightBlue = 5
-    case white = 1
-    case teal = 2
-    case darkPurple = 3
-    case lightPurple = 4
-    case pink = 0
-    case red = 6
-    case orange = 7
-    case yellow = 8
-    case lime = 9
-    case green = 10
+    case tier1 = 1
+    case tier2 = 2
+    case tier3 = 3
+    case tier4 = 4
+    case tier5 = 5
+    case tier6 = 6
+    case tier7 = 7
+    case tier8 = 8
+    case tier9 = 9
+    case tier10 = 10
+    case tier11 = 11
 }
 
 
