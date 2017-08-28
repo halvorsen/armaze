@@ -32,6 +32,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     @IBOutlet var sceneView: ARSCNView!
     
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -39,11 +43,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         back.text = "FORCE TOUCH TO CLOSE"
         back.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
         back.backgroundColor = .black
+        back.textColor = .white
+        back.textAlignment = .center
      //   back.addTarget(self, action: #selector(ViewController.backFunc(_:)), for: .touchUpInside)
-        tier.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
-        tier.text = "FORCE TOUCH TO CLOSE"
+        tier.frame = CGRect(x: 115*sw, y: 27*sh, width: 127*sw, height: 30*sh)
+        tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
         tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
         tier.backgroundColor = .black
+        tier.textColor = .white
+        tier.textAlignment = .center
         
         
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .lightBlue, vc: self, bestScore: 10000, thisScore: 0)
@@ -51,10 +59,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.isUserInteractionEnabled = false
         
         ringLabel.frame = CGRect(x: 0, y: 667*sh/4, width: 375*sw, height: 667*sh/2)
-        ringLabel.text = "1/10"
+        ringLabel.text = ""
         ringLabel.textAlignment = .center
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
         ringLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
+        
         
         sceneView.delegate = self
         // Show statistics such as fps and timing information
@@ -113,12 +122,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     @objc private func play(_ button: UIButton) {
         
         // create the alert
-        let alert = UIAlertController(title: "Location", message: "Point camera forward towards a area (50 yards x 50 yards) with plenty space forward and to the left", preferredStyle: UIAlertControllerStyle.alert)
+//        let alert = UIAlertController(title: "Location", message: "Point camera forward towards a area (50 yards x 50 yards) with plenty space forward and to the left", preferredStyle: UIAlertControllerStyle.alert)
+//
+//        // add the actions (buttons)
+//        let one = UIAlertAction(title: "Continue", style: UIAlertActionStyle.default) {
+//            _ -> Void in
         
-        // add the actions (buttons)
-        let one = UIAlertAction(title: "Continue", style: UIAlertActionStyle.default) {
-            _ -> Void in
-            
             switch self.myGameOverView.myColorScheme! {
             case .lightBlue:
                 self.currentScene = self.sceneDict["maze3"]!
@@ -136,14 +145,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         
         
-            }
+//            }
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-        
-        alert.addAction(one)
-        // show the alert
-        self.present(alert, animated: true, completion: nil)
-        
+//        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+//
+//        alert.addAction(one)
+//        // show the alert
+//        self.present(alert, animated: true, completion: nil)
+    
         
         
         
@@ -229,6 +238,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.addSubview(invisibleCover)
         sceneView.addSubview(back)
         sceneView.addSubview(tier)
+        invisibleCover.addSubview(ringLabel)
+        
+        let crosshairView = UIImageView()
+        crosshairView.frame = self.view.bounds
+        crosshairView.image = #imageLiteral(resourceName: "crosshair")
+        sceneView.addSubview(crosshairView)
+        crosshairView.alpha = 0.2
         
         Global.delay(bySeconds: 3.0) {
             
@@ -276,7 +292,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 let n = result.node
                 points += 1000
                 ringLabel.text = "\(points)"
-                invisibleCover.addSubview(ringLabel)
+                
                 
                 UIView.animate(withDuration: 1.0) {
                     self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 130)
@@ -290,7 +306,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     result.node.removeFromParentNode()
                     self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
-                    self.ringLabel.removeFromSuperview()
+                 //   self.ringLabel.removeFromSuperview()
                     
                 }
             } else {
@@ -301,15 +317,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 //                    case .fireballPowerUp = pickup,
 //                    !wandIsRecharging {
                     // spawn fireballs!
-                    //let pov = sceneView.pointOfView!
+                    let pov = sceneView.pointOfView!
                     let fireballNode = Fireball.node()
-                    //fireballNode.position =sceneView.scene.rootNode.convertPosition(pov.position,
-                    //                                                                            to: level!.container)
+                //    fireballNode.position = SCNVector3Make(0,0,-2)
+                    fireballNode.opacity = 0.0
+                Global.delay(bySeconds: 0.02) {
+                    fireballNode.opacity = 1.0
+                }
+                    fireballNode.position = playerNode!.position
+                    //fireballNode.position.z -= 3
                     //level!.container.addChildNode(fireballNode)
-                    sceneView.scene.rootNode.addChildNode(fireballNode)
+                
+                    self.sceneView.scene.rootNode.addChildNode(fireballNode)
+                
                     // we need camera direction vector
                     // https://developer.apple.com/videos/play/wwdc2017/602/
                     let currentFrame = sceneView.session.currentFrame!
+                
                     let n = SCNNode()
                     sceneView.scene.rootNode.addChildNode(n)
                     
@@ -318,11 +342,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     
                     var translation = matrix_identity_float4x4
                     translation.columns.3.z = -1.5
-                    
+                
                     n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
                     fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
-                    // n.simdTransform = matrix_multiply(pov.simdTransform, translation)
-                    
+                     n.simdTransform = matrix_multiply(pov.simdTransform, translation)
+                
                     let direction = (n.position - fireballNode.position).normalized
                     
                     // fireball should come FROM THE TIP of the wand!
@@ -330,7 +354,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                         let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
                         // all we need to do is to give the fireballNode the right starting position!!
                         // use same direction vector
-                        fireballNode.position = wandNode.convertPosition(tipNode.position, to: sceneView.scene.rootNode)
+                        
                      //   wandIsRecharging = true
                         wandNode.position.z = -0.2
                         wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
