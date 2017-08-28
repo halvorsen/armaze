@@ -173,17 +173,17 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         scrollView.backgroundColor = .clear
         scrollView.showsHorizontalScrollIndicator = false
         let schemeArray: [ColorScheme] = [
-        .lightBlue,
-        .white,
-        .teal,
-        .darkPurple,
-        .lightPurple,
-        .pink,
-        .red,
-        .orange,
-        .yellow,
-        .lime,
-        .green
+        .tier1,
+        .tier2,
+        .tier3,
+        .tier4,
+        .tier5,
+        .tier6,
+        .tier7,
+        .tier8,
+        .tier9,
+        .tier10,
+        .tier11
         ]
         var count = 0
         for scheme in schemeArray {

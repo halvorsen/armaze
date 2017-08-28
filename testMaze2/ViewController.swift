@@ -12,6 +12,7 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout, SCNPhysicsContactDelegate {
     var tap = UITapGestureRecognizer()
+    var press = DeepPressGestureRecognizer()
     var ringsFound = 0
     var currentScene = SCNScene()
     var playerNode:SCNNode?
@@ -21,7 +22,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         "maze1":SCNScene(named: "art.scnassets/maze1.scn")!,
         "maze2":SCNScene(named: "art.scnassets/maze2.scn")!,
         "maze3":SCNScene(named: "art.scnassets/maze3.scn")!,
-        "maze4":SCNScene(named: "art.scnassets/maze4.scn")!
+        "maze4":SCNScene(named: "art.scnassets/maze4.scn")!,
+        "maze5":SCNScene(named: "art.scnassets/maze5.scn")!,
+        "maze6":SCNScene(named: "art.scnassets/maze6.scn")!,
+        "maze7":SCNScene(named: "art.scnassets/maze7.scn")!,
+        "maze8":SCNScene(named: "art.scnassets/maze8.scn")!,
+        "maze9":SCNScene(named: "art.scnassets/maze9.scn")!,
+        "maze10":SCNScene(named: "art.scnassets/maze10.scn")!,
+        "maze11":SCNScene(named: "art.scnassets/maze11.scn")!
         
     ]
     let invisibleCover = UIView()
@@ -29,7 +37,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var points = 0
     let back = UILabel()
     let tier = UILabel()
-    
+    let collisionLabel = UILabel()
+    let location = UILabel()
     @IBOutlet var sceneView: ARSCNView!
     
     override var prefersStatusBarHidden: Bool {
@@ -39,13 +48,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
+        
         back.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
         back.text = "FORCE TOUCH TO CLOSE"
         back.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
         back.backgroundColor = .black
         back.textColor = .white
         back.textAlignment = .center
-     //   back.addTarget(self, action: #selector(ViewController.backFunc(_:)), for: .touchUpInside)
+        //   back.addTarget(self, action: #selector(ViewController.backFunc(_:)), for: .touchUpInside)
         tier.frame = CGRect(x: 115*sw, y: 27*sh, width: 127*sw, height: 30*sh)
         tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
         tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
@@ -64,10 +75,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
         ringLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
         
+        collisionLabel.frame = CGRect(x: 0, y: 550, width: 375*sw, height: 100*sh)
+        collisionLabel.text = ""
+        collisionLabel.textAlignment = .center
+        collisionLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
+        collisionLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
+        
         
         sceneView.delegate = self
         // Show statistics such as fps and timing information
         sceneView.showsStatistics = true
+        
         // Set the scene to the view
         
     }
@@ -76,7 +94,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     //let myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: .black, colorScheme: .red, vc: self)
     
     @objc private func backFunc(_ button: UIButton) {
-       backToVC()
+        backToVC()
     }
     
     private func backToVC() {
@@ -92,84 +110,91 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.sceneView.session.pause()
             //  self.sceneView.removeFromSuperview()
         }
+        sceneView.removeGestureRecognizer(press)
         
     }
-    
+    //   var mycount = 0
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
         if let camPos = sceneView.pointOfView?.position {
-       // let camPos = sceneView.scene.rootNode.convertPosition(rawCamPos, to: level.container)
-            guard playerNode != nil else {print("guard player node is nil");return}
-        playerNode!.position.x = camPos.x
-        playerNode!.position.z = camPos.z
+            // let camPos = sceneView.scene.rootNode.convertPosition(rawCamPos, to: level.container)
+            guard playerNode != nil else {return}
+            // print("player node is not nil \(mycount)")
+            //    mycount += 1
+            playerNode!.position.x = camPos.x
+            playerNode!.position.z = camPos.z
+            playerNode!.position.y = camPos.y - 1
+            
         }
         
     }
     
     
-
     
-//    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-//  
-//                wrapper.position = SCNVector3Make(node.position.x, node.position.x, node.position.x)
-//        
-//            
-//        
-//    }
-//    
-//    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-//        wrapper.position = SCNVector3Make(node.position.x, node.position.x, node.position.x)
-//    }
+    
+    
+    //    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+    //
+    //                wrapper.position = SCNVector3Make(node.position.x, node.position.x, node.position.x)
+    //
+    //
+    //
+    //    }
+    //
+    //    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+    //        wrapper.position = SCNVector3Make(node.position.x, node.position.x, node.position.x)
+    //    }
     
     var maze: String = ""
-
+    
     @objc private func play(_ button: UIButton) {
         
         // create the alert
-//        let alert = UIAlertController(title: "Location", message: "Point camera forward towards a area (50 yards x 50 yards) with plenty space forward and to the left", preferredStyle: UIAlertControllerStyle.alert)
-//
-//        // add the actions (buttons)
-//        let one = UIAlertAction(title: "Continue", style: UIAlertActionStyle.default) {
-//            _ -> Void in
+        //        let alert = UIAlertController(title: "Location", message: "Point camera forward towards a area (50 yards x 50 yards) with plenty space forward and to the left", preferredStyle: UIAlertControllerStyle.alert)
+        //
+        //        // add the actions (buttons)
+        //        let one = UIAlertAction(title: "Continue", style: UIAlertActionStyle.default) {
+        //            _ -> Void in
         
-            switch self.myGameOverView.myColorScheme! {
-            case .tier1:
-                maze = "maze1"
-            case .tier2:
-                maze = "maze2"
-            case .tier3:
-                maze = "maze3"
-            case .tier4:
-                maze = "maze4"
-            case .tier5:
-                maze = "maze5"
-            case .tier6:
-                maze = "maze6"
-            case .tier7:
-                maze = "maze7"
-            case .tier8:
-                maze = "maze8"
-            case .tier9:
-                maze = "maze9"
-            case .tier10:
-                maze = "maze10"
-            case .tier11:
-                maze = "maze11"
-           
-            }
+        switch self.myGameOverView.myColorScheme! {
+        case .tier1:
+            maze = "maze1"
+        case .tier2:
+            maze = "maze2"
+        case .tier3:
+            maze = "maze3"
+        case .tier4:
+            maze = "maze4"
+        case .tier5:
+            maze = "maze5"
+        case .tier6:
+            maze = "maze6"
+        case .tier7:
+            maze = "maze7"
+        case .tier8:
+            maze = "maze8"
+        case .tier9:
+            maze = "maze9"
+        case .tier10:
+            maze = "maze10"
+        case .tier11:
+            maze = "maze11"
+            
+        }
         
         self.currentScene = self.sceneDict[maze]!
+        
         self.startScene(myscene: maze)
+        sceneView.scene.physicsWorld.contactDelegate = self
         
+        //            }
         
-//            }
+        //        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        //
+        //        alert.addAction(one)
+        //        // show the alert
+        //        self.present(alert, animated: true, completion: nil)
         
-//        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-//
-//        alert.addAction(one)
-//        // show the alert
-//        self.present(alert, animated: true, completion: nil)
-    
         
         
         
@@ -189,24 +214,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var torus9 = SCNNode()
     var torus10 = SCNNode()
     var torusAll = [SCNNode]()
-   
+    
     var wrapper = SCNNode()
     private func startScene(myscene: String) {
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         sceneView.addGestureRecognizer(tap)
-        
+        sceneView.addGestureRecognizer(press)
         let localCamPos = sceneView.scene.rootNode.position
         playerNode?.removeFromParentNode()
         playerNode = Player.node()
         playerNode!.position = localCamPos
-        playerNode!.position.y = Float(Player.HEIGHT * 0.5)
+        playerNode!.position.y = localCamPos.y - 1
+        
         
         currentScene = sceneDict[myscene]!
         sceneView.scene = currentScene
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         wrapper.position = SCNVector3Make(0, 0, 0)
-        
+        wrapper.addChildNode(playerNode!)
         torus1 = wrapper.childNode(withName: "torus1", recursively: false)!
         torus2 = wrapper.childNode(withName: "torus2", recursively: false)!
         torus3 = wrapper.childNode(withName: "torus3", recursively: false)!
@@ -218,22 +244,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         torus9 = wrapper.childNode(withName: "torus9", recursively: false)!
         torus10 = wrapper.childNode(withName: "torus10", recursively: false)!
         
+        
         torusAll = [
-        torus1,
-        torus2,
-        torus3,
-        torus4,
-        torus5,
-        torus6,
-        torus7,
-        torus8,
-        torus9,
-        torus10
+            torus1,
+            torus2,
+            torus3,
+            torus4,
+            torus5,
+            torus6,
+            torus7,
+            torus8,
+            torus9,
+            torus10
         ]
         
-       
-
-
+        
+        
+        
         
         // Create a session configuration
         let configuration = ARWorldTrackingSessionConfiguration()
@@ -256,6 +283,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.addSubview(back)
         sceneView.addSubview(tier)
         invisibleCover.addSubview(ringLabel)
+        sceneView.addSubview(collisionLabel)
         
         let crosshairView = UIImageView()
         crosshairView.frame = self.view.bounds
@@ -282,17 +310,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     let torusNames = [
-    "torus1",
-    "torus2",
-    "torus3",
-    "torus4",
-    "torus5",
-    "torus6",
-    "torus7",
-    "torus8",
-    "torus9",
-    "torus10"
-    
+        "torus1",
+        "torus2",
+        "torus3",
+        "torus4",
+        "torus5",
+        "torus6",
+        "torus7",
+        "torus8",
+        "torus9",
+        "torus10"
+        
     ]
     
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
@@ -308,9 +336,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
                 let n = result.node
                 for i in 0...9 {
-                Global.delay(bySeconds: 0.3*Double(i)) {
-                self.points += 100
-                self.ringLabel.text = "\(self.points)"
+                    Global.delay(bySeconds: 0.3*Double(i)) {
+                        self.points += 100
+                        self.ringLabel.text = "\(self.points)"
                     }
                 }
                 
@@ -330,69 +358,69 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             } else {
                 //fire weapon
                 
-//                if isPlaying, playerState != nil,
-//                    let pickup = playerState.pickup,
-//                    case .fireballPowerUp = pickup,
-//                    !wandIsRecharging {
-                    // spawn fireballs!
-                    let pov = sceneView.pointOfView!
-                    let fireballNode = Fireball.node()
+                //                if isPlaying, playerState != nil,
+                //                    let pickup = playerState.pickup,
+                //                    case .fireballPowerUp = pickup,
+                //                    !wandIsRecharging {
+                // spawn fireballs!
+                let pov = sceneView.pointOfView!
+                let fireballNode = Fireball.node()
                 //    fireballNode.position = SCNVector3Make(0,0,-2)
-                    fireballNode.opacity = 0.0
+                fireballNode.opacity = 0.0
                 Global.delay(bySeconds: 0.02) {
                     fireballNode.opacity = 1.0
                 }
-                    fireballNode.position = playerNode!.position
-                    //fireballNode.position.z -= 3
-                    //level!.container.addChildNode(fireballNode)
+                fireballNode.position = playerNode!.position
+                //fireballNode.position.z -= 3
+                //level!.container.addChildNode(fireballNode)
                 
-                    self.sceneView.scene.rootNode.addChildNode(fireballNode)
+                self.sceneView.scene.rootNode.addChildNode(fireballNode)
                 
-                    // we need camera direction vector
-                    // https://developer.apple.com/videos/play/wwdc2017/602/
-                    let currentFrame = sceneView.session.currentFrame!
+                // we need camera direction vector
+                // https://developer.apple.com/videos/play/wwdc2017/602/
+                let currentFrame = sceneView.session.currentFrame!
                 
-                    let n = SCNNode()
-                    sceneView.scene.rootNode.addChildNode(n)
-                    
-                    var closeTranslation = matrix_identity_float4x4
-                    closeTranslation.columns.3.z = -0.5
-                    
-                    var translation = matrix_identity_float4x4
-                    translation.columns.3.z = -1.5
+                let n = SCNNode()
+                sceneView.scene.rootNode.addChildNode(n)
                 
-                    n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
-                    fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
-                     n.simdTransform = matrix_multiply(pov.simdTransform, translation)
+                var closeTranslation = matrix_identity_float4x4
+                closeTranslation.columns.3.z = -0.5
                 
-                    let direction = (n.position - fireballNode.position).normalized
+                var translation = matrix_identity_float4x4
+                translation.columns.3.z = -1.5
+                
+                n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
+                fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
+                n.simdTransform = matrix_multiply(pov.simdTransform, translation)
+                
+                let direction = (n.position - fireballNode.position).normalized
+                
+                // fireball should come FROM THE TIP of the wand!
+                if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
+                    let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
+                    // all we need to do is to give the fireballNode the right starting position!!
+                    // use same direction vector
                     
-                    // fireball should come FROM THE TIP of the wand!
-                    if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
-                        let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
-                        // all we need to do is to give the fireballNode the right starting position!!
-                        // use same direction vector
-                        
-                     //   wandIsRecharging = true
-                        wandNode.position.z = -0.2
-                        wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
-                        tipNode.scale = SCNVector3(0,0,0)
-//                        tipNode.runAction(SCNAction.scale(to: 1, duration: Wand.RECHARGE_TIME)) {
-//                            self.wandIsRecharging = false
-//                        }
-                    }
-                    
-                    fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY, asImpulse: true)
-                    n.removeFromParentNode()
-                    
-                    fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
-                        fireballNode.removeFromParentNode()
-                    }
-                    
-//                    playerNode!.runAction(SCNAction.playAudio(Sound.fireball.source, waitForCompletion: false))
-                    
-                    return
-             
+                    //   wandIsRecharging = true
+                    wandNode.position.z = -0.2
+                    wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
+                    tipNode.scale = SCNVector3(0,0,0)
+                    //                        tipNode.runAction(SCNAction.scale(to: 1, duration: Wand.RECHARGE_TIME)) {
+                    //                            self.wandIsRecharging = false
+                    //                        }
+                }
+                
+                fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY, asImpulse: true)
+                n.removeFromParentNode()
+                
+                fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
+                    fireballNode.removeFromParentNode()
+                }
+                
+                //                    playerNode!.runAction(SCNAction.playAudio(Sound.fireball.source, waitForCompletion: false))
+                
+                return
+                
             }
             
         }
@@ -405,7 +433,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         backToVC()
     }
-   
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -413,7 +441,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         myGameOverView.replay.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
     }
     
-   
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -437,9 +465,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
      }
      */
     
-//    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-//        let cameraPosition = sceneView.pointOfView?.position
-//    }
+    //    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+    //        let cameraPosition = sceneView.pointOfView?.position
+    //    }
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
@@ -457,8 +485,107 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     // MARK: - SCNPhysicsContactDelegate
-    
+    var isFirstInfraction = true
+    var isFirstRingTouch = true
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-  
+        print("Contact")
+        let contactMask = contact.nodeA.physicsBody!.categoryBitMask | contact.nodeB.physicsBody!.categoryBitMask
+        guard contact.nodeA.physicsBody != nil || contact.nodeB.physicsBody != nil else {return}
+        print("nodeA: \(contact.nodeA.physicsBody!.categoryBitMask)")
+        print("nodeB: \(contact.nodeB.physicsBody!.categoryBitMask)")
+        
+        //went through a wall
+        if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.fence.rawValue)  {
+            print("hit fence :(")
+            DispatchQueue.main.async {
+                self.collisionLabel.text = "hit fence :("
+            }
+            if isFirstInfraction {
+                isFirstInfraction = false
+            for i in 0...4 {
+                Global.delay(bySeconds: 0.3*Double(i)) {
+                    self.points -= 100
+                    self.ringLabel.text = "\(self.points)"
+                }
+            }
+                Global.delay(bySeconds: 5.0) {
+                    self.isFirstInfraction = true
+                }
+            }
+            
+        }
+        // touched a ring
+        if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.coin.rawValue) {
+            print("touched ring!!!")
+            DispatchQueue.main.async {
+                self.collisionLabel.text = "touched ring!!!"
+            }
+            if isFirstRingTouch {
+                isFirstRingTouch = false
+                Global.delay(bySeconds: 4.0) {
+                    self.isFirstRingTouch = true
+                }
+            let n = contact.nodeA
+            
+            let action = SCNAction.move(to: SCNVector3(n.position.x, n.position.y + 10, n.position.z), duration: 2.0)
+            let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
+            
+            n.runAction(action)
+            n.runAction(action1)
+            
+            for i in 0...9 {
+                Global.delay(bySeconds: 0.3*Double(i)) {
+                    self.points += 100
+                    self.ringLabel.text = "\(self.points)"
+                }
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                n.removeFromParentNode()
+                if n.name! == "torus10" {
+                    self.endGameSequence()
+                }
+                
+            }
+            }
+            
+        }
+        // killed a monster
+        if contactMask == (CollisionTypes.monster.rawValue | CollisionTypes.fireball.rawValue){
+            print("hit monster!!!")
+            DispatchQueue.main.async {
+                self.collisionLabel.text = "hit monster!!!"
+            }
+            
+            // Fix: kill monster code
+        }
+        //monster hit you!
+        if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.monster.rawValue) {
+            print("monster hit you!!!")
+            DispatchQueue.main.async {
+                self.collisionLabel.text = "monster hit you :("
+            }
+            if isFirstInfraction {
+                isFirstInfraction = false
+                for i in 0...4 {
+                    Global.delay(bySeconds: 0.3*Double(i)) {
+                        self.points -= 100
+                        self.ringLabel.text = "\(self.points)"
+                    }
+                }
+                Global.delay(bySeconds: 5.0) {
+                    self.isFirstInfraction = true
+                }
+            }
+            // fix: make monster disappear
+            
+        }
+        //        if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.coin.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.fireball.rawValue {
+        //            print("fireball Hit ring")
+        //            DispatchQueue.main.async {
+        //            self.collisionLabel.text = "Fireball hit ring"
+        //            }
+        //        }
+        
     }
 }

@@ -34,7 +34,7 @@ class Fireball {
                                   shape: nil)
         body.categoryBitMask = CollisionTypes.fireball.rawValue
         body.collisionBitMask = CollisionTypes.solid.rawValue
-        body.contactTestBitMask = CollisionTypes.player.rawValue|CollisionTypes.monster.rawValue
+        body.contactTestBitMask = CollisionTypes.player.rawValue|CollisionTypes.monster.rawValue|CollisionTypes.coin.rawValue
         body.isAffectedByGravity = false
         body.mass = 0.5
         body.restitution = 0.5
