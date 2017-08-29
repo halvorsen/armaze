@@ -556,6 +556,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             DispatchQueue.main.async {
                 self.collisionLabel.text = "hit monster!!!"
             }
+            //removeMonster
+            if let nameA = contact.nodeA.name,
+                let nameB = contact.nodeB.name {
+                if nameA == "cone" {
+                    contact.nodeA.removeFromParentNode()
+                }
+                if nameB == "cone" {
+                    contact.nodeB.removeFromParentNode()
+                }
+            }
             
             // Fix: kill monster code
         }
@@ -577,7 +587,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     self.isFirstInfraction = true
                 }
             }
-            // fix: make monster disappear
+            //removeMonster
+            if let nameA = contact.nodeA.name,
+                let nameB = contact.nodeB.name {
+                if nameA == "cone" {
+                    contact.nodeA.removeFromParentNode()
+                }
+                if nameB == "cone" {
+                    contact.nodeB.removeFromParentNode()
+                }
+            }
+            
             
         }
         //        if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.coin.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.fireball.rawValue {
