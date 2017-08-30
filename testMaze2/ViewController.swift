@@ -439,6 +439,88 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         super.viewWillAppear(animated)
         view.addSubview(myGameOverView)
         myGameOverView.replay.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
+        
+        if UserDefaults.standard.bool(forKey: "is99MazesFirstLaunch") {
+            UserDefaults.standard.set(true, forKey: "is99MazesFirstLaunch")
+            runTutorial()
+            
+        }
+    }
+    
+    let tutorialView = UIView()
+    var tutorialTap = UITapGestureRecognizer()
+    var tutorialSwipeRight = UISwipeGestureRecognizer()
+    var tutorialSwipeLeft = UISwipeGestureRecognizer()
+ func runTutorial() {
+        let tutorialView1 = UIImageView()
+        let tutorialView2 = UIImageView()
+        let tutorialView3 = UIImageView()
+        let tutorialView4 = UIImageView()
+        tutorialView1.image = #imageLiteral(resourceName: "Tutorial")
+        tutorialView2.image = #imageLiteral(resourceName: "Tutorial 2")
+        tutorialView3.image = #imageLiteral(resourceName: "Tutorial 3")
+        turorialView4.image = #imageLiteral(resourceName: "Tutorial 4")
+        if UIScreen.main.bounds.width == 375 {
+            tutorialView1.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 667*sh)
+            tutorialView2.frame = CGRect(x: 375*sw, y: 0, width: 375*sw, height: 667*sh)
+            tutorialView3.frame = CGRect(x: 750*sw, y: 0, width: 375*sw, height: 667*sh)
+            tutorialView4.frame = CGRect(x: 1125*sw, y: 0, width: 375*sw, height: 667*sh)
+        } else {
+            let margin = (UIScreen.main.bounds.width - 375)/2
+            tutorialView1.frame = CGRect(x: margin, y: 0, width: 375*sw, height: 667*sh)
+            tutorialView2.frame = CGRect(x: 375*sw + margin, y: 0, width: 375, height: 667*sh)
+            tutorialView3.frame = CGRect(x: 750*sw + margin, y: 0, width: 375, height: 667*sh)
+            tutorialView4.frame = CGRect(x: 1125*sw + margin, y: 0, width: 375, height: 667*sh)
+        }
+        tutorialView.frame = CGRect(x: 0, y: 0, width: 375*4*sw, height: 667*sh)
+        tutorialView.backgroundColor = .white
+        view.addSubview(tutorialView)
+        tutorialTap = UITapGestureRecognizer(target: self, action: #selector(ViewController.pageForward(_:)))
+        tutorialSwipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.pageForward(_:)))
+        tutorialSwipeLeft.direction = .left
+        tutorialSwipeRight = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.pageBackward(_:)))
+        tutorialSwipeRight.direction = .right
+        tutorialView.addSubview(tutorialView1)
+        tutorialView.addSubview(tutorialView2)
+        tutorialView.addSubview(tutorialView3)
+        tutorialView.addSubview(tutorialView4)
+        
+        
+        
+    }
+    
+    @objc private func pageForward(_ gesture: UIGestureRecognizer) {
+        if tutorialView.frame.origin.x >= 1100*sw {
+            UIView.animate(withDuration: 0.5) {
+                tutorialView.alpha = 0.0
+            }
+            Global.delay(bySeconds: 0.6) {
+                tutorialView.removeFromSuperview()
+                tutorialView1.removeFromSuperview()
+                tutorialView2.removeFromSuperview()
+                tutorialView3.removeFromSuperview()
+                tutorialView4.removeFromSuperview()
+            }
+        } else {
+        
+        UIView.animate(withDuration: 0.5) {
+            tutorialView.frame.origin.x -= 375*sw
+        }
+        }
+        
+    }
+    @objc private func pageBackward(_ gesture: UIGestureRecognizer) {
+        
+        if tutorialView.frame.origin.x <= 100*sw {
+             return
+        } else {
+            
+            UIView.animate(withDuration: 0.5) {
+                tutorialView.frame.origin.x += 375*sw
+            }
+        }
+        
+        
     }
     
     

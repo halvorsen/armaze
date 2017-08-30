@@ -127,6 +127,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         instructions = GameCenterButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
         weapon = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 264*sh))
         weapon.addTarget(self, action: #selector(GameOverView.buyWeapons(_:)), for: .touchUpInside)
+        instructions.addTarget(self, action: #selector(ViewController.runTutorial), for: .touchUpInside)
   //      extraLife = OneMoreLife(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 317*sh))
         self.addSubview(replay)
    
