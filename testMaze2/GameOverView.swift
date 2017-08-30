@@ -12,7 +12,7 @@ import SwiftyStoreKit
 class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     var activityView = UIActivityIndicatorView()
     
-    @objc private func buyWeapons() {
+    @objc private func buyWeapons(_ button: UIButton) {
         // Create the alert controller
         let alertController = UIAlertController(title: "Weapon", message: "Unlock weapon $0.99", preferredStyle: .alert)
 
@@ -127,12 +127,12 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         instructions = GameCenterButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
         weapon = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 264*sh))
         weapon.addTarget(self, action: #selector(GameOverView.buyWeapons(_:)), for: .touchUpInside)
-        instructions.addTarget(self, action: #selector(ViewController.runTutorial), for: .touchUpInside)
+        
   //      extraLife = OneMoreLife(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 317*sh))
-        self.addSubview(replay)
+        self.addSubview(dropMaze)
    
-        self.addSubview(gameCenter)
-        self.addSubview(noAds)
+        self.addSubview(instructions)
+        self.addSubview(weapon)
 
   
 
@@ -227,3 +227,4 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     }
     
 }
+

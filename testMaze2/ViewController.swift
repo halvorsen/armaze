@@ -438,28 +438,28 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.addSubview(myGameOverView)
-        myGameOverView.replay.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
-        
+        myGameOverView.dropMaze.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
+        myGameOverView.instructions.addTarget(self, action: #selector(ViewController.runTutorial), for: .touchUpInside)
         if UserDefaults.standard.bool(forKey: "is99MazesFirstLaunch") {
             UserDefaults.standard.set(true, forKey: "is99MazesFirstLaunch")
             runTutorial()
             
         }
     }
-    
+    let tutorialView1 = UIImageView()
+    let tutorialView2 = UIImageView()
+    let tutorialView3 = UIImageView()
+    let tutorialView4 = UIImageView()
     let tutorialView = UIView()
     var tutorialTap = UITapGestureRecognizer()
     var tutorialSwipeRight = UISwipeGestureRecognizer()
     var tutorialSwipeLeft = UISwipeGestureRecognizer()
- func runTutorial() {
-        let tutorialView1 = UIImageView()
-        let tutorialView2 = UIImageView()
-        let tutorialView3 = UIImageView()
-        let tutorialView4 = UIImageView()
+ @objc private func runTutorial() {
+
         tutorialView1.image = #imageLiteral(resourceName: "Tutorial")
         tutorialView2.image = #imageLiteral(resourceName: "Tutorial 2")
         tutorialView3.image = #imageLiteral(resourceName: "Tutorial 3")
-        turorialView4.image = #imageLiteral(resourceName: "Tutorial 4")
+        tutorialView4.image = #imageLiteral(resourceName: "Tutorial 4")
         if UIScreen.main.bounds.width == 375 {
             tutorialView1.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 667*sh)
             tutorialView2.frame = CGRect(x: 375*sw, y: 0, width: 375*sw, height: 667*sh)
@@ -491,20 +491,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     @objc private func pageForward(_ gesture: UIGestureRecognizer) {
         if tutorialView.frame.origin.x >= 1100*sw {
+            
+            AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
+                if response {
+                    //access granted, do nothing
+                } else {
+                    
+                }
+            }
+            
             UIView.animate(withDuration: 0.5) {
-                tutorialView.alpha = 0.0
+                self.tutorialView.alpha = 0.0
             }
             Global.delay(bySeconds: 0.6) {
-                tutorialView.removeFromSuperview()
-                tutorialView1.removeFromSuperview()
-                tutorialView2.removeFromSuperview()
-                tutorialView3.removeFromSuperview()
-                tutorialView4.removeFromSuperview()
+                self.tutorialView.removeFromSuperview()
+                self.tutorialView1.removeFromSuperview()
+                self.tutorialView2.removeFromSuperview()
+                self.tutorialView3.removeFromSuperview()
+                self.tutorialView4.removeFromSuperview()
+                
             }
         } else {
         
         UIView.animate(withDuration: 0.5) {
-            tutorialView.frame.origin.x -= 375*sw
+            self.tutorialView.frame.origin.x -= 375*self.sw
         }
         }
         
@@ -516,7 +526,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         } else {
             
             UIView.animate(withDuration: 0.5) {
-                tutorialView.frame.origin.x += 375*sw
+                self.tutorialView.frame.origin.x += 375*self.sw
             }
         }
         
