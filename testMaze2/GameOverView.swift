@@ -7,75 +7,73 @@
 //
 
 import UIKit
-//import SwiftyStoreKit
-
-
+import SwiftyStoreKit
 
 class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     var activityView = UIActivityIndicatorView()
     
-//    private func colorThemesFunc() {
-//        // Create the alert controller
-//        let alertController = UIAlertController(title: "Color Themes", message: "Unlock all color themes $2.99", preferredStyle: .alert)
-//
-//        // Create the actions
-//        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
-//            UIAlertAction in
-//            self.purchaseColorThemes()
-//
-//        }
-//        let restoreAction = UIAlertAction(title: "Restore Purchase", style: UIAlertActionStyle.default) {
-//            UIAlertAction in
-//
-//            SwiftyStoreKit.restorePurchases(atomically: true) { results in
-//                if results.restoreFailedPurchases.count > 0 {
-//                    print("Restore Failed: \(results.restoreFailedPurchases)")
-//                }
-//                else if results.restoredPurchases.count > 0 {
-//                    Global.isColorThemes = true
-//                    UserDefaults.standard.set(true, forKey: "isColorThemes")
-//                }
-//                else {
-//                    print("Nothing to Restore")
-//                }
-//            }
-//        }
-//
-//        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) {
-//            UIAlertAction in
-//            print("Cancel Pressed")
-//        }
-//
-//        // Add the actions
-//        alertController.addAction(okAction)
-//        alertController.addAction(restoreAction)
-//        alertController.addAction(cancelAction)
-//
-//        // Present the controller
-//        viewC.present(alertController, animated: true, completion: nil)
-//    }
+    @objc private func buyWeapons() {
+        // Create the alert controller
+        let alertController = UIAlertController(title: "Weapon", message: "Unlock weapon $0.99", preferredStyle: .alert)
+
+        // Create the actions
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
+            UIAlertAction in
+            self.purchaseColorThemes()
+
+        }
+        let restoreAction = UIAlertAction(title: "Restore Purchase", style: UIAlertActionStyle.default) {
+            UIAlertAction in
+
+            SwiftyStoreKit.restorePurchases(atomically: true) { results in
+                if results.restoreFailedPurchases.count > 0 {
+                    print("Restore Failed: \(results.restoreFailedPurchases)")
+                }
+                else if results.restoredPurchases.count > 0 {
+                    Global.isWeaponsMember = true
+                    UserDefaults.standard.set(true, forKey: "isWeaponsMember")
+                }
+                else {
+                    print("Nothing to Restore")
+                }
+            }
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) {
+            UIAlertAction in
+            print("Cancel Pressed")
+        }
+
+        // Add the actions
+        alertController.addAction(okAction)
+        alertController.addAction(restoreAction)
+        alertController.addAction(cancelAction)
+
+        // Present the controller
+        viewC.present(alertController, animated: true, completion: nil)
+    }
     
-//    private func purchaseColorThemes(productId: String = "plinkerPool.iap.colorThemes") {
-//       
-//        activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-//        activityView.center = self.center
-//        activityView.startAnimating()
-//        activityView.alpha = 0.0
-//        self.addSubview(activityView)
-//        SwiftyStoreKit.purchaseProduct(productId) { result in
-//            switch result {
-//            case .success( _):
-//                Global.isColorThemes = true
-//                UserDefaults.standard.set(true, forKey: "isColorThemes")
-//                self.activityView.removeFromSuperview()
-//            case .error(let error):
-//                
-//                print("error: \(error)")
-//                print("Purchase Failed: \(error)")
-//                self.activityView.removeFromSuperview()
-//            }
-//        }
-//    }
+    private func purchaseColorThemes(productId: String = "ARMaze.iap.weapon") {
+       
+        activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityView.center = self.center
+        activityView.startAnimating()
+        activityView.alpha = 0.0
+        self.addSubview(activityView)
+        SwiftyStoreKit.purchaseProduct(productId) { result in
+            switch result {
+            case .success( _):
+                Global.isWeaponsMember = true
+                UserDefaults.standard.set(true, forKey: "isWeaponsMember")
+                self.activityView.removeFromSuperview()
+            case .error(let error):
+                
+                print("error: \(error)")
+                print("Purchase Failed: \(error)")
+                self.activityView.removeFromSuperview()
+            }
+        }
+    }
     
     
     
@@ -111,7 +109,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         
     }
 
-    var (replay,menu,gameCenter,noAds,extraLife) = (ReplayButton(), MenuButton(), GameCenterButton(), SubscribeToPremiumButton(), OneMoreLife())
+    var (dropMaze,menu,instructions,weapon,extraLife) = (ReplayButton(), MenuButton(), GameCenterButton(), SubscribeToPremiumButton(), OneMoreLife())
     
     var viewC = UIViewController()
     init() {super.init(frame: .zero)}
@@ -124,10 +122,11 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         self.frame.origin.x = 375*sw
         self.backgroundColor = backgroundColor
         myColorScheme = colorScheme
-        replay = ReplayButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 158*sh))
+        dropMaze = ReplayButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 158*sh))
      //   menu = MenuButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
-        gameCenter = GameCenterButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
-        noAds = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 264*sh))
+        instructions = GameCenterButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
+        weapon = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 264*sh))
+        weapon.addTarget(self, action: #selector(GameOverView.buyWeapons(_:)), for: .touchUpInside)
   //      extraLife = OneMoreLife(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 317*sh))
         self.addSubview(replay)
    

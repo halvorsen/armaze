@@ -14,6 +14,8 @@ public struct Global {
     public static var topScore = 0
     public static var gaveBonusLife = false
     public static var highScores: [String:Int] = [:]
+    public static var isWeaponsMember = false
+    
     
     public static func delay(bySeconds seconds: Double, dispatchLevel: DispatchLevel = .main, closure: @escaping () -> Void) {
         let dispatchTime = DispatchTime.now() + seconds
