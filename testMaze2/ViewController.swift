@@ -484,6 +484,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tutorialView.addSubview(tutorialView2)
         tutorialView.addSubview(tutorialView3)
         tutorialView.addSubview(tutorialView4)
+        tutorialView.addGestureRecognizer(tutorialSwipeLeft)
+        tutorialView.addGestureRecognizer(tutorialSwipeRight)
+        tutorialView.addGestureRecognizer(tutorialTap)
         
         
         
