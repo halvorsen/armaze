@@ -320,9 +320,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         "torus8",
         "torus9",
         "torus10"
-        
     ]
     
+    var direction = SCNVector3()
+    var direction2 = SCNVector3()
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
         print("tap")
         var hitTestOptions = [SCNHitTestOption: Any]()
@@ -366,7 +367,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 let pov = sceneView.pointOfView!
                 let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
                 let fireballNode = Fireball.node()
-                
+                fireballNode.name = "beachBall"
                 fireballNode.opacity = 0.0
                 Global.delay(bySeconds: 0.02) {
                     fireballNode.opacity = 1.0
@@ -394,8 +395,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
                 n.simdTransform = matrix_multiply(pov.simdTransform, translation)
                 
-                let direction = (n.position - fireballNode.position).normalized
-                
+                direction = (n.position - fireballNode.position).normalized
+                direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
                 // fireball should come FROM THE TIP of the wand!
                 if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
                     let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
@@ -411,8 +412,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     //                        }
                 }
                 
-                fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY, asImpulse: true)
-                fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 0.8), asImpulse: true)
+                fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 500, asImpulse: true)
+                fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
                 n.removeFromParentNode()
                 
                 fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
@@ -656,11 +657,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             //removeMonster
             if let nameA = contact.nodeA.name,
                 let nameB = contact.nodeB.name {
-                if nameA == "cone" {
+                if nameA == "goblin" {
+                    print("goblin")
+                    contact.nodeA.removeAllActions()
+                    contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 3, asImpulse: true)
+                    contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
+                    Global.delay(bySeconds: 3.0) {
                     contact.nodeA.removeFromParentNode()
+                    }
                 }
-                if nameB == "cone" {
+                if nameB == "goblin" {
+                    print("goblin")
+                    contact.nodeB.removeAllActions()
+                    contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 10, asImpulse: true)
+                    contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
+                    Global.delay(bySeconds: 3.0) {
                     contact.nodeB.removeFromParentNode()
+                    }
                 }
             }
             

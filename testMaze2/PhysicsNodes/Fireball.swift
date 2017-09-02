@@ -63,10 +63,10 @@ class Fireball {
         let body = SCNPhysicsBody(type: SCNPhysicsBodyType.dynamic,
                                   shape: nil)
         body.categoryBitMask = CollisionTypes.fireball.rawValue
-        body.collisionBitMask = CollisionTypes.solid.rawValue
+        body.collisionBitMask = CollisionTypes.monster.rawValue
         body.contactTestBitMask = CollisionTypes.player.rawValue|CollisionTypes.monster.rawValue|CollisionTypes.coin.rawValue
         body.isAffectedByGravity = false
-        body.mass = 0.5
+        body.mass = 100.0
         body.restitution = 0.5
         body.damping = 0.1
         body.friction = 0.8
