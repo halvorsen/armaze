@@ -15,16 +15,16 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     @objc private func buyWeapons(_ button: UIButton) {
         // Create the alert controller
         let alertController = UIAlertController(title: "Shoot Obstacles", message: "Unlock weapons $0.99", preferredStyle: .alert)
-
+        
         // Create the actions
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
             UIAlertAction in
             self.purchaseWeapons()
-
+            
         }
         let restoreAction = UIAlertAction(title: "Restore Purchase", style: UIAlertActionStyle.default) {
             UIAlertAction in
-
+            
             SwiftyStoreKit.restorePurchases(atomically: true) { results in
                 if results.restoreFailedPurchases.count > 0 {
                     print("Restore Failed: \(results.restoreFailedPurchases)")
@@ -38,23 +38,23 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
                 }
             }
         }
-
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel) {
             UIAlertAction in
             print("Cancel Pressed")
         }
-
+        
         // Add the actions
         alertController.addAction(okAction)
         alertController.addAction(restoreAction)
         alertController.addAction(cancelAction)
-
+        
         // Present the controller
         viewC.present(alertController, animated: true, completion: nil)
     }
     
     private func purchaseWeapons(productId: String = "99Mazes.iap.unlockWeapons") {
-       
+        
         activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityView.center = self.center
         //Fix it iOS 11 moving purchase interaction to bottom of screen. Maybe move our activity view?
@@ -90,26 +90,47 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         tierLabel.text = "TIER \(myIndex + 1)"
         
         //old tap dot to get into a maze, change is above to just change the tier label and queue up the correct maze
-        if Global.isColorThemes == true || colorScheme.rawValue == 0  || colorScheme.rawValue == 1 || colorScheme.rawValue == 5 || true { //hack
-            
-            //maze from raw-colorscheme value
-            let myInt = colorScheme.rawValue
-            let maze = "maze\(myInt)"
-            //create delegate method to start scene and dismiss view
-            
+        
+        
+        //maze from raw-colorscheme value
+        let myInt = colorScheme.rawValue
+        let maze = "maze\(myInt)"
+        //create delegate method to start scene and dismiss view
+        
         UserDefaults.standard.set(colorScheme.rawValue, forKey: "colorScheme")
         CustomColor.changeCustomColor(colorScheme: colorScheme)
         myColorScheme = colorScheme
- 
-//        self.gameCenter.backgroundColor = CustomColor.color2
-//        self.extraLife.layer.borderColor = CustomColor.color2.cgColor
-//        self.extraLife.setTitleColor(CustomColor.color2, for: .normal)
-//        self.noAds.backgroundColor = CustomColor.color2
-//        self.replay.backgroundColor = CustomColor.color2
+        thisScoreLabel.text = ""
+        if let myColorScheme = myColorScheme {
+            switch myColorScheme {
+            case .tier1:
+                bestScoreLabel.text = "\(Global.highScores["1-1"]!)"
+            case .tier2:
+                bestScoreLabel.text = "\(Global.highScores["2-1"]!)"
+            case .tier3:
+                bestScoreLabel.text = "\(Global.highScores["3-1"]!)"
+            case .tier4:
+                bestScoreLabel.text = "\(Global.highScores["4-1"]!)"
+            case .tier5:
+                bestScoreLabel.text = "\(Global.highScores["5-1"]!)"
+            case .tier6:
+                bestScoreLabel.text = "\(Global.highScores["6-1"]!)"
+            case .tier7:
+                bestScoreLabel.text = "\(Global.highScores["7-1"]!)"
+            case .tier8:
+                bestScoreLabel.text = "\(Global.highScores["8-1"]!)"
+            case .tier9:
+                bestScoreLabel.text = "\(Global.highScores["9-1"]!)"
+            case .tier10:
+                bestScoreLabel.text = "\(Global.highScores["10-1"]!)"
+            case .tier11:
+                bestScoreLabel.text = "\(Global.highScores["11-1"]!)"
+                
+            }
         }
         
     }
-
+    
     var (dropMaze,menu,instructions,weapon,extraLife) = (ReplayButton(), MenuButton(), GameCenterButton(), SubscribeToPremiumButton(), OneMoreLife())
     
     var viewC = UIViewController()
@@ -124,39 +145,24 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         self.backgroundColor = backgroundColor
         myColorScheme = colorScheme
         dropMaze = ReplayButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 158*sh))
-     //   menu = MenuButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
+        //   menu = MenuButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
         instructions = GameCenterButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
         weapon = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 264*sh))
         weapon.addTarget(self, action: #selector(GameOverView.buyWeapons(_:)), for: .touchUpInside)
         
-  //      extraLife = OneMoreLife(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 317*sh))
+        //      extraLife = OneMoreLife(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 317*sh))
         self.addSubview(dropMaze)
-   
+        
         self.addSubview(instructions)
         self.addSubview(weapon)
-
-  
-
+        
+        
+        
         UIView.animate(withDuration: 0.4) {
             self.frame.origin.x = 0
         }
         
-        Global.delay(bySeconds: 0.7) {
-            self.extraLife.setTitle("ONE MORE LIFE  4", for: .normal)
-            Global.delay(bySeconds: 0.7) {
-                self.extraLife.setTitle("ONE MORE LIFE  3", for: .normal)
-                Global.delay(bySeconds: 0.7) {
-                    self.extraLife.setTitle("ONE MORE LIFE  2", for: .normal)
-                    Global.delay(bySeconds: 0.7) {
-                        self.extraLife.setTitle("ONE MORE LIFE  1", for: .normal)
-                        Global.delay(bySeconds: 0.7) {
-                            self.extraLife.removeFromSuperview()
-                            
-                        }
-                    }
-                }
-            }
-        }
+        
         
         let skin1Label = UILabel(frame: CGRect(x: 42*sw, y: 418*sh, width: 350*sw, height: 24*sh))
         let skin2Label = UILabel(frame: CGRect(x: 42*sw, y: 505*sh, width: 350*sw, height: 24*sh))
@@ -174,17 +180,17 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         scrollView.backgroundColor = .clear
         scrollView.showsHorizontalScrollIndicator = false
         let schemeArray: [ColorScheme] = [
-        .tier1,
-        .tier2,
-        .tier3,
-        .tier4,
-        .tier5,
-        .tier6,
-        .tier7,
-        .tier8,
-        .tier9,
-        .tier10,
-        .tier11
+            .tier1,
+            .tier2,
+            .tier3,
+            .tier4,
+            .tier5,
+            .tier6,
+            .tier7,
+            .tier8,
+            .tier9,
+            .tier10,
+            .tier11
         ]
         var count = 0
         for scheme in schemeArray {
@@ -220,7 +226,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         thisScoreLabel.textColor = buttonsColor
         thisScoreLabel.addTextSpacing(spacing: 5.23*fontSizeMultiplier)
         self.addSubview(thisScoreLabel)
-       
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

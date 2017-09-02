@@ -17,6 +17,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var currentScene = SCNScene()
     var playerNode:SCNNode?
     var foundGun = false
+    var level = ""
     // Create a new scene
     let sceneDict : [String:SCNScene] = [
         
@@ -104,14 +105,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         print("!!!!!Done!!!!!")
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
-        
+        myGameOverView.thisScoreLabel.text = "\(points)"
+        if points > Global.highScores[level]! {
+            Global.highScores[level] = points
+            UserDefaults.standard.set(points, forKey: "level")
+        }
+        myGameOverView.bestScoreLabel.text = "\(Global.highScores[level]!)"
+        if points == 10000 {
+            myGameOverView.bestScoreLabel.text = "Perfect Score!"
+        }
         UIView.animate(withDuration: 1.0) {
-            //      self.sceneView.frame.origin.x = 375*self.sw
+      
             self.myGameOverView.frame.origin.x = 0
         }
         Global.delay(bySeconds: 1.0) {
             self.sceneView.session.pause()
-            //  self.sceneView.removeFromSuperview()
+
         }
         sceneView.removeGestureRecognizer(press)
         
@@ -151,13 +160,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var maze: String = ""
     
     @objc private func play(_ button: UIButton) {
-        
-        // create the alert
-        //        let alert = UIAlertController(title: "Location", message: "Point camera forward towards a area (50 yards x 50 yards) with plenty space forward and to the left", preferredStyle: UIAlertControllerStyle.alert)
-        //
-        //        // add the actions (buttons)
-        //        let one = UIAlertAction(title: "Continue", style: UIAlertActionStyle.default) {
-        //            _ -> Void in
+  
         
         switch self.myGameOverView.myColorScheme! {
         case .tier1:
@@ -229,7 +232,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode = Player.node()
         playerNode!.position = localCamPos
         playerNode!.position.y = localCamPos.y - 1
-        
+        level = myscene
         
         currentScene = sceneDict[myscene]!
         sceneView.scene = currentScene
