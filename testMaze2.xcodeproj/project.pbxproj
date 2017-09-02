@@ -237,6 +237,7 @@
 				A96E62861F3B3FAD006620F8 /* Resources */,
 				26DCF7A8A394466F9F989A7F /* [CP] Embed Pods Frameworks */,
 				96853976B7B4AA509A367D8F /* [CP] Copy Pods Resources */,
+				A975DCEA1F5B021500B545A2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -489,6 +490,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-testMaze2Tests/Pods-testMaze2Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		A975DCEA1F5B021500B545A2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" a9cc3c114b202ec31390e423f8db307328800a9f 8999b85b5b17d0926cf3c5c45657aee0032aa33c613d4bf7779c97b9eaefdeca";
 		};
 		DE151291E0B5BEAE1CD4C6B3 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

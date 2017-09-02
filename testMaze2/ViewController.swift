@@ -16,6 +16,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var ringsFound = 0
     var currentScene = SCNScene()
     var playerNode:SCNNode?
+    var foundGun = false
     // Create a new scene
     let sceneDict : [String:SCNScene] = [
         
@@ -47,7 +48,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        Global.isWeaponsMember = true //hack
         
+        foundGun = true //hack
         press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
         
         back.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
@@ -202,7 +205,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
-    
+    var gun = SCNNode()
     var torus1 = SCNNode()
     var torus2 = SCNNode()
     var torus3 = SCNNode()
@@ -243,7 +246,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         torus8 = wrapper.childNode(withName: "torus8", recursively: false)!
         torus9 = wrapper.childNode(withName: "torus9", recursively: false)!
         torus10 = wrapper.childNode(withName: "torus10", recursively: false)!
-        
+        gun = wrapper.childNode(withName: "gun", recursively: false)!
+        if !Global.isWeaponsMember {
+            gun.removeFromParentNode()
+        }
         
         torusAll = [
             torus1,
@@ -257,10 +263,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             torus9,
             torus10
         ]
-        
-        
-        
-        
         
         // Create a session configuration
         let configuration = ARWorldTrackingSessionConfiguration()
@@ -282,8 +284,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.addSubview(invisibleCover)
         sceneView.addSubview(back)
         sceneView.addSubview(tier)
-       // invisibleCover.addSubview(ringLabel)
-       // sceneView.addSubview(collisionLabel)
+        invisibleCover.addSubview(ringLabel)
+        sceneView.addSubview(collisionLabel)
         
         let crosshairView = UIImageView()
         crosshairView.frame = self.view.bounds
@@ -303,10 +305,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             
         }
-        
-        
-        
-        
+        pickUpGun() //hack
         
     }
     let torusNames = [
@@ -324,8 +323,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var direction = SCNVector3()
     var direction2 = SCNVector3()
+    var isGunReady = true
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
         print("tap")
+        var didNotGetRing = true
         var hitTestOptions = [SCNHitTestOption: Any]()
         hitTestOptions[SCNHitTestOption.boundingBoxOnly] = true
         let results: [SCNHitTestResult] = sceneView.hitTest(gesture.location(in: view), options: hitTestOptions)
@@ -334,7 +335,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         for result in results {
             print(result.node.name!)
             if torusNames.contains(result.node.name!) {
-                
+                didNotGetRing = false
                 let n = result.node
                 for i in 0...9 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
@@ -356,7 +357,37 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     }
                     
                 }
-            } else {
+            }
+        }
+        
+        if foundGun && didNotGetRing {
+            //position gun
+            print("position gun")
+            if isGunReady {
+                isGunReady = false
+                gun.removeAllActions()
+                
+                let movePosRotationAction = SCNAction.rotateTo(x: CGFloat(-90.0.degreesToRadians), y: 0, z: 0, duration: 0.0)
+                let moveNegRotationAction = SCNAction.rotateTo(x: CGFloat(-60.0.degreesToRadians), y: 0, z: CGFloat(30.0.degreesToRadians), duration: 0.5)
+                if let rotationSequence = SCNAction.sequence([movePosRotationAction, moveNegRotationAction]) {
+                    gun.runAction(rotationSequence)
+                }
+                let movePosAction = SCNAction.moveBy(x: -0.1, y: 0.2, z: 0.2, duration: 0.0)
+                let moveNegAction = SCNAction.moveBy(x: 0.1, y: -0.2, z: -0.2, duration: 0.8)
+                if let sequence = SCNAction.sequence([movePosAction, moveNegAction]) {
+                    gun.runAction(sequence, completionHandler: {
+                        
+                        self.gun.position = SCNVector3(0.07 - 0.01,-0.25,-0.3)
+                        self.gun.eulerAngles = SCNVector3(-60.0.degreesToRadians,0,30.0.degreesToRadians)
+                        let movePosAction = SCNAction.moveBy(x: 0.02, y: 0, z: 0, duration: 0.7)
+                        let moveNegAction = SCNAction.moveBy(x: -0.02, y: 0, z: 0, duration: 0.7)
+                        let sequence = SCNAction.sequence([movePosAction, moveNegAction])
+                        self.gun.runAction(SCNAction.repeatForever(sequence!)!)
+                        self.isGunReady = true
+                    })
+                }
+                
+                
                 //fire weapon
                 
                 //                if isPlaying, playerState != nil,
@@ -419,15 +450,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
                     fireballNode.removeFromParentNode()
                 }
-               
-                //                    playerNode!.runAction(SCNAction.playAudio(Sound.fireball.source, waitForCompletion: false))
-                
-                return
-                
             }
+            //                    playerNode!.runAction(SCNAction.playAudio(Sound.fireball.source, waitForCompletion: false))
+            
+            return
             
         }
+        
     }
+    
     
     private func endGameSequence() {
         let currentHighScore = Global.highScores[maze] ?? 0
@@ -457,8 +488,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var tutorialTap = UITapGestureRecognizer()
     var tutorialSwipeRight = UISwipeGestureRecognizer()
     var tutorialSwipeLeft = UISwipeGestureRecognizer()
- @objc private func runTutorial() {
-
+    @objc private func runTutorial() {
+        
         tutorialView1.image = #imageLiteral(resourceName: "Tutorial")
         tutorialView2.image = #imageLiteral(resourceName: "Tutorial 2")
         tutorialView3.image = #imageLiteral(resourceName: "Tutorial 3")
@@ -518,17 +549,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
             }
         } else {
-        
-        UIView.animate(withDuration: 0.5) {
-            self.tutorialView.frame.origin.x -= 375*self.sw
-        }
+            
+            UIView.animate(withDuration: 0.5) {
+                self.tutorialView.frame.origin.x -= 375*self.sw
+            }
         }
         
     }
     @objc private func pageBackward(_ gesture: UIGestureRecognizer) {
         
         if tutorialView.frame.origin.x <= 100*sw {
-             return
+            return
         } else {
             
             UIView.animate(withDuration: 0.5) {
@@ -545,6 +576,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         // Pause the view's session
         sceneView.session.pause()
+    }
+    
+    private func pickUpGun() {
+        gun.removeAllActions()
+        //let carryNode = gun//Wand.wandNode()
+        gun.scale = SCNVector3(0.01,0.01,0.01)
+        gun.position = SCNVector3(0.07 - 0.01,-0.25,-0.3)
+        gun.eulerAngles = SCNVector3(-60.0.degreesToRadians,0,30.0.degreesToRadians)
+        
+        let movePosAction = SCNAction.moveBy(x: 0.02, y: 0, z: 0, duration: 0.7)
+        let moveNegAction = SCNAction.moveBy(x: -0.02, y: 0, z: 0, duration: 0.7)
+        let sequence = SCNAction.sequence([movePosAction, moveNegAction])
+        gun.runAction(SCNAction.repeatForever(sequence!)!)
+        sceneView.pointOfView?.addChildNode(gun)
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -583,6 +629,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     // MARK: - SCNPhysicsContactDelegate
+    var isFirstGunTouch = true
     var isFirstInfraction = true
     var isFirstRingTouch = true
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
@@ -600,12 +647,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             if isFirstInfraction {
                 isFirstInfraction = false
-            for i in 0...4 {
-                Global.delay(bySeconds: 0.3*Double(i)) {
-                    self.points -= 100
-                    self.ringLabel.text = "\(self.points)"
+                for i in 0...4 {
+                    Global.delay(bySeconds: 0.3*Double(i)) {
+                        self.points -= 100
+                        self.ringLabel.text = "\(self.points)"
+                    }
                 }
-            }
                 Global.delay(bySeconds: 5.0) {
                     self.isFirstInfraction = true
                 }
@@ -623,33 +670,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 Global.delay(bySeconds: 4.0) {
                     self.isFirstRingTouch = true
                 }
-            let n = contact.nodeA
-            
-            let action = SCNAction.move(to: SCNVector3(n.position.x, n.position.y + 10, n.position.z), duration: 2.0)
-            let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
-            
-            n.runAction(action)
-            n.runAction(action1)
-            
-            for i in 0...9 {
-                Global.delay(bySeconds: 0.3*Double(i)) {
-                    self.points += 100
-                    self.ringLabel.text = "\(self.points)"
-                }
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                n.removeFromParentNode()
-                if n.name! == "torus10" {
-                    self.endGameSequence()
+                let n = contact.nodeA
+                
+                let action = SCNAction.move(to: SCNVector3(n.position.x, n.position.y + 10, n.position.z), duration: 2.0)
+                let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
+                
+                n.runAction(action)
+                n.runAction(action1)
+                
+                for i in 0...9 {
+                    Global.delay(bySeconds: 0.3*Double(i)) {
+                        self.points += 100
+                        self.ringLabel.text = "\(self.points)"
+                    }
                 }
                 
-            }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    n.removeFromParentNode()
+                    if n.name! == "torus10" {
+                        self.endGameSequence()
+                    }
+                    
+                }
             }
             
         }
+        // touched gun
+        if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.weapon.rawValue) && isFirstGunTouch {
+            print("touched gun!!!")
+            isFirstGunTouch = false
+            DispatchQueue.main.async {
+                self.collisionLabel.text = "touched gun!!!"
+            }
+            foundGun = true
+            pickUpGun()
+            
+            
+            
+            
+        }
         // killed a monster
-        if contactMask == (CollisionTypes.monster.rawValue | CollisionTypes.fireball.rawValue){
+        if contactMask == (CollisionTypes.monster.rawValue | CollisionTypes.fireball.rawValue) {
             print("hit monster!!!")
             DispatchQueue.main.async {
                 self.collisionLabel.text = "hit monster!!!"
@@ -663,7 +724,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 3, asImpulse: true)
                     contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
                     Global.delay(bySeconds: 3.0) {
-                    contact.nodeA.removeFromParentNode()
+                        contact.nodeA.removeFromParentNode()
                     }
                 }
                 if nameB == "goblin" {
@@ -672,7 +733,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 10, asImpulse: true)
                     contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
                     Global.delay(bySeconds: 3.0) {
-                    contact.nodeB.removeFromParentNode()
+                        contact.nodeB.removeFromParentNode()
                     }
                 }
             }

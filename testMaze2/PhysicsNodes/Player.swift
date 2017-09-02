@@ -19,7 +19,7 @@ class Player {
         node.physicsBody = SCNPhysicsBody(type: .kinematic, shape: SCNPhysicsShape(geometry: SCNCylinder(radius: RADIUS, height: HEIGHT), options: nil))
         node.physicsBody!.categoryBitMask = CollisionTypes.player.rawValue
         node.physicsBody!.collisionBitMask = 0
-        node.physicsBody!.contactTestBitMask = CollisionTypes.coin.rawValue|CollisionTypes.monster.rawValue|CollisionTypes.fence.rawValue
+        node.physicsBody!.contactTestBitMask = CollisionTypes.coin.rawValue|CollisionTypes.monster.rawValue|CollisionTypes.fence.rawValue|CollisionTypes.weapon.rawValue
         return node
     }
 }

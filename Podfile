@@ -8,6 +8,8 @@ target 'testMaze2' do
   # Pods for testMaze2
 
     pod 'SwiftyStoreKit'
+    pod 'Fabric'
+    pod 'Crashlytics'
 
   target 'testMaze2Tests' do
     inherit! :search_paths
