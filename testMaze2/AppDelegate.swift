@@ -51,7 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         for items in mazes {
         Global.highScores[items] = UserDefaults.standard.integer(forKey: items)
         }
-        
+        print("highscores dictionary: \(Global.highScores)")
         if UserDefaults.standard.bool(forKey: "isWeaponsMember") {
             Global.isWeaponsMember = true
         }

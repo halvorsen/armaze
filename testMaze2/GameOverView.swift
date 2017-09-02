@@ -14,12 +14,12 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     
     @objc private func buyWeapons(_ button: UIButton) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "Weapon", message: "Unlock weapon $0.99", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Shoot Obstacles", message: "Unlock weapons $0.99", preferredStyle: .alert)
 
         // Create the actions
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
             UIAlertAction in
-            self.purchaseColorThemes()
+            self.purchaseWeapons()
 
         }
         let restoreAction = UIAlertAction(title: "Restore Purchase", style: UIAlertActionStyle.default) {
@@ -53,10 +53,11 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         viewC.present(alertController, animated: true, completion: nil)
     }
     
-    private func purchaseColorThemes(productId: String = "ARMaze.iap.weapon") {
+    private func purchaseWeapons(productId: String = "99Mazes.iap.unlockWeapons") {
        
         activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityView.center = self.center
+        //Fix it iOS 11 moving purchase interaction to bottom of screen. Maybe move our activity view?
         activityView.startAnimating()
         activityView.alpha = 0.0
         self.addSubview(activityView)

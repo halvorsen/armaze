@@ -19,17 +19,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     // Create a new scene
     let sceneDict : [String:SCNScene] = [
         
-        "maze1":SCNScene(named: "art.scnassets/maze1.scn")!,
-        "maze2":SCNScene(named: "art.scnassets/maze2.scn")!,
-        "maze3":SCNScene(named: "art.scnassets/maze3.scn")!,
-        "maze4":SCNScene(named: "art.scnassets/maze4.scn")!,
-        "maze5":SCNScene(named: "art.scnassets/maze5.scn")!,
-        "maze6":SCNScene(named: "art.scnassets/maze6.scn")!,
-        "maze7":SCNScene(named: "art.scnassets/maze7.scn")!,
-        "maze8":SCNScene(named: "art.scnassets/maze8.scn")!,
-        "maze9":SCNScene(named: "art.scnassets/maze9.scn")!,
-        "maze10":SCNScene(named: "art.scnassets/maze10.scn")!,
-        "maze11":SCNScene(named: "art.scnassets/maze11.scn")!
+        "1-1":SCNScene(named: "art.scnassets/1-1.scn")!,
+        "2-1":SCNScene(named: "art.scnassets/2-1.scn")!,
+        "3-1":SCNScene(named: "art.scnassets/3-1.scn")!,
+        "4-1":SCNScene(named: "art.scnassets/4-1.scn")!,
+        "5-1":SCNScene(named: "art.scnassets/5-1.scn")!,
+        "6-1":SCNScene(named: "art.scnassets/6-1.scn")!,
+        "7-1":SCNScene(named: "art.scnassets/7-1.scn")!,
+        "8-1":SCNScene(named: "art.scnassets/8-1.scn")!,
+        "9-1":SCNScene(named: "art.scnassets/9-1.scn")!,
+        "10-1":SCNScene(named: "art.scnassets/10-1.scn")!,
+        "11-1":SCNScene(named: "art.scnassets/11-1.scn")!
         
     ]
     let invisibleCover = UIView()
@@ -158,27 +158,27 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         switch self.myGameOverView.myColorScheme! {
         case .tier1:
-            maze = "maze1"
+            maze = "1-1"
         case .tier2:
-            maze = "maze2"
+            maze = "2-1"
         case .tier3:
-            maze = "maze3"
+            maze = "3-1"
         case .tier4:
-            maze = "maze4"
+            maze = "4-1"
         case .tier5:
-            maze = "maze5"
+            maze = "5-1"
         case .tier6:
-            maze = "maze6"
+            maze = "6-1"
         case .tier7:
-            maze = "maze7"
+            maze = "7-1"
         case .tier8:
-            maze = "maze8"
+            maze = "8-1"
         case .tier9:
-            maze = "maze9"
+            maze = "9-1"
         case .tier10:
-            maze = "maze10"
+            maze = "10-1"
         case .tier11:
-            maze = "maze11"
+            maze = "11-1"
             
         }
         
@@ -282,13 +282,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.addSubview(invisibleCover)
         sceneView.addSubview(back)
         sceneView.addSubview(tier)
-        invisibleCover.addSubview(ringLabel)
-        sceneView.addSubview(collisionLabel)
+       // invisibleCover.addSubview(ringLabel)
+       // sceneView.addSubview(collisionLabel)
         
         let crosshairView = UIImageView()
         crosshairView.frame = self.view.bounds
         crosshairView.image = #imageLiteral(resourceName: "crosshair")
-        sceneView.addSubview(crosshairView)
+        //sceneView.addSubview(crosshairView)
         crosshairView.alpha = 0.2
         
         Global.delay(bySeconds: 3.0) {
