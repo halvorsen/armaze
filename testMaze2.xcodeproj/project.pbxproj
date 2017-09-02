@@ -61,7 +61,6 @@
 		A0F29C4DDF7DA5F96153ABD5 /* Pods-testMaze2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testMaze2Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-testMaze2Tests/Pods-testMaze2Tests.release.xcconfig"; sourceTree = "<group>"; };
 		A933B23A1F598E330096F5EA /* monster.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = monster.dae; sourceTree = "<group>"; };
 		A933B23B1F598E400096F5EA /* gun.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = gun.dae; sourceTree = "<group>"; };
-		A933B23C1F598E500096F5EA /* ball.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = ball.dae; sourceTree = "<group>"; };
 		A96E62881F3B3FAD006620F8 /* testMaze2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testMaze2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96E628B1F3B3FAD006620F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A96E628D1F3B3FAD006620F8 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -178,7 +177,6 @@
 				A99F62BE1F3D68B100DD6027 /* Global.swift */,
 				A99F62BC1F3D68B100DD6027 /* MenuButtons.swift */,
 				A99F62BD1F3D68B100DD6027 /* UIProtocolExtentions.swift */,
-				A933B23C1F598E500096F5EA /* ball.dae */,
 				A933B23A1F598E330096F5EA /* monster.dae */,
 				A933B23B1F598E400096F5EA /* gun.dae */,
 				A96E628D1F3B3FAD006620F8 /* art.scnassets */,

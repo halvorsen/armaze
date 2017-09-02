@@ -364,8 +364,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 //                    !wandIsRecharging {
                 // spawn fireballs!
                 let pov = sceneView.pointOfView!
+                let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
                 let fireballNode = Fireball.node()
-                //    fireballNode.position = SCNVector3Make(0,0,-2)
+                
                 fireballNode.opacity = 0.0
                 Global.delay(bySeconds: 0.02) {
                     fireballNode.opacity = 1.0
@@ -411,12 +412,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 }
                 
                 fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY, asImpulse: true)
+                fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 0.8), asImpulse: true)
                 n.removeFromParentNode()
                 
                 fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
                     fireballNode.removeFromParentNode()
                 }
-                
+               
                 //                    playerNode!.runAction(SCNAction.playAudio(Sound.fireball.source, waitForCompletion: false))
                 
                 return
