@@ -104,27 +104,27 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         if let myColorScheme = myColorScheme {
             switch myColorScheme {
             case .tier1:
-                bestScoreLabel.text = "\(Global.highScores["1-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["1-1"]!)"
             case .tier2:
-                bestScoreLabel.text = "\(Global.highScores["2-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["2-1"]!)"
             case .tier3:
-                bestScoreLabel.text = "\(Global.highScores["3-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["3-1"]!)"
             case .tier4:
-                bestScoreLabel.text = "\(Global.highScores["4-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["4-1"]!)"
             case .tier5:
-                bestScoreLabel.text = "\(Global.highScores["5-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["5-1"]!)"
             case .tier6:
-                bestScoreLabel.text = "\(Global.highScores["6-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["6-1"]!)"
             case .tier7:
-                bestScoreLabel.text = "\(Global.highScores["7-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["7-1"]!)"
             case .tier8:
-                bestScoreLabel.text = "\(Global.highScores["8-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["8-1"]!)"
             case .tier9:
-                bestScoreLabel.text = "\(Global.highScores["9-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["9-1"]!)"
             case .tier10:
-                bestScoreLabel.text = "\(Global.highScores["10-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["10-1"]!)"
             case .tier11:
-                bestScoreLabel.text = "\(Global.highScores["11-1"]!)"
+                bestScoreLabel.text = "BEST \(Global.highScores["11-1"]!)"
                 
             }
         }

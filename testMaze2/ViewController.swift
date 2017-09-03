@@ -18,6 +18,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var playerNode:SCNNode?
     var foundGun = false
     var level = ""
+    let crosshairView = UIImageView()
+    var gunPosition = [SCNVector3]()
     // Create a new scene
     let sceneDict : [String:SCNScene] = [
         
@@ -42,17 +44,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let collisionLabel = UILabel()
     let location = UILabel()
     @IBOutlet var sceneView: ARSCNView!
-    
+    //var sceneView = ARSCNView()
     override var prefersStatusBarHidden: Bool {
         return true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         Global.isWeaponsMember = true //hack
         
         foundGun = true //hack
-        press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
+        
         
         back.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
         back.text = "FORCE TOUCH TO CLOSE"
@@ -60,7 +63,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         back.backgroundColor = .black
         back.textColor = .white
         back.textAlignment = .center
-        //   back.addTarget(self, action: #selector(ViewController.backFunc(_:)), for: .touchUpInside)
         tier.frame = CGRect(x: 115*sw, y: 27*sh, width: 127*sw, height: 30*sh)
         tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
         tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
@@ -74,9 +76,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.isUserInteractionEnabled = false
         
         ringLabel.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 100*sh)
-        ringLabel.text = ""
+        ringLabel.frame.origin.y = sh*100
+        ringLabel.text = "Analyzing - Pan Camera Down & Around"
+        ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 14)
         ringLabel.textAlignment = .center
-        ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
+        
         ringLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
         
         collisionLabel.frame = CGRect(x: 0, y: 550, width: 375*sw, height: 100*sh)
@@ -87,22 +91,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         
         sceneView.delegate = self
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
-        
-        // Set the scene to the view
+       
         
     }
     
     var myGameOverView = GameOverView()
-    //let myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: .black, colorScheme: .red, vc: self)
-    
+    var isFirstBackFunc = true
     @objc private func backFunc(_ button: UIButton) {
+        if isFirstBackFunc {
+            isFirstBackFunc = false
+            print("exit4")
         backToVC()
+        }
     }
     
     private func backToVC() {
         print("!!!!!Done!!!!!")
+        dropGun()
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
         myGameOverView.thisScoreLabel.text = "\(points)"
@@ -110,7 +115,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             Global.highScores[level] = points
             UserDefaults.standard.set(points, forKey: "level")
         }
-        myGameOverView.bestScoreLabel.text = "\(Global.highScores[level]!)"
+        myGameOverView.bestScoreLabel.text = "BEST \(Global.highScores[level]!)"
         if points == 10000 {
             myGameOverView.bestScoreLabel.text = "Perfect Score!"
         }
@@ -119,20 +124,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.myGameOverView.frame.origin.x = 0
         }
         Global.delay(bySeconds: 1.0) {
+            print("exit2")
             self.sceneView.session.pause()
+            self.isFirstBackFunc = true
 
         }
         sceneView.removeGestureRecognizer(press)
         
     }
-    //   var mycount = 0
+ 
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
         if let camPos = sceneView.pointOfView?.position {
-            // let camPos = sceneView.scene.rootNode.convertPosition(rawCamPos, to: level.container)
+            
             guard playerNode != nil else {return}
-            // print("player node is not nil \(mycount)")
-            //    mycount += 1
+        
             playerNode!.position.x = camPos.x
             playerNode!.position.z = camPos.z
             playerNode!.position.y = camPos.y - 1
@@ -140,22 +146,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         
     }
-    
-    
-    
-    
-    
-    //    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-    //
-    //                wrapper.position = SCNVector3Make(node.position.x, node.position.x, node.position.x)
-    //
-    //
-    //
-    //    }
-    //
-    //    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-    //        wrapper.position = SCNVector3Make(node.position.x, node.position.x, node.position.x)
-    //    }
+
     
     var maze: String = ""
     
@@ -192,22 +183,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         self.startScene(myscene: maze)
         sceneView.scene.physicsWorld.contactDelegate = self
-        
-        //            }
-        
-        //        alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-        //
-        //        alert.addAction(one)
-        //        // show the alert
-        //        self.present(alert, animated: true, completion: nil)
-        
-        
-        
-        
-        
-        
+  
     }
     
+    var light = SCNNode()
     var gun = SCNNode()
     var torus1 = SCNNode()
     var torus2 = SCNNode()
@@ -223,10 +202,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var wrapper = SCNNode()
     private func startScene(myscene: String) {
-        
+        press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
+        sceneView.addGestureRecognizer(press)
+        back.alpha = 1.0
+        tier.alpha = 1.0
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         sceneView.addGestureRecognizer(tap)
-        sceneView.addGestureRecognizer(press)
+        
         let localCamPos = sceneView.scene.rootNode.position
         playerNode?.removeFromParentNode()
         playerNode = Player.node()
@@ -237,7 +219,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         currentScene = sceneDict[myscene]!
         sceneView.scene = currentScene
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
-        wrapper.position = SCNVector3Make(0, 0, 0)
+        light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
+        wrapper.position = sceneView.pointOfView!.position //SCNVector3Make(0, 0, 0)
         wrapper.addChildNode(playerNode!)
         torus1 = wrapper.childNode(withName: "torus1", recursively: false)!
         torus2 = wrapper.childNode(withName: "torus2", recursively: false)!
@@ -250,6 +233,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         torus9 = wrapper.childNode(withName: "torus9", recursively: false)!
         torus10 = wrapper.childNode(withName: "torus10", recursively: false)!
         gun = wrapper.childNode(withName: "gun", recursively: false)!
+        gunPosition.append(gun.scale)
+        gunPosition.append(gun.position)
+        gunPosition.append(gun.eulerAngles)
+        print("gunPosition")
+        print(gunPosition)
         if !Global.isWeaponsMember {
             gun.removeFromParentNode()
         }
@@ -290,25 +278,40 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         sceneView.addSubview(collisionLabel)
         
-        let crosshairView = UIImageView()
+        
         crosshairView.frame = self.view.bounds
         crosshairView.image = #imageLiteral(resourceName: "crosshair")
-        //sceneView.addSubview(crosshairView)
-        crosshairView.alpha = 0.2
+        sceneView.addSubview(crosshairView)
         
-        Global.delay(bySeconds: 3.0) {
+        crosshairView.alpha = 0.0
+        
+        Global.delay(bySeconds: 5.0) {
             
-            UIView.animate(withDuration: 0.5){
+            UIView.animate(withDuration: 0.5) {
                 self.back.alpha = 0.0
                 self.tier.alpha = 0.0
             }
-            Global.delay(bySeconds: 0.5) {
-                self.back.removeFromSuperview()
-                self.tier.removeFromSuperview()
-            }
+            
             
         }
         pickUpGun() //hack
+        
+        print("level: \(level)")
+        if level == "1-1" {
+            Global.delay(bySeconds: 10.0) {
+                print("fade")
+                self.ringLabel.text = ""
+                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
+                
+            }
+        } else {
+            Global.delay(bySeconds: 5.0) {
+                print("fade2")
+                self.ringLabel.text = ""
+                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
+                
+            }
+        }
         
     }
     let torusNames = [
@@ -365,17 +368,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         if foundGun && didNotGetRing {
             //position gun
-            print("position gun")
+            
             if isGunReady {
                 isGunReady = false
                 gun.removeAllActions()
-                
-                let movePosRotationAction = SCNAction.rotateTo(x: CGFloat(-90.0.degreesToRadians), y: 0, z: 0, duration: 0.0)
+                crosshairView.alpha = 0.2
+                Global.delay(bySeconds: 0.2, closure: {self.crosshairView.alpha = 0.0})
+                let movePosRotationAction = SCNAction.rotateTo(x: CGFloat(-90.0.degreesToRadians), y: 0, z: 0, duration: 0.2)
                 let moveNegRotationAction = SCNAction.rotateTo(x: CGFloat(-60.0.degreesToRadians), y: 0, z: CGFloat(30.0.degreesToRadians), duration: 0.5)
                 if let rotationSequence = SCNAction.sequence([movePosRotationAction, moveNegRotationAction]) {
                     gun.runAction(rotationSequence)
                 }
-                let movePosAction = SCNAction.moveBy(x: -0.1, y: 0.2, z: 0.2, duration: 0.0)
+                let movePosAction = SCNAction.moveBy(x: -0.1, y: 0.2, z: 0.2, duration: 0.2)
                 let moveNegAction = SCNAction.moveBy(x: 0.1, y: -0.2, z: -0.2, duration: 0.8)
                 if let sequence = SCNAction.sequence([movePosAction, moveNegAction]) {
                     gun.runAction(sequence, completionHandler: {
@@ -389,85 +393,76 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                         self.isGunReady = true
                     })
                 }
-                
-                
-                //fire weapon
-                
-                //                if isPlaying, playerState != nil,
-                //                    let pickup = playerState.pickup,
-                //                    case .fireballPowerUp = pickup,
-                //                    !wandIsRecharging {
-                // spawn fireballs!
-                let pov = sceneView.pointOfView!
-                let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
-                let fireballNode = Fireball.node()
-                fireballNode.name = "beachBall"
-                fireballNode.opacity = 0.0
-                Global.delay(bySeconds: 0.02) {
-                    fireballNode.opacity = 1.0
+               
+                Global.delay(bySeconds: 0.2) {
+                    self.fireBeachBall()
                 }
-                fireballNode.position = playerNode!.position
-                //fireballNode.position.z -= 3
-                //level!.container.addChildNode(fireballNode)
-                
-                self.sceneView.scene.rootNode.addChildNode(fireballNode)
-                
-                // we need camera direction vector
-                // https://developer.apple.com/videos/play/wwdc2017/602/
-                let currentFrame = sceneView.session.currentFrame!
-                
-                let n = SCNNode()
-                sceneView.scene.rootNode.addChildNode(n)
-                
-                var closeTranslation = matrix_identity_float4x4
-                closeTranslation.columns.3.z = -0.5
-                
-                var translation = matrix_identity_float4x4
-                translation.columns.3.z = -1.5
-                
-                n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
-                fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
-                n.simdTransform = matrix_multiply(pov.simdTransform, translation)
-                
-                direction = (n.position - fireballNode.position).normalized
-                direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
-                // fireball should come FROM THE TIP of the wand!
-                if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
-                    let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
-                    // all we need to do is to give the fireballNode the right starting position!!
-                    // use same direction vector
-                    
-                    //   wandIsRecharging = true
-                    wandNode.position.z = -0.2
-                    wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
-                    tipNode.scale = SCNVector3(0,0,0)
-                    //                        tipNode.runAction(SCNAction.scale(to: 1, duration: Wand.RECHARGE_TIME)) {
-                    //                            self.wandIsRecharging = false
-                    //                        }
-                }
-                
-                fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 500, asImpulse: true)
-                fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
-                n.removeFromParentNode()
-                
-                fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
-                    fireballNode.removeFromParentNode()
-                }
+               
             }
-            //                    playerNode!.runAction(SCNAction.playAudio(Sound.fireball.source, waitForCompletion: false))
             
-            return
+            
             
         }
         
     }
     
+    private func fireBeachBall() {
+        
+            
+            let pov = sceneView.pointOfView!
+            let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
+            let fireballNode = Fireball.node()
+            fireballNode.name = "beachBall"
+            fireballNode.opacity = 0.0
+            Global.delay(bySeconds: 0.02) {
+                fireballNode.opacity = 1.0
+            }
+            fireballNode.position = playerNode!.position
+            
+            self.sceneView.scene.rootNode.addChildNode(fireballNode)
+            
+            let currentFrame = sceneView.session.currentFrame!
+            
+            let n = SCNNode()
+            sceneView.scene.rootNode.addChildNode(n)
+            
+            var closeTranslation = matrix_identity_float4x4
+            closeTranslation.columns.3.z = -0.5
+            
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -1.5
+            
+            n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
+            fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
+            n.simdTransform = matrix_multiply(pov.simdTransform, translation)
+            
+            direction = (n.position - fireballNode.position).normalized
+            direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
+            
+            if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
+                let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
+                
+                wandNode.position.z = -0.2
+                wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
+                tipNode.scale = SCNVector3(0,0,0)
+            }
+            
+            fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 500, asImpulse: true)
+            fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
+            n.removeFromParentNode()
+            
+            fireballNode.runAction(SCNAction.wait(duration: Fireball.TTL)) {
+                fireballNode.removeFromParentNode()
+            }
+        
+    }
     
     private func endGameSequence() {
         let currentHighScore = Global.highScores[maze] ?? 0
         if points > currentHighScore {
             Global.highScores[maze] = points
         }
+        print("exit3")
         backToVC()
     }
     
@@ -578,6 +573,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         super.viewWillDisappear(animated)
         
         // Pause the view's session
+        print("exit1")
         sceneView.session.pause()
     }
     
@@ -594,6 +590,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         gun.runAction(SCNAction.repeatForever(sequence!)!)
         sceneView.pointOfView?.addChildNode(gun)
         
+    }
+    
+    private func dropGun() {
+        gun.removeAllActions()
+        wrapper.addChildNode(gun)
+        print("gunposition again")
+        print(gunPosition)
+        gun.scale = gunPosition[0]
+        gun.position = gunPosition[1]
+        gun.eulerAngles = gunPosition[2]
+        gunPosition.removeAll()
     }
     
     override func didReceiveMemoryWarning() {
