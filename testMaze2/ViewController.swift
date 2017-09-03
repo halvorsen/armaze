@@ -159,6 +159,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                    // goblin.runAction(actionRotate)
                 }
             }
+        case "6-1":
+            //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
+            let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
+            let vectMag = Double(vect.magnitude)
+            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
+            if camPos.x < -5.0 {
+                
+                if chasingGoblins.count > 0 {
+                    chasingGoblins[0].runAction(actionChase)
+                }
+                if chasingGoblins.count > 1 {
+                    chasingGoblins[1].runAction(actionChase)
+                }
+                
+            }
         default:
             break
         }
@@ -240,6 +255,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         currentScene = sceneDict[myscene]!
         sceneView.scene = currentScene
+        //sceneView.present(currentScene, with: .fade(withDuration: 0.0), incomingPointOfView: nil, completionHandler: {})
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
         wrapper.position = sceneView.pointOfView!.position //SCNVector3Make(0, 0, 0)
@@ -341,6 +357,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3 ]
+            timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
+                guard let camPos = self.sceneView.pointOfView?.position else {return}
+                for goblin in self.chasingGoblins {
+                    
+                    goblin.look(at: SCNVector3(CGFloat(camPos.x - goblin.position.x), 0.0,CGFloat(camPos.z - goblin.position.z)))
+                    
+                }
+            })
+            
+        case "6-1":
+            let goblinChase1 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
+            let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
+            let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
+            let goblinChase4 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
+            let goblinChase5 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
+            let goblinChase6 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
+            chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3, goblinChase4, goblinChase5, goblinChase6 ]
             timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
                 guard let camPos = self.sceneView.pointOfView?.position else {return}
                 for goblin in self.chasingGoblins {
@@ -804,11 +837,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             //removeMonster
             if let nameA = contact.nodeA.name,
                 let nameB = contact.nodeB.name {
-                if nameA == "cone" {
-                    contact.nodeA.removeFromParentNode()
+                if nameA == "goblin" {
+                    print("goblin")
+                    if chasingGoblins.contains(contact.nodeA) {
+                        chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeA)!)
+                    }
+                    contact.nodeA.removeAllActions()
+                    contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 3, asImpulse: true)
+                    contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
+                    Global.delay(bySeconds: 3.0) {
+                        contact.nodeA.removeFromParentNode()
+                    }
                 }
-                if nameB == "cone" {
-                    contact.nodeB.removeFromParentNode()
+                if nameB == "goblin" {
+                    print("goblin")
+                    if chasingGoblins.contains(contact.nodeB) {
+                        chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeB)!)
+                    }
+                    contact.nodeB.removeAllActions()
+                    contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 10, asImpulse: true)
+                    contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
+                    Global.delay(bySeconds: 3.0) {
+                        contact.nodeB.removeFromParentNode()
+                    }
                 }
             }
             
