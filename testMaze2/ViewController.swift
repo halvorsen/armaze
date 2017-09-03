@@ -105,6 +105,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func backToVC() {
         print("!!!!!Done!!!!!")
+        timer1.invalidate()
         chasingGoblins.removeAll()
         dropGun()
         isFirstGunTouch = true
@@ -145,15 +146,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
         switch level {
         case "2-1":
-            let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
-         
-            if camPos.x < -22.2 || true { //hack
+          //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
+            let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
+            let vectMag = Double(vect.magnitude)
+            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
+            if camPos.x < -22.2 {
                 
                 for goblin in chasingGoblins {
-                    let actionRotate = SCNAction.rotateTo(x: CGFloat(camPos.x - goblin.position.x), y: 0, z: CGFloat(camPos.z - goblin.position.z), duration: 0.0)
-                 
+                  //  let actionRotate = SCNAction.rotateTo(x: CGFloat(camPos.x - goblin.position.x), y: 0, z: CGFloat(camPos.z - goblin.position.z), duration: 0.0)
+                  // goblin.look(at: SCNVector3(CGFloat(camPos.x - goblin.position.x), 0.0,CGFloat(camPos.z - goblin.position.z)))
                     goblin.runAction(actionChase)
-                    goblin.runAction(actionRotate)
+                   // goblin.runAction(actionRotate)
                 }
             }
         default:
@@ -164,7 +167,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
     
     var maze: String = ""
-    
+    let goblinSpeed : Double = 5.0
     @objc private func play(_ button: UIButton) {
   
         
@@ -338,11 +341,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3 ]
+            timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
+                guard let camPos = self.sceneView.pointOfView?.position else {return}
+                for goblin in self.chasingGoblins {
+                    
+                    goblin.look(at: SCNVector3(CGFloat(camPos.x - goblin.position.x), 0.0,CGFloat(camPos.z - goblin.position.z)))
+                    
+                }
+            })
         default:
             break
         }
         
     }
+    var timer1 = Timer()
     let torusNames = [
         "torus1",
         "torus2",
@@ -745,6 +757,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 let nameB = contact.nodeB.name {
                 if nameA == "goblin" {
                     print("goblin")
+                    if chasingGoblins.contains(contact.nodeA) {
+                        chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeA)!)
+                    }
                     contact.nodeA.removeAllActions()
                     contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 3, asImpulse: true)
                     contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
@@ -754,6 +769,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 }
                 if nameB == "goblin" {
                     print("goblin")
+                    if chasingGoblins.contains(contact.nodeB) {
+                        chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeB)!)
+                    }
                     contact.nodeB.removeAllActions()
                     contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 10, asImpulse: true)
                     contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
