@@ -16,11 +16,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var ringsFound = 0
     var currentScene = SCNScene()
     var playerNode:SCNNode?
+    var chasingGoblins = [SCNNode]()
     var foundGun = false
     var level = ""
     let crosshairView = UIImageView()
     var gunPosition = [SCNVector3]()
-    // Create a new scene
+  
     let sceneDict : [String:SCNScene] = [
         
         "1-1":SCNScene(named: "art.scnassets/1-1.scn")!,
@@ -89,10 +90,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         collisionLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
         collisionLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
         
-        
         sceneView.delegate = self
-       
-        
     }
     
     var myGameOverView = GameOverView()
@@ -107,7 +105,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func backToVC() {
         print("!!!!!Done!!!!!")
+        chasingGoblins.removeAll()
         dropGun()
+        isFirstGunTouch = true
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
         myGameOverView.thisScoreLabel.text = "\(points)"
@@ -135,14 +135,29 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
  
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
-        if let camPos = sceneView.pointOfView?.position {
+        guard let camPos = sceneView.pointOfView?.position else {return}
             
-            guard playerNode != nil else {return}
+        guard playerNode != nil else {return}
         
             playerNode!.position.x = camPos.x
             playerNode!.position.z = camPos.z
             playerNode!.position.y = camPos.y - 1
-            
+
+        switch level {
+        case "2-1":
+            let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
+         
+            if camPos.x < -22.2 || true { //hack
+                
+                for goblin in chasingGoblins {
+                    let actionRotate = SCNAction.rotateTo(x: CGFloat(camPos.x - goblin.position.x), y: 0, z: CGFloat(camPos.z - goblin.position.z), duration: 0.0)
+                 
+                    goblin.runAction(actionChase)
+                    goblin.runAction(actionRotate)
+                }
+            }
+        default:
+            break
         }
         
     }
@@ -202,6 +217,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var wrapper = SCNNode()
     private func startScene(myscene: String) {
+        
+        
+        
+        
         press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
         sceneView.addGestureRecognizer(press)
         back.alpha = 1.0
@@ -311,6 +330,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
                 
             }
+        }
+        
+        switch level {
+        case "2-1":
+            let goblinChase1 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
+            let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
+            let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
+            chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3 ]
+        default:
+            break
         }
         
     }
@@ -607,21 +636,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
     }
-    
-    // MARK: - ARSCNViewDelegate
-    
-    /*
-     // Override to create and configure nodes for anchors added to the view's session.
-     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-     let node = SCNNode()
-     
-     return node
-     }
-     */
-    
-    //    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-    //        let cameraPosition = sceneView.pointOfView?.position
-    //    }
+   
     
     func session(_ session: ARSession, didFailWithError error: Error) {
         // Present an error message to the user
@@ -638,7 +653,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
-    // MARK: - SCNPhysicsContactDelegate
+    
     var isFirstGunTouch = true
     var isFirstInfraction = true
     var isFirstRingTouch = true
