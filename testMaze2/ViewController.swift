@@ -55,7 +55,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
         Global.isWeaponsMember = true //hack
         
-        foundGun = true //hack
+        //foundGun = true //hack
         
         
         back.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
@@ -174,6 +174,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 }
                 
             }
+        case "8-1","10-1","11-1":
+            //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
+            let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
+            let vectMag = Double(vect.magnitude)
+            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
+            if camPos.x < -5.0 {
+                
+                for goblin in chasingGoblins {
+                    goblin.runAction(actionChase)
+                }
+               
+                
+            }
         default:
             break
         }
@@ -235,10 +248,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var wrapper = SCNNode()
     private func startScene(myscene: String) {
-        
-        
-        
-        
+ 
         press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
         sceneView.addGestureRecognizer(press)
         back.alpha = 1.0
@@ -254,8 +264,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         level = myscene
         
         currentScene = sceneDict[myscene]!
-        sceneView.scene = currentScene
-        //sceneView.present(currentScene, with: .fade(withDuration: 0.0), incomingPointOfView: nil, completionHandler: {})
+     //   sceneView.scene = currentScene
+        sceneView.present(currentScene, with: .fade(withDuration: 0.0), incomingPointOfView: nil, completionHandler: {self.sceneSetup()})
+        
+    }
+    
+    private func sceneSetup() {
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
         wrapper.position = sceneView.pointOfView!.position //SCNVector3Make(0, 0, 0)
@@ -366,7 +380,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 }
             })
             
-        case "6-1":
+        case "6-1","8-1","10-1","11-1":
             let goblinChase1 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
             let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
@@ -387,6 +401,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         
     }
+    
     var timer1 = Timer()
     let torusNames = [
         "torus1",
