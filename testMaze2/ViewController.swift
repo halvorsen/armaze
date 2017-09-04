@@ -22,21 +22,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let crosshairView = UIImageView()
     var gunPosition = [SCNVector3]()
   
-    let sceneDict : [String:SCNScene] = [
-        
-        "1-1":SCNScene(named: "art.scnassets/1-1.scn")!,
-        "2-1":SCNScene(named: "art.scnassets/2-1.scn")!,
-        "3-1":SCNScene(named: "art.scnassets/3-1.scn")!,
-        "4-1":SCNScene(named: "art.scnassets/4-1.scn")!,
-        "5-1":SCNScene(named: "art.scnassets/5-1.scn")!,
-        "6-1":SCNScene(named: "art.scnassets/6-1.scn")!,
-        "7-1":SCNScene(named: "art.scnassets/7-1.scn")!,
-        "8-1":SCNScene(named: "art.scnassets/8-1.scn")!,
-        "9-1":SCNScene(named: "art.scnassets/9-1.scn")!,
-        "10-1":SCNScene(named: "art.scnassets/10-1.scn")!,
-        "11-1":SCNScene(named: "art.scnassets/11-1.scn")!
-        
-    ]
+    
     let invisibleCover = UIView()
     let ringLabel = UILabel()
     var points = 0
@@ -120,6 +106,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         if points == 10000 {
             myGameOverView.bestScoreLabel.text = "Perfect Score!"
         }
+        points = 0
         UIView.animate(withDuration: 1.0) {
       
             self.myGameOverView.frame.origin.x = 0
@@ -179,14 +166,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
             let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
-            if camPos.x < -5.0 {
+           
                 
                 for goblin in chasingGoblins {
                     goblin.runAction(actionChase)
                 }
                
                 
-            }
+            
         default:
             break
         }
@@ -195,10 +182,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
     
     var maze: String = ""
-    let goblinSpeed : Double = 5.0
+    let goblinSpeed : Double = 0.5
     @objc private func play(_ button: UIButton) {
   
-        
+        tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
         switch self.myGameOverView.myColorScheme! {
         case .tier1:
             maze = "1-1"
@@ -225,7 +212,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
         }
         
-        self.currentScene = self.sceneDict[maze]!
+        
+     //   self.currentScene = self.sceneDict[maze]!
         
         self.startScene(myscene: maze)
         sceneView.scene.physicsWorld.contactDelegate = self
@@ -254,7 +242,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         back.alpha = 1.0
         tier.alpha = 1.0
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
-        sceneView.addGestureRecognizer(tap)
+        
         
         let localCamPos = sceneView.scene.rootNode.position
         playerNode?.removeFromParentNode()
@@ -263,10 +251,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode!.position.y = localCamPos.y - 1
         level = myscene
         
-        currentScene = sceneDict[myscene]!
-     //   sceneView.scene = currentScene
-        sceneView.present(currentScene, with: .fade(withDuration: 0.0), incomingPointOfView: nil, completionHandler: {self.sceneSetup()})
-        
+        currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
+
+        sceneView.scene = currentScene
+  
+        sceneSetup()
     }
     
     private func sceneSetup() {
@@ -346,7 +335,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
             
         }
-        pickUpGun() //hack
+       // pickUpGun() //hack
         
         print("level: \(level)")
         if level == "1-1" {
@@ -384,9 +373,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase1 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
             let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
-            let goblinChase4 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
-            let goblinChase5 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
-            let goblinChase6 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
+            let goblinChase4 = wrapper.childNode(withName: "monsterChase4", recursively: false)!
+            let goblinChase5 = wrapper.childNode(withName: "monsterChase5", recursively: false)!
+            let goblinChase6 = wrapper.childNode(withName: "monsterChase6", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3, goblinChase4, goblinChase5, goblinChase6 ]
             timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
                 guard let camPos = self.sceneView.pointOfView?.position else {return}
@@ -399,7 +388,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         default:
             break
         }
-        
+        sceneView.addGestureRecognizer(tap)
     }
     
     var timer1 = Timer()
@@ -770,7 +759,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     }
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
                     n.removeFromParentNode()
                     if n.name! == "torus10" {
                         self.endGameSequence()
