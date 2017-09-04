@@ -93,6 +93,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func backToVC() {
         print("!!!!!Done!!!!!")
+        foundGun = false
         timer1.invalidate()
         chasingGoblins.removeAll()
         dropGun()
@@ -109,13 +110,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             myGameOverView.bestScoreLabel.text = "Perfect Score!"
         }
         points = 0
+        ringLabel.text = "Analyzing - Pan Camera Down & Around"
         UIView.animate(withDuration: 1.0) {
       
             self.myGameOverView.frame.origin.x = 0
         }
         Global.delay(bySeconds: 1.0) {
             print("exit2")
-            self.sceneView.session.pause()
+     //       self.sceneView.session.pause()
             self.isFirstBackFunc = true
 
         }
@@ -253,7 +255,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode!.position = localCamPos
         playerNode!.position.y = localCamPos.y - 1
         level = myscene
-        
+        currentScene = SCNScene()
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
 
         sceneView.scene = currentScene
@@ -301,7 +303,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         // Create a session configuration
         let configuration = ARWorldTrackingSessionConfiguration()
-        configuration.planeDetection = .horizontal
+       // configuration.planeDetection = .horizontal
         // Run the view's session
         sceneView.session.run(configuration)
         
@@ -654,7 +656,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         // Pause the view's session
         print("exit1")
-        sceneView.session.pause()
+      //  sceneView.session.pause()
         
         
     }
