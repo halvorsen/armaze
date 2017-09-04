@@ -9,6 +9,7 @@
 import UIKit
 import SceneKit
 import ARKit
+import AudioToolbox
 
 class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout, SCNPhysicsContactDelegate {
     var tap = UITapGestureRecognizer()
@@ -137,6 +138,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
             let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
+            collisionLabel.text = "X <-22.2?:\(camPos.x)"
             if camPos.x < -22.2 {
                 
                 for goblin in chasingGoblins {
@@ -182,7 +184,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
     
     var maze: String = ""
-    let goblinSpeed : Double = 0.5
+    let goblinSpeed : Double = 0.1
     @objc private func play(_ button: UIButton) {
   
         tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
@@ -653,6 +655,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         // Pause the view's session
         print("exit1")
         sceneView.session.pause()
+        
+        
     }
     
     private func pickUpGun() {
@@ -721,6 +725,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             if isFirstInfraction {
                 isFirstInfraction = false
+                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                 for i in 0...4 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
                         self.points -= 100
@@ -828,6 +833,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             if isFirstInfraction {
                 isFirstInfraction = false
+                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                 for i in 0...4 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
                         self.points -= 100
@@ -847,11 +853,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeA)!)
                     }
                     contact.nodeA.removeAllActions()
-                    contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 3, asImpulse: true)
-                    contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
-                    Global.delay(bySeconds: 3.0) {
-                        contact.nodeA.removeFromParentNode()
-                    }
+                    
+                    contact.nodeA.removeFromParentNode()
+                    
                 }
                 if nameB == "goblin" {
                     print("goblin")
@@ -859,11 +863,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeB)!)
                     }
                     contact.nodeB.removeAllActions()
-                    contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 10, asImpulse: true)
-                    contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
-                    Global.delay(bySeconds: 3.0) {
-                        contact.nodeB.removeFromParentNode()
-                    }
+                   
+                    contact.nodeB.removeFromParentNode()
+                    
                 }
             }
             

@@ -31,6 +31,7 @@
 		A99F62C41F3D68B100DD6027 /* GameOverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F62B91F3D68B100DD6027 /* GameOverView.swift */; };
 		A99F62C61F3D737600DD6027 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F62C51F3D737600DD6027 /* Dot.swift */; };
 		A99F63101F40EED800DD6027 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F630F1F40EED700DD6027 /* SettingsViewController.swift */; };
+		A9FAC5A41F5DCA9900BDAF78 /* Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FAC5A31F5DCA9900BDAF78 /* Delegate.swift */; };
 		F55394C0181898446A09BFDA /* Pods_testMaze2UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25EBC98F4890821F3318365A /* Pods_testMaze2UITests.framework */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,7 @@
 		A99F62BE1F3D68B100DD6027 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		A99F62C51F3D737600DD6027 /* Dot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dot.swift; sourceTree = "<group>"; };
 		A99F630F1F40EED700DD6027 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		A9FAC5A31F5DCA9900BDAF78 /* Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Delegate.swift; sourceTree = "<group>"; };
 		AF4236B34B5CAEB87C8F6A43 /* Pods-testMaze2UITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testMaze2UITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-testMaze2UITests/Pods-testMaze2UITests.release.xcconfig"; sourceTree = "<group>"; };
 		EA41392142B365523FE2FDAC /* Pods-testMaze2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testMaze2Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-testMaze2Tests/Pods-testMaze2Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -181,6 +183,7 @@
 				A933B23B1F598E400096F5EA /* gun.dae */,
 				A96E628D1F3B3FAD006620F8 /* art.scnassets */,
 				A96E628F1F3B3FAD006620F8 /* ViewController.swift */,
+				A9FAC5A31F5DCA9900BDAF78 /* Delegate.swift */,
 				A99F630F1F40EED700DD6027 /* SettingsViewController.swift */,
 				A97F0FED1F4B3D7E001D84FC /* Extensions.swift */,
 				A975CD6B1F549EA400CEDE12 /* DeepPressGestureRecognizer.swift */,
@@ -538,6 +541,7 @@
 				A97F0FEC1F4B3B49001D84FC /* Shaders.swift in Sources */,
 				A975CD6C1F549EA400CEDE12 /* DeepPressGestureRecognizer.swift in Sources */,
 				A99F62C61F3D737600DD6027 /* Dot.swift in Sources */,
+				A9FAC5A41F5DCA9900BDAF78 /* Delegate.swift in Sources */,
 				A96E628C1F3B3FAD006620F8 /* AppDelegate.swift in Sources */,
 				A99F63101F40EED800DD6027 /* SettingsViewController.swift in Sources */,
 				A97F0FEE1F4B3D7E001D84FC /* Extensions.swift in Sources */,
