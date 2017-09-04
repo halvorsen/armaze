@@ -63,8 +63,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         invisibleCover.isUserInteractionEnabled = false
         
-        ringLabel.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 100*sh)
-        ringLabel.frame.origin.y = sh*100
+        ringLabel.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 50*sh)
+        ringLabel.frame.origin.y = sh*617
+        ringLabel.backgroundColor = .black
         ringLabel.text = "Analyzing - Pan Camera Down & Around"
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 14)
         ringLabel.textAlignment = .center
@@ -101,7 +102,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         myGameOverView.thisScoreLabel.text = "\(points)"
         if points > Global.highScores[level]! {
             Global.highScores[level] = points
-            UserDefaults.standard.set(points, forKey: "level")
+            UserDefaults.standard.set(points, forKey: level)
         }
         myGameOverView.bestScoreLabel.text = "BEST \(Global.highScores[level]!)"
         if points == 10000 {
@@ -344,14 +345,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             Global.delay(bySeconds: 10.0) {
                 print("fade")
                 self.ringLabel.text = ""
-                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
+                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
                 
             }
         } else {
             Global.delay(bySeconds: 5.0) {
                 print("fade2")
                 self.ringLabel.text = ""
-                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 100)
+                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
                 
             }
         }
@@ -527,7 +528,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 tipNode.scale = SCNVector3(0,0,0)
             }
             
-            fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 500, asImpulse: true)
+            fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 250, asImpulse: true)
             fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
             n.removeFromParentNode()
             
@@ -634,9 +635,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         
     }
+    
     @objc private func pageBackward(_ gesture: UIGestureRecognizer) {
-        
-        if tutorialView.frame.origin.x <= 100*sw {
+        print("tutorial frame origin x: \(tutorialView.frame.origin.x)")
+        if tutorialView.frame.origin.x > -100*sw {
             return
         } else {
             
@@ -644,8 +646,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 self.tutorialView.frame.origin.x += 375*self.sw
             }
         }
-        
-        
     }
     
     

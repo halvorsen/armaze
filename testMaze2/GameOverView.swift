@@ -14,7 +14,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     
     @objc private func buyWeapons(_ button: UIButton) {
         // Create the alert controller
-        let alertController = UIAlertController(title: "Shoot Obstacles", message: "Unlock weapons $0.99", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Shoot Monsters", message: "Unlock weapons $0.99", preferredStyle: .alert)
         
         // Create the actions
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.default) {
