@@ -105,7 +105,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         nodeForGoblinToFace.removeFromParentNode()
         isFirstInfraction = true
         isFirstRingTouch = true
-    //    dropGun()
+        dropGun()
         isFirstGunTouch = true
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
@@ -126,7 +126,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.myGameOverView.frame.origin.x = 0
         }
         Global.delay(bySeconds: 1.0) {
-            self.ringLabel.text = "Analyzing - Pan Camera Down & Around"
+            self.ringLabel.text = "Analyzing-Pan Camera Around"
      //       self.sceneView.session.pause()
             self.isFirstBackFunc = true
             self.chaseTime = 0.0
@@ -782,16 +782,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
-//    private func dropGun() {
-//        gun.removeAllActions()
-//      //  wrapper.addChildNode(gun)
-//        print("gunposition again")
-//        print(gunPosition)
-//        gun.scale = gunPosition[0]
-//        gun.position = gunPosition[1]
-//        gun.eulerAngles = gunPosition[2]
-//        gunPosition.removeAll()
-//    }
+    private func dropGun() {
+        gun.removeAllActions()
+        wrapper.addChildNode(gun)
+        print("gunposition again")
+        print(gunPosition)
+        gun.scale = gunPosition[0]
+        gun.position = gunPosition[1]
+        gun.eulerAngles = gunPosition[2]
+        gunPosition.removeAll()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
