@@ -308,9 +308,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.session.run(configuration)
         
         
-        let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)!
+        let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
-        let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 3))!
+        let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 3))
         
         for torus in torusAll {
             torus.runAction(action0)
@@ -435,7 +435,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
                 
                 let action = SCNAction.move(to: SCNVector3(n.position.x, n.position.y + 10, n.position.z), duration: 2.0)
-                let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
+                let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
                 
                 result.node.runAction(action)
                 result.node.runAction(action1)
@@ -459,12 +459,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 Global.delay(bySeconds: 0.2, closure: {self.crosshairView.alpha = 0.0})
                 let movePosRotationAction = SCNAction.rotateTo(x: CGFloat(-90.0.degreesToRadians), y: 0, z: 0, duration: 0.2)
                 let moveNegRotationAction = SCNAction.rotateTo(x: CGFloat(-60.0.degreesToRadians), y: 0, z: CGFloat(30.0.degreesToRadians), duration: 0.5)
-                if let rotationSequence = SCNAction.sequence([movePosRotationAction, moveNegRotationAction]) {
+                let rotationSequence = SCNAction.sequence([movePosRotationAction, moveNegRotationAction])
                     gun.runAction(rotationSequence)
-                }
+                
                 let movePosAction = SCNAction.moveBy(x: -0.1, y: 0.2, z: 0.2, duration: 0.2)
                 let moveNegAction = SCNAction.moveBy(x: 0.1, y: -0.2, z: -0.2, duration: 0.8)
-                if let sequence = SCNAction.sequence([movePosAction, moveNegAction]) {
+                let sequence = SCNAction.sequence([movePosAction, moveNegAction])
                     gun.runAction(sequence, completionHandler: {
                         
                         self.gun.position = SCNVector3(0.07 - 0.01,-0.25,-0.3)
@@ -472,10 +472,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                         let movePosAction = SCNAction.moveBy(x: 0.02, y: 0, z: 0, duration: 0.7)
                         let moveNegAction = SCNAction.moveBy(x: -0.02, y: 0, z: 0, duration: 0.7)
                         let sequence = SCNAction.sequence([movePosAction, moveNegAction])
-                        self.gun.runAction(SCNAction.repeatForever(sequence!)!)
+                        self.gun.runAction(SCNAction.repeatForever(sequence))
                         self.isGunReady = true
                     })
-                }
+                
                
                 Global.delay(bySeconds: 0.2) {
                     self.fireBeachBall()
@@ -493,7 +493,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
             
             let pov = sceneView.pointOfView!
-            let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
+        let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
             let fireballNode = Fireball.node()
             fireballNode.name = "beachBall"
             fireballNode.opacity = 0.0
@@ -671,7 +671,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         let movePosAction = SCNAction.moveBy(x: 0.02, y: 0, z: 0, duration: 0.7)
         let moveNegAction = SCNAction.moveBy(x: -0.02, y: 0, z: 0, duration: 0.7)
         let sequence = SCNAction.sequence([movePosAction, moveNegAction])
-        gun.runAction(SCNAction.repeatForever(sequence!)!)
+        gun.runAction(SCNAction.repeatForever(sequence))
         sceneView.pointOfView?.addChildNode(gun)
         
     }
@@ -754,7 +754,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 let n = contact.nodeA
                 
                 let action = SCNAction.move(to: SCNVector3(n.position.x, n.position.y + 10, n.position.z), duration: 2.0)
-                let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))!
+                let action1 = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
                 
                 n.runAction(action)
                 n.runAction(action1)
