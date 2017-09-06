@@ -35,6 +35,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var chasingTimer = Timer()
     var myGameOverView = GameOverView()
     var isFirstBackFunc = true
+    var isSessionFirstRunning = true
+    var isGunReady = true
+    
     
     @IBOutlet var sceneView: ARSCNView!
     //var sceneView = ARSCNView()
@@ -50,6 +53,23 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
      
         sceneView.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.addSubview(myGameOverView)
+        myGameOverView.dropMaze.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
+        myGameOverView.instructions.addTarget(self, action: #selector(ViewController.runTutorial), for: .touchUpInside)
+     
+        if !UserDefaults.standard.bool(forKey: "has99LaunchedBefore") {
+            UserDefaults.standard.set(true, forKey: "has99LaunchedBefore")
+            runTutorial()
+            
+        }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
     }
     
     @objc private func backFunc(_ button: UIButton) {
@@ -75,14 +95,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         foundGun = false
         gunPosition.removeAll()
         
-        
+        if let playerNode = playerNode {
+            playerNode.removeFromParentNode()
+        }
         
         timer1.invalidate()
         chasingTimer.invalidate()
         
-        
-        
-        dropGun()
+        nodeForGoblinToFace.removeFromParentNode()
+        isFirstInfraction = true
+        isFirstRingTouch = true
+    //    dropGun()
         isFirstGunTouch = true
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
@@ -333,16 +356,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
         sceneView.addGestureRecognizer(press)
         back.alpha = 1.0
-        tier.alpha = 1.0
+       
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
-        
+        //potential problem???
         let localCamPos = sceneView.scene.rootNode.position
+        
         playerNode?.removeFromParentNode()
         playerNode = Player.node()
         playerNode!.position = localCamPos
         playerNode!.position.y = localCamPos.y - 1
         nodeForGoblinToFace.position = SCNVector3(0,-3,0)
+        
         playerNode!.addChildNode(nodeForGoblinToFace)
         level = myscene
         currentScene = SCNScene()
@@ -356,7 +381,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func sceneSetup() {
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
-        wrapper.position = sceneView.pointOfView!.position //SCNVector3Make(0, 0, 0)
+        //potential problem???
+        wrapper.position = sceneView.pointOfView!.position
+        
         wrapper.addChildNode(playerNode!)
         torus1 = wrapper.childNode(withName: "torus1", recursively: false)!
         torus2 = wrapper.childNode(withName: "torus2", recursively: false)!
@@ -372,8 +399,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         gunPosition.append(gun.scale)
         gunPosition.append(gun.position)
         gunPosition.append(gun.eulerAngles)
-        print("gunPosition")
-        print(gunPosition)
+        
         if !Global.isWeaponsMember {
             gun.removeFromParentNode()
         }
@@ -391,12 +417,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             torus10
         ]
         
-        // Create a session configuration
+      //potential problem area?
+        if isSessionFirstRunning {
         let configuration = ARWorldTrackingConfiguration()
-       // configuration.planeDetection = .horizontal
-        // Run the view's session
+       
         sceneView.session.run(configuration)
-        
+        }
         
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
@@ -413,27 +439,24 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
       //  sceneView.addSubview(tier)
         invisibleCover.addSubview(ringLabel)
         sceneView.addSubview(collisionLabel)
-        
-        
-        
-        
+ 
         crosshairView.alpha = 0.0
         
-        Global.delay(bySeconds: 5.0) {
-            
-            UIView.animate(withDuration: 0.5) {
-                self.back.alpha = 0.0
-                self.tier.alpha = 0.0
-            }
-            
-            
-        }
+//        Global.delay(bySeconds: 5.0) {
+//
+//            UIView.animate(withDuration: 0.5) {
+//                self.back.alpha = 0.0
+//                self.tier.alpha = 0.0
+//            }
+//
+//
+//        }
        // pickUpGun() //hack
         
-        print("level: \(level)")
+      
         if level == "1-1" {
             Global.delay(bySeconds: 10.0) {
-                print("fade")
+              
                 self.ringLabel.text = "FORCE TOUCH TO CLOSE"
                 self.tier.alpha = 0.0
               //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
@@ -441,7 +464,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
         } else {
             Global.delay(bySeconds: 5.0) {
-                print("fade2")
+              
                 self.ringLabel.text = "FORCE TOUCH TO CLOSE"
                 self.tier.alpha = 0.0
               //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
@@ -506,7 +529,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var direction = SCNVector3()
     var direction2 = SCNVector3()
-    var isGunReady = true
+    
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
         print("tap")
         var didNotGetRing = true
@@ -516,7 +539,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         print(results)
         
         for result in results {
-            print(result.node.name!)
+          
             if torusNames.contains(result.node.name!) {
                 didNotGetRing = false
                 let n = result.node
@@ -584,8 +607,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     private func fireBeachBall() {
-        
-            
+
             let pov = sceneView.pointOfView!
        // let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
             let fireballNode = Fireball.node()
@@ -639,22 +661,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         if points > currentHighScore {
             Global.highScores[maze] = points
         }
-        print("exit3")
+       
         backToVC()
     }
     
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        view.addSubview(myGameOverView)
-        myGameOverView.dropMaze.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
-        myGameOverView.instructions.addTarget(self, action: #selector(ViewController.runTutorial), for: .touchUpInside)
-        if UserDefaults.standard.bool(forKey: "is99MazesFirstLaunch") {
-            UserDefaults.standard.set(true, forKey: "is99MazesFirstLaunch")
-            runTutorial()
-            
-        }
-    }
+    
     let tutorialView1 = UIImageView()
     let tutorialView2 = UIImageView()
     let tutorialView3 = UIImageView()
@@ -749,7 +761,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         super.viewWillDisappear(animated)
         
         // Pause the view's session
-        print("exit1")
+  
       //  sceneView.session.pause()
         
         
@@ -757,7 +769,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func pickUpGun() {
         gun.removeAllActions()
-        //let carryNode = gun//Wand.wandNode()
+      
         gun.scale = SCNVector3(0.01,0.01,0.01)
         gun.position = SCNVector3(0.07 - 0.01,-0.25,-0.3)
         gun.eulerAngles = SCNVector3(-60.0.degreesToRadians,0,30.0.degreesToRadians)
@@ -770,16 +782,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
-    private func dropGun() {
-        gun.removeAllActions()
-        wrapper.addChildNode(gun)
-        print("gunposition again")
-        print(gunPosition)
-        gun.scale = gunPosition[0]
-        gun.position = gunPosition[1]
-        gun.eulerAngles = gunPosition[2]
-        gunPosition.removeAll()
-    }
+//    private func dropGun() {
+//        gun.removeAllActions()
+//      //  wrapper.addChildNode(gun)
+//        print("gunposition again")
+//        print(gunPosition)
+//        gun.scale = gunPosition[0]
+//        gun.position = gunPosition[1]
+//        gun.eulerAngles = gunPosition[2]
+//        gunPosition.removeAll()
+//    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -807,7 +819,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var isFirstInfraction = true
     var isFirstRingTouch = true
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
-        print("Contact")
+     
         let contactMask = contact.nodeA.physicsBody!.categoryBitMask | contact.nodeB.physicsBody!.categoryBitMask
         guard contact.nodeA.physicsBody != nil || contact.nodeB.physicsBody != nil else {return}
         print("nodeA: \(contact.nodeA.physicsBody!.categoryBitMask)")
