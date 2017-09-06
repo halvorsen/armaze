@@ -190,7 +190,7 @@ class Wand {
         let moveDownAction = SCNAction.moveBy(x: 0, y: -0.1, z: 0, duration: 0.3)
         let waitAction = SCNAction.wait(duration: 1.5)
         let sequence = SCNAction.sequence([moveUpAction, moveDownAction, moveUpAction, moveDownAction, waitAction])
-        node.runAction(SCNAction.repeatForever(sequence!)!)
+        node.runAction(SCNAction.repeatForever(sequence))
         
         return node
     }
