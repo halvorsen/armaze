@@ -260,6 +260,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
 
+    private func changeLabelSize() {
+        
+        ringLabel.frame = CGRect(x: 115*sw, y: 613*sh, width: 127*sw, height: 30*sh)
+        
+    }
     
     var maze: String = ""
     let goblinSpeed : Double = 0.1
@@ -285,7 +290,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         ringLabel.frame = CGRect(x: 67*sw, y: 613*sh, width: 219*sw, height: 30*sh)
         ringLabel.frame.origin.y = sh*617
         ringLabel.backgroundColor = .black
-        ringLabel.text = "Analyzing - Pan Camera Down & Around"
+        ringLabel.text = "Analyzing-Pan Camera Around"
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
         ringLabel.textAlignment = .center
         
@@ -424,6 +429,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.session.run(configuration)
         }
         
+        wrapper.position = SCNVector3(0,0,0)
+        wrapper.rotation.w = 0
+        
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
         let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 3))
@@ -530,6 +538,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var direction = SCNVector3()
     var direction2 = SCNVector3()
     
+    
+    
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
         print("tap")
         var didNotGetRing = true
@@ -543,6 +553,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if torusNames.contains(result.node.name!) {
                 didNotGetRing = false
                 let n = result.node
+                if ringLabel.bounds.width > 130*sw {
+                    changeLabelSize()
+                }
                 for i in 0...9 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
                         self.points += 100
@@ -834,6 +847,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if isFirstInfraction {
                 isFirstInfraction = false
                 AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                if ringLabel.bounds.width > 130*sw {
+                    changeLabelSize()
+                }
                 for i in 0...4 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
                         self.points -= 100
@@ -864,7 +880,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
                 n.runAction(action)
                 n.runAction(action1)
-                
+                if ringLabel.bounds.width > 130*sw {
+                    changeLabelSize()
+                }
                 for i in 0...9 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
                         self.points += 100
@@ -942,6 +960,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if isFirstInfraction {
                 isFirstInfraction = false
                 AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                if ringLabel.bounds.width > 130*sw {
+                    changeLabelSize()
+                }
                 for i in 0...4 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
                         self.points -= 100
