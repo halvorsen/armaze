@@ -92,9 +92,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
 
      
         //create delegate method to start scene and dismiss view
-        
-        UserDefaults.standard.set(colorScheme.rawValue, forKey: "colorScheme")
-        CustomColor.changeCustomColor(colorScheme: colorScheme)
+       
         myColorScheme = colorScheme
         thisScoreLabel.text = ""
         if let myColorScheme = myColorScheme {
@@ -181,7 +179,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         ]
         var count = 0
         for scheme in schemeArray {
-            let myDot = Dot(color: CustomColor.colorDictionary[scheme]!.1, origin: CGPoint(x:45*CGFloat(count)*sw,y:0), colorScheme: scheme)
+            let myDot = Dot(color: CustomColor.colorDictionary[scheme]!, origin: CGPoint(x:45*CGFloat(count)*sw,y:0), colorScheme: scheme)
             scrollView.addSubview(myDot)
             myDot.tapDelegate = self
             dotsContainer.append(myDot)

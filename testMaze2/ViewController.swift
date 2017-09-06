@@ -33,6 +33,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let location = UILabel()
     var timer1 = Timer()
     var chasingTimer = Timer()
+    var myGameOverView = GameOverView()
+    var isFirstBackFunc = true
     
     @IBOutlet var sceneView: ARSCNView!
     //var sceneView = ARSCNView()
@@ -44,66 +46,47 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         super.viewDidLoad()
 
         Global.isWeaponsMember = true //hack
-        
-        //foundGun = true //hack
-        
-        
-        back.frame = CGRect(x: 69*sw, y: 613*sh, width: 219*sw, height: 30*sh)
-        back.text = "FORCE TOUCH TO CLOSE"
-        back.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
-        back.backgroundColor = .black
-        back.textColor = .white
-        back.textAlignment = .center
-        tier.frame = CGRect(x: 115*sw, y: 27*sh, width: 127*sw, height: 30*sh)
-        tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
-        tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
-        tier.backgroundColor = .black
-        tier.textColor = .white
-        tier.textAlignment = .center
-        
-        
+
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
-        
-        invisibleCover.isUserInteractionEnabled = false
-        
-        ringLabel.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 50*sh)
-        ringLabel.frame.origin.y = sh*617
-        ringLabel.backgroundColor = .black
-        ringLabel.text = "Analyzing - Pan Camera Down & Around"
-        ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 14)
-        ringLabel.textAlignment = .center
-        
-        ringLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
-        
-        collisionLabel.frame = CGRect(x: 0, y: 550, width: 375*sw, height: 100*sh)
-        collisionLabel.text = ""
-        collisionLabel.textAlignment = .center
-        collisionLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
-        collisionLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
-        
+     
         sceneView.delegate = self
     }
     
-    var myGameOverView = GameOverView()
-    var isFirstBackFunc = true
     @objc private func backFunc(_ button: UIButton) {
         if isFirstBackFunc {
             isFirstBackFunc = false
-            print("exit4")
         backToVC()
         }
     }
     
     private func backToVC() {
         print("!!!!!Done!!!!!")
+        sceneView.removeGestureRecognizer(tap)
+        sceneView.removeGestureRecognizer(press)
+        invisibleCover.removeFromSuperview()
+        ringLabel.removeFromSuperview()
+        back.removeFromSuperview()
+        tier.removeFromSuperview()
+        collisionLabel.removeFromSuperview()
+        location.removeFromSuperview()
+        
+        ringsFound = 0
+        chasingGoblins.removeAll()
         foundGun = false
+        gunPosition.removeAll()
+        
+        
+        
         timer1.invalidate()
         chasingTimer.invalidate()
-        chasingGoblins.removeAll()
+        
+        
+        
         dropGun()
         isFirstGunTouch = true
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
+        
         myGameOverView.thisScoreLabel.text = "\(points)"
         if points > Global.highScores[level]! {
             Global.highScores[level] = points
@@ -123,7 +106,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.ringLabel.text = "Analyzing - Pan Camera Down & Around"
      //       self.sceneView.session.pause()
             self.isFirstBackFunc = true
-
+            self.chaseTime = 0.0
         }
         sceneView.removeGestureRecognizer(press)
         
@@ -258,6 +241,38 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var maze: String = ""
     let goblinSpeed : Double = 0.1
     @objc private func play(_ button: UIButton) {
+        
+        //        back.frame = CGRect(x: 69*sw, y: 27*sh, width: 219*sw, height: 30*sh)
+        //        back.text = "FORCE TOUCH TO CLOSE"
+        //        back.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
+        //        back.backgroundColor = .black
+        //        back.textColor = .white
+        //        back.textAlignment = .center
+        
+        tier.frame = CGRect(x: 115*sw, y: 27*sh, width: 127*sw, height: 30*sh)
+        tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
+        tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
+        tier.backgroundColor = .black
+        tier.textColor = .white
+        tier.textAlignment = .center
+        tier.alpha = 1.0
+        
+        invisibleCover.isUserInteractionEnabled = false
+        
+        ringLabel.frame = CGRect(x: 67*sw, y: 613*sh, width: 219*sw, height: 30*sh)
+        ringLabel.frame.origin.y = sh*617
+        ringLabel.backgroundColor = .black
+        ringLabel.text = "Analyzing - Pan Camera Down & Around"
+        ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
+        ringLabel.textAlignment = .center
+        
+        ringLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
+        ringLabel.alpha = 1.0
+        collisionLabel.frame = CGRect(x: 0, y: 550, width: 375*sw, height: 100*sh)
+        collisionLabel.text = ""
+        collisionLabel.textAlignment = .center
+        collisionLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 25)
+        collisionLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
   
         tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
         switch self.myGameOverView.myColorScheme! {
@@ -286,6 +301,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
         }
         
+        
+        crosshairView.frame = self.view.bounds
+        crosshairView.image = #imageLiteral(resourceName: "crosshair")
+        sceneView.addSubview(crosshairView)
         
      //   self.currentScene = self.sceneDict[maze]!
         
@@ -396,9 +415,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.addSubview(collisionLabel)
         
         
-        crosshairView.frame = self.view.bounds
-        crosshairView.image = #imageLiteral(resourceName: "crosshair")
-        sceneView.addSubview(crosshairView)
+        
         
         crosshairView.alpha = 0.0
         
@@ -417,15 +434,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         if level == "1-1" {
             Global.delay(bySeconds: 10.0) {
                 print("fade")
-                self.ringLabel.text = ""
-                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
+                self.ringLabel.text = "FORCE TOUCH TO CLOSE"
+                self.tier.alpha = 0.0
+              //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
                 
             }
         } else {
             Global.delay(bySeconds: 5.0) {
                 print("fade2")
-                self.ringLabel.text = ""
-                self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
+                self.ringLabel.text = "FORCE TOUCH TO CLOSE"
+                self.tier.alpha = 0.0
+              //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
                 
             }
         }
