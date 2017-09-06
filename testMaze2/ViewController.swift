@@ -93,6 +93,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         ringsFound = 0
         chasingGoblins.removeAll()
         foundGun = false
+        dropGun()
         gunPosition.removeAll()
         
         if let playerNode = playerNode {
@@ -105,7 +106,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         nodeForGoblinToFace.removeFromParentNode()
         isFirstInfraction = true
         isFirstRingTouch = true
-        dropGun()
+        
         isFirstGunTouch = true
         myGameOverView.frame.origin.x = -375*sw
         view.addSubview(myGameOverView)
@@ -429,8 +430,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.session.run(configuration)
         }
         
-        wrapper.position = SCNVector3(0,0,0)
-        wrapper.rotation.w = 0
+        wrapper.position = sceneView.pointOfView!.position
+        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
         
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
@@ -479,7 +480,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
             }
         }
-        
+        print("level: \(level)")
         switch level {
         case "2-1":
    
