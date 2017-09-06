@@ -31,6 +31,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let tier = UILabel()
     let collisionLabel = UILabel()
     let location = UILabel()
+    var timer1 = Timer()
+    var chasingTimer = Timer()
+    
     @IBOutlet var sceneView: ARSCNView!
     //var sceneView = ARSCNView()
     override var prefersStatusBarHidden: Bool {
@@ -64,7 +67,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.isUserInteractionEnabled = false
         
         ringLabel.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 50*sh)
-        //ringLabel.frame.origin.y = sh*617
+        ringLabel.frame.origin.y = sh*617
         ringLabel.backgroundColor = .black
         ringLabel.text = "Analyzing - Pan Camera Down & Around"
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 14)
@@ -95,6 +98,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         print("!!!!!Done!!!!!")
         foundGun = false
         timer1.invalidate()
+        chasingTimer.invalidate()
         chasingGoblins.removeAll()
         dropGun()
         isFirstGunTouch = true
@@ -124,40 +128,41 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.removeGestureRecognizer(press)
         
     }
- 
-    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
-        
+    var chaseTime = 0.0
+    @objc private func chasingFunc() {
         guard let camPos = sceneView.pointOfView?.position else {return}
-            
+        
         guard playerNode != nil else {return}
         
-            playerNode!.position.x = camPos.x
-            playerNode!.position.z = camPos.z
-            playerNode!.position.y = camPos.y - 1
-
+        playerNode!.position.x = camPos.x
+        playerNode!.position.z = camPos.z
+        playerNode!.position.y = camPos.y - 1
+        
         switch level {
         case "2-1":
-            print("entered switch 2-1b")
-          //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
-            let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
-            let vectMag = Double(vect.magnitude)
-            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
-           // collisionLabel.text = "X <-22.2?:\(camPos.x)"
-            if camPos.x < -22.2 {
-                
-                for goblin in chasingGoblins {
-                  //  let actionRotate = SCNAction.rotateTo(x: CGFloat(camPos.x - goblin.position.x), y: 0, z: CGFloat(camPos.z - goblin.position.z), duration: 0.0)
-                  // goblin.look(at: SCNVector3(CGFloat(camPos.x - goblin.position.x), 0.0,CGFloat(camPos.z - goblin.position.z)))
-                    goblin.runAction(actionChase)
-                   // goblin.runAction(actionRotate)
-                }
+            if chaseTime == 0.0 {
+                chaseTime = 21.0
             }
-        case "6-1":
-            //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
-            let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
+            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
-            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
-            if camPos.x < -5.0 {
+            let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+          
+          
+              
+                for goblin in chasingGoblins {
+                    
+                    goblin.runAction(actionChase)
+                    
+                }
+            
+        case "6-1":
+            if chaseTime == 0.0 {
+                chaseTime = 180.0
+            }
+            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
+            let vectMag = Double(vect.magnitude)
+            let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+           
                 
                 if chasingGoblins.count > 0 {
                     chasingGoblins[0].runAction(actionChase)
@@ -166,23 +171,86 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     chasingGoblins[1].runAction(actionChase)
                 }
                 
-            }
-        case "8-1","10-1","11-1":
-            //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
-            let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
-            let vectMag = Double(vect.magnitude)
-            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
-           
-                
-                for goblin in chasingGoblins {
-                    goblin.runAction(actionChase)
-                }
-               
-                
             
+        case "8-1","10-1","11-1":
+            if chaseTime == 0.0 {
+                chaseTime = 21.0
+            }
+            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
+            let vectMag = Double(vect.magnitude)
+            let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+            
+            
+            for goblin in chasingGoblins {
+                goblin.runAction(actionChase)
+            }
+   
         default:
             break
         }
+        if chaseTime > 3.0 {
+            chaseTime -= 3.0
+        }
+    }
+ 
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        
+//        guard let camPos = sceneView.pointOfView?.position else {return}
+//
+//        guard playerNode != nil else {return}
+//
+//            playerNode!.position.x = camPos.x
+//            playerNode!.position.z = camPos.z
+//            playerNode!.position.y = camPos.y - 1
+//
+//        switch level {
+//        case "2-1":
+//
+//          //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
+//            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
+//            let vectMag = Double(vect.magnitude)
+//            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
+//           // collisionLabel.text = "X <-22.2?:\(camPos.x)"
+//            if camPos.x > -22.2 {
+//
+//                print("chasing goblin: \(chasingGoblins.count)")
+//                for goblin in chasingGoblins {
+//
+//                    goblin.runAction(actionChase)
+//
+//                }
+//            }
+//        case "6-1":
+//
+//            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
+//            let vectMag = Double(vect.magnitude)
+//            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
+//            if camPos.x < -5.0 {
+//
+//                if chasingGoblins.count > 0 {
+//                    chasingGoblins[0].runAction(actionChase)
+//                }
+//                if chasingGoblins.count > 1 {
+//                    chasingGoblins[1].runAction(actionChase)
+//                }
+//
+//            }
+//        case "8-1","10-1","11-1":
+//
+//            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
+//            let vectMag = Double(vect.magnitude)
+//            let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
+//
+//
+//                for goblin in chasingGoblins {
+//                    goblin.runAction(actionChase)
+//                }
+//
+//
+//
+//        default:
+//            break
+//        }
         
     }
 
@@ -255,7 +323,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode = Player.node()
         playerNode!.position = localCamPos
         playerNode!.position.y = localCamPos.y - 1
-        nodeForGoblinToFace.position = SCNVector3(0,-1,0)
+        nodeForGoblinToFace.position = SCNVector3(0,-3,0)
         playerNode!.addChildNode(nodeForGoblinToFace)
         level = myscene
         currentScene = SCNScene()
@@ -364,7 +432,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         switch level {
         case "2-1":
-            print("entered switch 2-1a")
+   
             let goblinChase1 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
             let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
@@ -398,9 +466,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             break
         }
         sceneView.addGestureRecognizer(tap)
+        
+        chasingTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(ViewController.chasingFunc), userInfo: nil, repeats: true)
+        
     }
     
-    var timer1 = Timer()
+    
     let torusNames = [
         "torus1",
         "torus2",
