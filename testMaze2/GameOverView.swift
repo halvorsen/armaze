@@ -89,12 +89,8 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         currentDotIndex = myIndex
         tierLabel.text = "TIER \(myIndex + 1)"
         
-        //old tap dot to get into a maze, change is above to just change the tier label and queue up the correct maze
-        
-        
-        //maze from raw-colorscheme value
-        let myInt = colorScheme.rawValue
-        let maze = "maze\(myInt)"
+
+     
         //create delegate method to start scene and dismiss view
         
         UserDefaults.standard.set(colorScheme.rawValue, forKey: "colorScheme")
@@ -164,15 +160,6 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         
         
         
-        let skin1Label = UILabel(frame: CGRect(x: 42*sw, y: 418*sh, width: 350*sw, height: 24*sh))
-        let skin2Label = UILabel(frame: CGRect(x: 42*sw, y: 505*sh, width: 350*sw, height: 24*sh))
-        skin1Label.textColor = CustomColor.color1
-        skin2Label.textColor = CustomColor.color1
-        skin1Label.font = UIFont(name: "HelveticaNeue-Medium", size: 18*fontSizeMultiplier)
-        skin2Label.font = UIFont(name: "HelveticaNeue-Medium", size: 12*fontSizeMultiplier)
-        skin1Label.text = "Congrats! Bonus Game Skin"
-        let skinImage1 = UIImageView(frame: CGRect(x: 42*sw, y: 445*sh, width: 50*sw, height: 50*sw))
-        let skinImage2 = UIImageView(frame: CGRect(x: 42*sw, y: 528*sh, width: 50*sw, height: 50*sw))
         
         //add dots at bottom
         let scrollView = UIScrollView(frame: CGRect(x: 0, y: 606*sh, width: 375*sw, height: 45*sw))

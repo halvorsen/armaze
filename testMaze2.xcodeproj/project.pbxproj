@@ -21,8 +21,6 @@
 		A97F0FE21F4B324A001D84FC /* CollisionTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE11F4B324A001D84FC /* CollisionTypes.swift */; };
 		A97F0FE41F4B3283001D84FC /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE31F4B3283001D84FC /* Player.swift */; };
 		A97F0FE71F4B38CE001D84FC /* Fireball.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE61F4B38CE001D84FC /* Fireball.swift */; };
-		A97F0FE91F4B3949001D84FC /* Wand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FE81F4B3949001D84FC /* Wand.swift */; };
-		A97F0FEC1F4B3B49001D84FC /* Shaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FEB1F4B3B49001D84FC /* Shaders.swift */; };
 		A97F0FEE1F4B3D7E001D84FC /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97F0FED1F4B3D7E001D84FC /* Extensions.swift */; };
 		A99F62BF1F3D68B100DD6027 /* MenuButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F62BC1F3D68B100DD6027 /* MenuButtons.swift */; };
 		A99F62C01F3D68B100DD6027 /* CustomColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F62BA1F3D68B100DD6027 /* CustomColor.swift */; };
@@ -80,9 +78,7 @@
 		A97F0FE11F4B324A001D84FC /* CollisionTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionTypes.swift; sourceTree = "<group>"; };
 		A97F0FE31F4B3283001D84FC /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		A97F0FE61F4B38CE001D84FC /* Fireball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireball.swift; sourceTree = "<group>"; };
-		A97F0FE81F4B3949001D84FC /* Wand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wand.swift; sourceTree = "<group>"; };
 		A97F0FEA1F4B3A6A001D84FC /* Shader */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shader; sourceTree = "<group>"; };
-		A97F0FEB1F4B3B49001D84FC /* Shaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shaders.swift; sourceTree = "<group>"; };
 		A97F0FED1F4B3D7E001D84FC /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A99F62B91F3D68B100DD6027 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		A99F62BA1F3D68B100DD6027 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
@@ -220,9 +216,7 @@
 			children = (
 				A97F0FEA1F4B3A6A001D84FC /* Shader */,
 				A97F0FE31F4B3283001D84FC /* Player.swift */,
-				A97F0FEB1F4B3B49001D84FC /* Shaders.swift */,
 				A97F0FE61F4B38CE001D84FC /* Fireball.swift */,
-				A97F0FE81F4B3949001D84FC /* Wand.swift */,
 			);
 			path = PhysicsNodes;
 			sourceTree = "<group>";
@@ -532,13 +526,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A97F0FE91F4B3949001D84FC /* Wand.swift in Sources */,
 				A97F0FE41F4B3283001D84FC /* Player.swift in Sources */,
 				A99F62BF1F3D68B100DD6027 /* MenuButtons.swift in Sources */,
 				A96E62901F3B3FAD006620F8 /* ViewController.swift in Sources */,
 				A99F62C01F3D68B100DD6027 /* CustomColor.swift in Sources */,
 				A99F62C11F3D68B100DD6027 /* UIProtocolExtentions.swift in Sources */,
-				A97F0FEC1F4B3B49001D84FC /* Shaders.swift in Sources */,
 				A975CD6C1F549EA400CEDE12 /* DeepPressGestureRecognizer.swift in Sources */,
 				A99F62C61F3D737600DD6027 /* Dot.swift in Sources */,
 				A9FAC5A41F5DCA9900BDAF78 /* Delegate.swift in Sources */,
@@ -634,7 +626,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

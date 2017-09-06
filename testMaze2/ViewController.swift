@@ -22,7 +22,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var level = ""
     let crosshairView = UIImageView()
     var gunPosition = [SCNVector3]()
-  
+    let nodeForGoblinToFace = SCNNode()
     
     let invisibleCover = UIView()
     let ringLabel = UILabel()
@@ -64,7 +64,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.isUserInteractionEnabled = false
         
         ringLabel.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 50*sh)
-        ringLabel.frame.origin.y = sh*617
+        //ringLabel.frame.origin.y = sh*617
         ringLabel.backgroundColor = .black
         ringLabel.text = "Analyzing - Pan Camera Down & Around"
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 14)
@@ -110,13 +110,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             myGameOverView.bestScoreLabel.text = "Perfect Score!"
         }
         points = 0
-        ringLabel.text = "Analyzing - Pan Camera Down & Around"
+        
         UIView.animate(withDuration: 1.0) {
       
             self.myGameOverView.frame.origin.x = 0
         }
         Global.delay(bySeconds: 1.0) {
-            print("exit2")
+            self.ringLabel.text = "Analyzing - Pan Camera Down & Around"
      //       self.sceneView.session.pause()
             self.isFirstBackFunc = true
 
@@ -137,11 +137,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
         switch level {
         case "2-1":
+            print("entered switch 2-1b")
           //  let actionChase = SCNAction.move(to: playerNode!.position, duration: 10.0)
             let vect = SCNVector3(playerNode!.position.x,-4.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
             let actionChase = SCNAction.move(to: vect, duration: vectMag/goblinSpeed)
-            collisionLabel.text = "X <-22.2?:\(camPos.x)"
+           // collisionLabel.text = "X <-22.2?:\(camPos.x)"
             if camPos.x < -22.2 {
                 
                 for goblin in chasingGoblins {
@@ -254,6 +255,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode = Player.node()
         playerNode!.position = localCamPos
         playerNode!.position.y = localCamPos.y - 1
+        nodeForGoblinToFace.position = SCNVector3(0,-1,0)
+        playerNode!.addChildNode(nodeForGoblinToFace)
         level = myscene
         currentScene = SCNScene()
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
@@ -302,7 +305,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         ]
         
         // Create a session configuration
-        let configuration = ARWorldTrackingSessionConfiguration()
+        let configuration = ARWorldTrackingConfiguration()
        // configuration.planeDetection = .horizontal
         // Run the view's session
         sceneView.session.run(configuration)
@@ -320,7 +323,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         sceneView.addSubview(invisibleCover)
         sceneView.addSubview(back)
-        sceneView.addSubview(tier)
+      //  sceneView.addSubview(tier)
         invisibleCover.addSubview(ringLabel)
         sceneView.addSubview(collisionLabel)
         
@@ -361,15 +364,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         switch level {
         case "2-1":
+            print("entered switch 2-1a")
             let goblinChase1 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
             let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3 ]
             timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
-                guard let camPos = self.sceneView.pointOfView?.position else {return}
+               // guard let camPos = self.sceneView.pointOfView?.position else {return}
                 for goblin in self.chasingGoblins {
                     
-                    goblin.look(at: SCNVector3(CGFloat(camPos.x - goblin.position.x), 0.0,CGFloat(camPos.z - goblin.position.z)))
+                    goblin.look(at: self.nodeForGoblinToFace.position - goblin.position)
                     
                 }
             })
@@ -383,10 +387,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase6 = wrapper.childNode(withName: "monsterChase6", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3, goblinChase4, goblinChase5, goblinChase6 ]
             timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
-                guard let camPos = self.sceneView.pointOfView?.position else {return}
+             //   guard let camPos = self.sceneView.pointOfView?.position else {return}
                 for goblin in self.chasingGoblins {
                     
-                    goblin.look(at: SCNVector3(CGFloat(camPos.x - goblin.position.x), 0.0,CGFloat(camPos.z - goblin.position.z)))
+                    goblin.look(at: self.nodeForGoblinToFace.position - goblin.position)
                     
                 }
             })
@@ -493,7 +497,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
             
             let pov = sceneView.pointOfView!
-        let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
+       // let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
             let fireballNode = Fireball.node()
             fireballNode.name = "beachBall"
             fireballNode.opacity = 0.0
@@ -522,14 +526,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             direction = (n.position - fireballNode.position).normalized
             direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
             
-            if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
-                let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
-                
-                wandNode.position.z = -0.2
-                wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
-                tipNode.scale = SCNVector3(0,0,0)
-            }
-            
+//            if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
+//                let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
+//
+//                wandNode.position.z = -0.2
+//                wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
+//                tipNode.scale = SCNVector3(0,0,0)
+//            }
+        
             fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 250, asImpulse: true)
             fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
             n.removeFromParentNode()

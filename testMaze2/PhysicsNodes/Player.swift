@@ -20,6 +20,8 @@ class Player {
         node.physicsBody!.categoryBitMask = CollisionTypes.player.rawValue
         node.physicsBody!.collisionBitMask = 0
         node.physicsBody!.contactTestBitMask = CollisionTypes.coin.rawValue|CollisionTypes.monster.rawValue|CollisionTypes.fence.rawValue|CollisionTypes.weapon.rawValue
+        
+        
         return node
     }
 }
