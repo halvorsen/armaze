@@ -12,7 +12,7 @@ import SceneKit
 class Fireball {
     static let TTL:TimeInterval = 5
     static let INITIAL_VELOCITY:Float = 10
-    static let RADIUS:CGFloat =  1//Wand.TIP_RADIUS
+   // static let RADIUS:CGFloat =  0.2//Wand.TIP_RADIUS
     
     private static var sphere:SCNGeometry?
     

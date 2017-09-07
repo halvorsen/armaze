@@ -4,8 +4,8 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2017-09-02T00:39:43Z</created>
-  <modified>2017-09-02T00:39:43Z</modified>
+  <created>2017-09-07T02:44:27Z</created>
+  <modified>2017-09-07T02:44:27Z</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
@@ -341,7 +341,7 @@
  <library_visual_scenes>
   <visual_scene id="scene12">
    <node id="Sphere05" name="beachBall">
-    <matrix>-0.02590537 -0.04276239 0 -0.7637618 0.04276239 -0.02590537 0 2.542085 0 0 0.04999826 1.20361 0 0 0 1 </matrix>
+    <matrix>-0.01036275 -0.01710595 0 -0.3257643 0.01710595 -0.01036275 0 0.9748439 0 0 0.02 0.5215763 0 0 0 1 </matrix>
     <instance_geometry url="#geometry1">
      <bind_material>
       <technique_common>
