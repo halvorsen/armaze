@@ -388,19 +388,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         //  sceneView.addSubview(tier)
         invisibleCover.addSubview(ringLabel)
         sceneView.addSubview(collisionLabel)
-        
-        // crosshairView.alpha = 0.0
-        
-        //        Global.delay(bySeconds: 5.0) {
-        //
-        //            UIView.animate(withDuration: 0.5) {
-        //                self.back.alpha = 0.0
-        //                self.tier.alpha = 0.0
-        //            }
-        //
-        //
-        //        }
-        pickUpGun() //hack
+       
+      //  pickUpGun() //hack
         
         
         if level == "1-1" {
@@ -429,7 +418,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3 ]
             timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
-                // guard let camPos = self.sceneView.pointOfView?.position else {return}
+               
                 for goblin in self.chasingGoblins {
                     
                     goblin.look(at: self.nodeForGoblinToFace.position - goblin.position)
@@ -446,7 +435,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase6 = wrapper.childNode(withName: "monsterChase6", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3, goblinChase4, goblinChase5, goblinChase6 ]
             timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
-                //   guard let camPos = self.sceneView.pointOfView?.position else {return}
+               
                 for goblin in self.chasingGoblins {
                     
                     goblin.look(at: self.nodeForGoblinToFace.position - goblin.position)
