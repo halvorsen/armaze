@@ -4,8 +4,8 @@
   <contributor>
    <authoring_tool>SceneKit Collada Exporter v1.0</authoring_tool>
   </contributor>
-  <created>2017-09-07T02:44:27Z</created>
-  <modified>2017-09-07T02:44:27Z</modified>
+  <created>2017-09-08T02:32:17Z</created>
+  <modified>2017-09-08T02:32:17Z</modified>
   <unit meter="1.000000"/>
   <up_axis>Z_UP</up_axis>
  </asset>
@@ -340,21 +340,23 @@
  </library_geometries>
  <library_visual_scenes>
   <visual_scene id="scene12">
-   <node id="Sphere05" name="beachBall">
-    <matrix>-0.01036275 -0.01710595 0 -0.3257643 0.01710595 -0.01036275 0 0.9748439 0 0 0.02 0.5215763 0 0 0 1 </matrix>
-    <instance_geometry url="#geometry1">
-     <bind_material>
-      <technique_common>
-       <instance_material symbol="geometryElement5" target="#_1_-_Default-material"/>
-       <instance_material symbol="geometryElement6" target="#Material__12-material"/>
-       <instance_material symbol="geometryElement7" target="#Material__13-material"/>
-       <instance_material symbol="geometryElement8" target="#Material__14-material"/>
-       <instance_material symbol="geometryElement9" target="#Material__15-material"/>
-       <instance_material symbol="geometryElement10" target="#Material__16-material"/>
-       <instance_material symbol="geometryElement11" target="#Material__17-material"/>
-      </technique_common>
-     </bind_material>
-    </instance_geometry>
+   <node id="beachBall" name="beachBall">
+    <node id="Sphere05" name="beachBall">
+     <matrix>-0.01036275 -0.01710595 0 -0.3257643 0.01710595 -0.01036275 0 0.9748439 0 0 0.02 0.5215762 0 0 0 1 </matrix>
+     <instance_geometry url="#geometry1">
+      <bind_material>
+       <technique_common>
+        <instance_material symbol="geometryElement5" target="#_1_-_Default-material"/>
+        <instance_material symbol="geometryElement6" target="#Material__12-material"/>
+        <instance_material symbol="geometryElement7" target="#Material__13-material"/>
+        <instance_material symbol="geometryElement8" target="#Material__14-material"/>
+        <instance_material symbol="geometryElement9" target="#Material__15-material"/>
+        <instance_material symbol="geometryElement10" target="#Material__16-material"/>
+        <instance_material symbol="geometryElement11" target="#Material__17-material"/>
+       </technique_common>
+      </bind_material>
+     </instance_geometry>
+    </node>
    </node>
   </visual_scene>
  </library_visual_scenes>

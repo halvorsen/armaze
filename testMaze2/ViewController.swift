@@ -568,10 +568,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         fireballNode.name = "beachBall"
         
         fireballNode.opacity = 1.0
-        Global.delay(bySeconds: 0.02) {
-            fireballNode.opacity = 1.0
-        }
-        fireballNode.scale = SCNVector3(0.3,0.3,0.3)   //playerNode!.position
+        
+        fireballNode.scale = SCNVector3(0.5,0.5,0.5)   //playerNode!.position
         // let gunPoint = gun.childNode(withName: "point", recursively: false)!
         sceneView.scene.rootNode.addChildNode(fireballNode)
         //fireballNode.runAction(SCNAction.move(by: SCNVector3(0.5,0.5,-0.2), duration: 0.0))
@@ -590,21 +588,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
         n.simdTransform = matrix_multiply(pov.simdTransform, translation)
         let gunPoint = gun.childNode(withName: "point", recursively: false)!
-        //    let inceptionLocation = gunPoint.convertPosition(gunPoint.position, to: gun)
-        
-        
         
         direction = (n.position - fireballNode.position).normalized
         direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
         
         fireballNode.position = gun.convertPosition(gunPoint.position, to: sceneView.scene.rootNode)
-        //            if let wandNode = sceneView.pointOfView?.childNode(withName: Wand.WAND_NODE_NAME, recursively: false),
-        //                let tipNode = wandNode.childNode(withName: Wand.TIP_NODE_NAME, recursively: false) {
-        //
-        //                wandNode.position.z = -0.2
-        //                wandNode.runAction(SCNAction.moveBy(x: 0, y: 0, z: -0.1, duration: Wand.RECHARGE_TIME))
-        //                tipNode.scale = SCNVector3(0,0,0)
-        //            }
         
         fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 250, asImpulse: true)
         fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
@@ -925,10 +913,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 }
             }
             //removeMonster
-            if let nameA = contact.nodeA.name,
-                let nameB = contact.nodeB.name {
+            if let nameA = contact.nodeA.name {
                 if nameA == "goblin" {
-                    print("goblin")
+                  
                     if chasingGoblins.contains(contact.nodeA) {
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeA)!)
                     }
@@ -937,8 +924,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     contact.nodeA.removeFromParentNode()
                     
                 }
+                
+                if let nameB = contact.nodeB.name {
                 if nameB == "goblin" {
-                    print("goblin")
+                    
                     if chasingGoblins.contains(contact.nodeB) {
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeB)!)
                     }
@@ -946,6 +935,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     
                     contact.nodeB.removeFromParentNode()
                     
+                }
                 }
             }
             
