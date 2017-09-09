@@ -152,10 +152,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
-     
-            
-            
-            
+
             for goblin in chasingGoblins {
                 chaseTime += Double(arc4random_uniform(3)*5)
                 let actionChase = SCNAction.move(to: vect, duration: chaseTime)
@@ -169,9 +166,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
-      
-            
-            
+
             if chasingGoblins.count > 0 {
                 chaseTime += Double(arc4random_uniform(3)*5)
                 let actionChase = SCNAction.move(to: vect, duration: chaseTime)
@@ -190,9 +185,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
-            
-            
-            
+ 
             for goblin in chasingGoblins {
                 chaseTime += Double(arc4random_uniform(3)*5)
                 let actionChase = SCNAction.move(to: vect, duration: chaseTime)
@@ -380,6 +373,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         wrapper.position = sceneView.pointOfView!.position
         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
         wrapper.addChildNode(playerNode!)
+        print("playerNode Location")
+        print(playerNode!.position)
+        print(playerNode!.eulerAngles)
         
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
@@ -417,7 +413,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
             }
         }
-        print("level: \(level)")
+       
         switch level {
         case "2-1":
             
@@ -479,12 +475,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
-        print("tap")
+   
         var didNotGetRing = true
         var hitTestOptions = [SCNHitTestOption: Any]()
         hitTestOptions[SCNHitTestOption.boundingBoxOnly] = true
         let results: [SCNHitTestResult] = sceneView.hitTest(gesture.location(in: view), options: hitTestOptions)
-        print(results)
+       
         
         for result in results {
             
@@ -690,7 +686,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     @objc private func pageBackward(_ gesture: UIGestureRecognizer) {
-        print("tutorial frame origin x: \(tutorialView.frame.origin.x)")
+  
         if tutorialView.frame.origin.x > -100*sw {
             return
         } else {
@@ -734,8 +730,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func dropGun() {
         gun.removeAllActions()
         wrapper.addChildNode(gun)
-        print("gunposition again")
-        print(gunPosition)
         gun.scale = gunPosition[0]
         gun.position = gunPosition[1]
         gun.eulerAngles = gunPosition[2]
@@ -771,12 +765,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         let contactMask = contact.nodeA.physicsBody!.categoryBitMask | contact.nodeB.physicsBody!.categoryBitMask
         guard contact.nodeA.physicsBody != nil || contact.nodeB.physicsBody != nil else {return}
-        print("nodeA: \(contact.nodeA.physicsBody!.categoryBitMask)")
-        print("nodeB: \(contact.nodeB.physicsBody!.categoryBitMask)")
+      
         
         //went through a wall
         if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.fence.rawValue)  {
-            print("hit fence :(")
+            
             DispatchQueue.main.async {
                 self.collisionLabel.text = "hit fence :("
             }
@@ -800,7 +793,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         // touched a ring
         if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.coin.rawValue) {
-            print("touched ring!!!")
+    
             DispatchQueue.main.async {
                 self.collisionLabel.text = "touched ring!!!"
             }
@@ -838,7 +831,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         // touched gun
         if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.weapon.rawValue) && isFirstGunTouch {
-            print("touched gun!!!")
+    
             isFirstGunTouch = false
             DispatchQueue.main.async {
                 self.collisionLabel.text = "touched gun!!!"
@@ -852,7 +845,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         // killed a monster
         if contactMask == (CollisionTypes.monster.rawValue | CollisionTypes.fireball.rawValue) {
-            print("hit monster!!!")
+     
             DispatchQueue.main.async {
                 self.collisionLabel.text = "hit monster!!!"
             }
@@ -860,7 +853,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if let nameA = contact.nodeA.name,
                 let nameB = contact.nodeB.name {
                 if nameA == "goblin" {
-                    print("goblin")
+                   
                     if chasingGoblins.contains(contact.nodeA) {
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeA)!)
                     }
@@ -872,7 +865,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     }
                 }
                 if nameB == "goblin" {
-                    print("goblin")
+               
                     if chasingGoblins.contains(contact.nodeB) {
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeB)!)
                     }
@@ -889,7 +882,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         //monster hit you!
         if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.monster.rawValue) {
-            print("monster hit you!!!")
+      
             DispatchQueue.main.async {
                 self.collisionLabel.text = "monster hit you :("
             }
