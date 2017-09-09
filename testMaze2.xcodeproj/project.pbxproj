@@ -78,7 +78,6 @@
 		A97F0FE11F4B324A001D84FC /* CollisionTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionTypes.swift; sourceTree = "<group>"; };
 		A97F0FE31F4B3283001D84FC /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		A97F0FE61F4B38CE001D84FC /* Fireball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fireball.swift; sourceTree = "<group>"; };
-		A97F0FEA1F4B3A6A001D84FC /* Shader */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shader; sourceTree = "<group>"; };
 		A97F0FED1F4B3D7E001D84FC /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		A99F62B91F3D68B100DD6027 /* GameOverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameOverView.swift; sourceTree = "<group>"; };
 		A99F62BA1F3D68B100DD6027 /* CustomColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColor.swift; sourceTree = "<group>"; };
@@ -214,7 +213,6 @@
 		A97F0FE51F4B36A5001D84FC /* PhysicsNodes */ = {
 			isa = PBXGroup;
 			children = (
-				A97F0FEA1F4B3A6A001D84FC /* Shader */,
 				A97F0FE31F4B3283001D84FC /* Player.swift */,
 				A97F0FE61F4B38CE001D84FC /* Fireball.swift */,
 			);

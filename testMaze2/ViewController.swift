@@ -152,12 +152,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
-            let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+     
             
             
             
             for goblin in chasingGoblins {
-                
+                chaseTime += Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
                 goblin.runAction(actionChase)
                 
             }
