@@ -67,8 +67,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
         }
     }
-    
+    let configuration = ARWorldTrackingConfiguration()
     override func viewDidAppear(_ animated: Bool) {
+ 
+            sceneView.session.run(configuration)
         
     }
     
@@ -298,7 +300,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     var wrapper = SCNNode()
     private func startScene(myscene: String) {
-        
+        points = 0
         press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
         sceneView.addGestureRecognizer(press)
         back.alpha = 1.0
@@ -362,13 +364,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             torus9,
             torus10
         ]
+
         
-        //potential problem area?
-        if isSessionFirstRunning {
-            let configuration = ARWorldTrackingConfiguration()
-            
-            sceneView.session.run(configuration)
-        }
         
         wrapper.position = sceneView.pointOfView!.position
         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
@@ -376,7 +373,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         print("playerNode Location")
         print(playerNode!.position)
         print(playerNode!.eulerAngles)
-        
+//        sceneView.session.run(configuration)
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
         let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 3))
@@ -938,5 +935,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         //            }
         //        }
         
+    }
+    func pause() {
+        self.sceneView.session.pause()
+    }
+    func run() {
+        sceneView.session.run(configuration)
     }
 }
