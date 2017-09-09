@@ -48,7 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Global.isWeaponsMember = true //hack
+     //   Global.isWeaponsMember = true //hack
         
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
         
@@ -168,13 +168,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
-            let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+      
             
             
             if chasingGoblins.count > 0 {
+                chaseTime += Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
                 chasingGoblins[0].runAction(actionChase)
             }
             if chasingGoblins.count > 1 {
+                chaseTime += Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
                 chasingGoblins[1].runAction(actionChase)
             }
             
@@ -185,10 +189,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             }
             let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
             let vectMag = Double(vect.magnitude)
-            let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+            
             
             
             for goblin in chasingGoblins {
+                chaseTime += Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
                 goblin.runAction(actionChase)
             }
             
@@ -330,7 +336,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         //potential problem???
         wrapper.position = sceneView.pointOfView!.position
         
-        wrapper.addChildNode(playerNode!)
+        
         torus1 = wrapper.childNode(withName: "torus1", recursively: false)!
         torus2 = wrapper.childNode(withName: "torus2", recursively: false)!
         torus3 = wrapper.childNode(withName: "torus3", recursively: false)!
@@ -372,6 +378,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         wrapper.position = sceneView.pointOfView!.position
         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+        wrapper.addChildNode(playerNode!)
         
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
@@ -389,7 +396,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         sceneView.addSubview(collisionLabel)
        
-      //  pickUpGun() //hack
+        pickUpGun() //hack
         
         
         if level == "1-1" {
