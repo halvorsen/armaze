@@ -139,9 +139,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     var chaseTime = 0.0
     @objc private func chasingFunc() {
-        guard let camPos = sceneView.pointOfView?.position else {return}
+        guard let _camPos = sceneView.pointOfView?.position else {return}
         
         guard playerNode != nil else {return}
+        
+        let camPos  = sceneView.scene.rootNode.convertPosition(_camPos, to: wrapper)
+        
         
         playerNode!.position.x = camPos.x
         playerNode!.position.z = camPos.z
@@ -309,8 +312,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
         //potential problem???
-        let localCamPos = sceneView.scene.rootNode.position
-        
+        let _localCamPos = sceneView.scene.rootNode.position
+        let localCamPos  = sceneView.scene.rootNode.convertPosition(_localCamPos, to: wrapper)
         playerNode?.removeFromParentNode()
         playerNode = Player.node()
         playerNode!.position = localCamPos
@@ -365,13 +368,26 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             torus9,
             torus10
         ]
+        //ARRIVED AT AND MONSTERS WOULD LOOK AT ME BUT RUN TO DIFFERENT SPOT...
+//        //        sceneView.session.run(configuration)
+//        playerNode = Player.node()
+//        nodeForGoblinToFace = SCNNode()
+//        let localCamPos = sceneView.scene.rootNode.position
+//        playerNode!.position = localCamPos
+//        playerNode!.position.y = localCamPos.y - 1
+//        //   playerNode!.eulerAngles.y = sceneView.scene.rootNode.eulerAngles.y
+//        wrapper.position = sceneView.pointOfView!.position
+//        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+//        nodeForGoblinToFace.position = SCNVector3(0,-3,0)
+//        wrapper.addChildNode(playerNode!)
+//        playerNode!.addChildNode(nodeForGoblinToFace)
 
         
         
         
         wrapper.position = sceneView.pointOfView!.position
         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
-        wrapper.addChildNode(playerNode!)
+        sceneView.scene.rootNode.addChildNode(playerNode!)
         print("playerNode Location")
         print(playerNode!.position)
         print(playerNode!.eulerAngles)
