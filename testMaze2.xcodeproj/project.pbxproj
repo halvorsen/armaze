@@ -58,8 +58,9 @@
 		402B005DFF916C176B2943AE /* Pods_testMaze2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_testMaze2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E7899C6D15B6B9AF1FB57DB /* Pods-testMaze2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testMaze2.release.xcconfig"; path = "Pods/Target Support Files/Pods-testMaze2/Pods-testMaze2.release.xcconfig"; sourceTree = "<group>"; };
 		A0F29C4DDF7DA5F96153ABD5 /* Pods-testMaze2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-testMaze2Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-testMaze2Tests/Pods-testMaze2Tests.release.xcconfig"; sourceTree = "<group>"; };
+		A9160A631F65C43C00344640 /* gun.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = gun.dae; sourceTree = "<group>"; };
 		A933B23A1F598E330096F5EA /* monster.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = monster.dae; sourceTree = "<group>"; };
-		A933B23B1F598E400096F5EA /* gun.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = gun.dae; sourceTree = "<group>"; };
+		A933B23B1F598E400096F5EA /* gun2.dae */ = {isa = PBXFileReference; lastKnownFileType = text.xml.dae; path = gun2.dae; sourceTree = "<group>"; };
 		A96E62881F3B3FAD006620F8 /* testMaze2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = testMaze2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A96E628B1F3B3FAD006620F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A96E628D1F3B3FAD006620F8 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -175,7 +176,8 @@
 				A99F62BC1F3D68B100DD6027 /* MenuButtons.swift */,
 				A99F62BD1F3D68B100DD6027 /* UIProtocolExtentions.swift */,
 				A933B23A1F598E330096F5EA /* monster.dae */,
-				A933B23B1F598E400096F5EA /* gun.dae */,
+				A9160A631F65C43C00344640 /* gun.dae */,
+				A933B23B1F598E400096F5EA /* gun2.dae */,
 				A96E628D1F3B3FAD006620F8 /* art.scnassets */,
 				A96E628F1F3B3FAD006620F8 /* ViewController.swift */,
 				A9FAC5A31F5DCA9900BDAF78 /* Delegate.swift */,

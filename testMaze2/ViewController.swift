@@ -139,12 +139,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     var chaseTime = 0.0
     @objc private func chasingFunc() {
-        guard let _camPos = sceneView.pointOfView?.position else {return}
+        guard let camPos = sceneView.pointOfView?.position else {return}
         
         guard playerNode != nil else {return}
-        
-        let camPos  = sceneView.scene.rootNode.convertPosition(_camPos, to: wrapper)
-        
         
         playerNode!.position.x = camPos.x
         playerNode!.position.z = camPos.z
@@ -312,8 +309,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
         //potential problem???
-        let _localCamPos = sceneView.scene.rootNode.position
-        let localCamPos  = sceneView.scene.rootNode.convertPosition(_localCamPos, to: wrapper)
+        let localCamPos = sceneView.scene.rootNode.position
+        
         playerNode?.removeFromParentNode()
         playerNode = Player.node()
         playerNode!.position = localCamPos
@@ -738,9 +735,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func pickUpGun() {
         gun.removeAllActions()
         
-        gun.scale = SCNVector3(0.01,0.01,0.01)
-        gun.position = SCNVector3(0.07 - 0.01,-0.15,-0.2)
-        gun.eulerAngles = SCNVector3(-70.0.degreesToRadians,10.0.degreesToRadians,10.0.degreesToRadians)
+        gun.scale = SCNVector3(0.02,0.02,0.02)
+        gun.position = SCNVector3(0.07 - 0.01,-0.12,-0.2)
+        gun.eulerAngles = SCNVector3(-70.0.degreesToRadians,20.0.degreesToRadians,10.0.degreesToRadians)
         
         //        gun.scale = SCNVector3(0.01,0.01,0.01)
         //        gun.position = SCNVector3(0.07 - 0.01,-0.25,-0.3)
