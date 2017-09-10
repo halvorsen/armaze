@@ -156,8 +156,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let vectMag = Double(vect.magnitude)
 
             for goblin in chasingGoblins {
-                chaseTime += Double(arc4random_uniform(3)*5)
-                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+              
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
                 goblin.runAction(actionChase)
                 
             }
@@ -170,13 +171,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let vectMag = Double(vect.magnitude)
 
             if chasingGoblins.count > 0 {
-                chaseTime += Double(arc4random_uniform(3)*5)
-                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
                 chasingGoblins[0].runAction(actionChase)
             }
             if chasingGoblins.count > 1 {
-                chaseTime += Double(arc4random_uniform(3)*5)
-                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
                 chasingGoblins[1].runAction(actionChase)
             }
             
@@ -189,8 +190,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let vectMag = Double(vect.magnitude)
  
             for goblin in chasingGoblins {
-                chaseTime += Double(arc4random_uniform(3)*5)
-                let actionChase = SCNAction.move(to: vect, duration: chaseTime)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
                 goblin.runAction(actionChase)
             }
             
@@ -330,7 +331,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
         //potential problem???
-        wrapper.position = sceneView.pointOfView!.position
+      //  wrapper.position = sceneView.pointOfView!.position
         
         
         torus1 = wrapper.childNode(withName: "torus1", recursively: false)!
@@ -367,12 +368,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
         
         
+        
         wrapper.position = sceneView.pointOfView!.position
         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
         wrapper.addChildNode(playerNode!)
         print("playerNode Location")
         print(playerNode!.position)
         print(playerNode!.eulerAngles)
+        print("wrapper Location")
+        print(wrapper.position)
+        print(wrapper.eulerAngles)
+        
 //        sceneView.session.run(configuration)
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
         
@@ -390,7 +396,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         sceneView.addSubview(collisionLabel)
        
-      //  pickUpGun() //hack
+        pickUpGun() //hack
         
         
         if level == "1-1" {
@@ -561,8 +567,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         fireballNode.scale = SCNVector3(0.5,0.5,0.5)   //playerNode!.position
         // let gunPoint = gun.childNode(withName: "point", recursively: false)!
+        let gunPoint = gun.childNode(withName: "point", recursively: false)!
+       // fireballNode.position = gun.convertPosition(SCNVector3(gunPoint.position.x,gunPoint.position.y,gunPoint.position.z), to: sceneView.scene.rootNode)
+       // fireballNode.runAction(SCNAction.move(by: SCNVector3(0.2,-0.2,0.0), duration: 0.0))
         sceneView.scene.rootNode.addChildNode(fireballNode)
-        //fireballNode.runAction(SCNAction.move(by: SCNVector3(0.5,0.5,-0.2), duration: 0.0))
+
+     
+        
         let currentFrame = sceneView.session.currentFrame!
         
         let n = SCNNode()
@@ -570,19 +581,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         var closeTranslation = matrix_identity_float4x4
         closeTranslation.columns.3.z = -0.5
+        closeTranslation.columns.3.x = 0.12
+        closeTranslation.columns.3.y = 0.06
         
         var translation = matrix_identity_float4x4
-        translation.columns.3.z = -1.5
+        translation.columns.3.z = -100.5
+      //  translation.columns.3.x = -0.08
+      //  translation.columns.3.y = -0.02
         
         n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
         fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
         n.simdTransform = matrix_multiply(pov.simdTransform, translation)
-        let gunPoint = gun.childNode(withName: "point", recursively: false)!
         
         direction = (n.position - fireballNode.position).normalized
         direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
         
-        fireballNode.position = gun.convertPosition(gunPoint.position, to: sceneView.scene.rootNode)
+        
         
         fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 250, asImpulse: true)
         fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
