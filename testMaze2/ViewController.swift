@@ -175,7 +175,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
         sceneView.scene = currentScene
-        
+        wrapper.position = sceneView.pointOfView!.position
+        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+        sceneView.scene.rootNode.position = sceneView.pointOfView!.position
+        sceneView.scene.rootNode.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
         sceneSetup()
         
     }
@@ -210,8 +213,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         
         
-        wrapper.position = sceneView.pointOfView!.position
-        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+        
         sceneView.pointOfView?.addChildNode(playerNode!)
     
        // sceneView.scene.rootNode.addChildNode(playerNode!)
@@ -398,25 +400,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var chaseTime = 0.0
     @objc private func chasingFunc() {
         
-//        let _camPos = sceneView.pointOfView!.position
-//        let camPos = sceneView.scene.rootNode.convertPosition(_camPos, to: wrapper)
-        
-        //        playerNode!.position.x = camPos.x
-        //        playerNode!.position.z = camPos.z
-        //        playerNode!.position.y = camPos.y - 1
-        
         switch level {
         case "2-1":
             if chaseTime == 0.0 {
                 chaseTime = 21.0
             }
-            
+    
             
             for goblin in chasingGoblins {
                 let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
-                let vect = SCNVector3(playerNodePositionInWrapper.x - goblin.position.x,-3.0,playerNodePositionInWrapper.z - goblin.position.z)
-                
-//                let vectMag = Double(vect.magnitude)
+                let vect = SCNVector3(playerNodePositionInWrapper.x ,-3.0,playerNodePositionInWrapper.z)
+
                 let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
                 
                 let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
@@ -428,22 +422,19 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if chaseTime == 0.0 {
                 chaseTime = 180.0
             }
-            //  let _vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
-            // let vect = sceneView.pointOfView!.convertPosition(_vect, to: wrapper)
-            
-            
+        
             if chasingGoblins.count > 0 {
                 let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
-                let vect = SCNVector3(playerNodePositionInWrapper.x - chasingGoblins[0].position.x,-3.0,playerNodePositionInWrapper.z - chasingGoblins[0].position.z)
-//                let vectMag = Double(vect.magnitude)
+                let vect = SCNVector3(playerNodePositionInWrapper.x ,-3.0,playerNodePositionInWrapper.z)
+
                 let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
                 let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
                 chasingGoblins[0].runAction(actionChase)
             }
             if chasingGoblins.count > 1 {
                 let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
-                let vect = SCNVector3(playerNodePositionInWrapper.x - chasingGoblins[1].position.x,-3.0,playerNodePositionInWrapper.z - chasingGoblins[1].position.z)
-//                let vectMag = Double(vect.magnitude)
+                let vect = SCNVector3(playerNodePositionInWrapper.x ,-3.0,playerNodePositionInWrapper.z)
+
                 let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
                 let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
                 chasingGoblins[1].runAction(actionChase)
@@ -454,14 +445,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if chaseTime == 0.0 {
                 chaseTime = 21.0
             }
-            //            let _vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
-            //            let vect = sceneView.pointOfView!.convertPosition(_vect, to: wrapper)
-            //            let vectMag = Double(vect.magnitude)
+      
             
             for goblin in chasingGoblins {
                 let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
-                let vect = SCNVector3(playerNodePositionInWrapper.x - goblin.position.x,-3.0,playerNodePositionInWrapper.z - goblin.position.z)
-//                let vectMag = Double(vect.magnitude)
+                let vect = SCNVector3(playerNodePositionInWrapper.x ,-3.0,playerNodePositionInWrapper.z)
+
                 let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
                 let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
                 goblin.runAction(actionChase)
@@ -477,9 +466,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     
     private func changeLabelSize() {
-        
-        ringLabel.frame = CGRect(x: 115*sw, y: 613*sh, width: 127*sw, height: 30*sh)
-        
+        DispatchQueue.main.async {
+          
+            self.ringLabel.frame = CGRect(x: 115*self.sw, y: 613*self.sh, width: 127*self.sw, height: 30*self.sh)
+        }
     }
     
     let torusNames = [
@@ -501,7 +491,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
-   
+        print("tap")
         var didNotGetRing = true
         var hitTestOptions = [SCNHitTestOption: Any]()
         hitTestOptions[SCNHitTestOption.boundingBoxOnly] = true
@@ -541,8 +531,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         if foundGun && didNotGetRing {
             //position gun
-            
+            print("tap2")
             if isGunReady {
+                print("tap3")
                 //  isGunReady = false
                 //    gun.removeAllActions()
                 //  crosshairView.alpha = 0.2
@@ -587,7 +578,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         fireballNode.name = "beachBall"
         
         fireballNode.opacity = 0.0
-        Global.delay(bySeconds: 0.01) {
+        Global.delay(bySeconds: 0.05) {
             fireballNode.opacity = 1.0
         }
         
@@ -630,9 +621,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             velocityMultiplier = 60
         }
         
-//        let eulerdirection = SCNVector3()
+
         fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * velocityMultiplier, asImpulse: true)
-     //   fireballNode.physicsBody?.applyForce(eulerdirection * Fireball.INITIAL_VELOCITY * 30, asImpulse: true)
+     
         fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
         n.removeFromParentNode()
         
@@ -755,7 +746,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func pickUpGun() {
         gun.removeAllActions()
-        
+        foundGun = true
         gun.scale = SCNVector3(0.02,0.02,0.02)
         gun.position = SCNVector3(0.07 - 0.01,-0.12,-0.2)
         gun.eulerAngles = SCNVector3(-70.0.degreesToRadians,20.0.degreesToRadians,10.0.degreesToRadians)
@@ -872,7 +863,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             DispatchQueue.main.async {
                 self.collisionLabel.text = "touched gun!!!"
             }
-            foundGun = true
+            
             pickUpGun()
             
             

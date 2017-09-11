@@ -155,10 +155,10 @@ class DeepPressGestureRecognizer: UIGestureRecognizer
             }
             
             //fire hard press
-            if let hardAction = self.hardAction, let target = self.target {
-                target.perform(hardAction)
-                // target.perform(hardAction, withObject: self)
-            }
+//            if let hardAction = self.hardAction, let target = self.target {
+//                target.perform(hardAction)
+//                 target.perform(hardAction, withObject: self)
+//            }
         }
     }
     
