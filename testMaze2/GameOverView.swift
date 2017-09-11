@@ -94,7 +94,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         //create delegate method to start scene and dismiss view
        
         myColorScheme = colorScheme
-        thisScoreLabel.text = ""
+       // thisScoreLabel.text = ""
         if let myColorScheme = myColorScheme {
             switch myColorScheme {
             case .tier1:

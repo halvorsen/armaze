@@ -289,7 +289,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
        // sceneView.addSubview(collisionLabel)
        
-      //  pickUpGun() //hack
+        pickUpGun() //hack
         
         
         if level == "1-1" {
@@ -382,7 +382,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         chasingGoblins.removeAll()
         foundGun = false
         
-        gunPosition.removeAll()
+        
         
         if let playerNode = playerNode {
             playerNode.removeFromParentNode()
@@ -420,6 +420,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.isFirstBackFunc = true
             self.chaseTime = 0.0
             self.dropGun()
+            self.gunPosition.removeAll()
         }
         sceneView.removeGestureRecognizer(press)
         
