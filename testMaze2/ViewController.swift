@@ -190,6 +190,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     secondChild.physicsBody?.collisionBitMask = CollisionTypes.fireball.rawValue
                 }
             }
+            if child.name == "gun" {
+                for secondChild in child.childNodes {
+                    secondChild.categoryBitMask = 256
+                }
+            }
         }
         
         sceneSetup()
