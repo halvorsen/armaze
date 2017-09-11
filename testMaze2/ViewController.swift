@@ -229,7 +229,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode!.eulerAngles = SCNVector3(0,0,0)
         playerNode!.addChildNode(nodeForGoblinToFace)
         
-        
+        Global.delay(bySeconds: 3.0) {
+            self.isFirstInfraction = true
+        }
         
         
         sceneView.pointOfView?.addChildNode(playerNode!)
@@ -295,7 +297,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         if level == "1-1" {
             Global.delay(bySeconds: 10.0) {
                 
-                self.ringLabel.text = "FORCE TOUCH TO CLOSE"
+                self.ringLabel.text = "FORCE TOUCH TO EXIT"
                 self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
                 self.tier.alpha = 0.0
                 //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
@@ -304,7 +306,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         } else {
             Global.delay(bySeconds: 5.0) {
                 
-                self.ringLabel.text = "FORCE TOUCH TO CLOSE"
+                self.ringLabel.text = "FORCE TOUCH TO EXIT"
                 self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
                 self.tier.alpha = 0.0
                 //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
@@ -397,7 +399,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         chasingTimer.invalidate()
         
         nodeForGoblinToFace.removeFromParentNode()
-        isFirstInfraction = true
+        isFirstInfraction = false
         isFirstRingTouch = true
         
         isFirstGunTouch = true
@@ -796,7 +798,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     
     var isFirstGunTouch = true
-    var isFirstInfraction = true
+    var isFirstInfraction = false
     var isFirstRingTouch = true
     func physicsWorld(_ world: SCNPhysicsWorld, didBegin contact: SCNPhysicsContact) {
         
