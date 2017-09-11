@@ -48,7 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-     //   Global.isWeaponsMember = true //hack
+        Global.isWeaponsMember = true //hack
         
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
         
@@ -149,8 +149,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         crosshairView.image = #imageLiteral(resourceName: "crosshair")
         sceneView.addSubview(crosshairView)
         
-        //   self.currentScene = self.sceneDict[maze]!
-        
         self.startScene(myscene: maze)
         sceneView.scene.physicsWorld.contactDelegate = self
         
@@ -164,7 +162,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
-     //   let localCamPos = sceneView.scene.rootNode.position
+        sceneView.debugOptions = SCNDebugOptions.showPhysicsShapes
         
         playerNode?.removeFromParentNode()
 
@@ -224,7 +222,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 //          playerNode!.position.y = camPos.y - 1
         nodeForGoblinToFace = SCNNode()
         playerNode = Player.node()
-        playerNode!.position = SCNVector3(0,-2,0)
+        playerNode!.position = SCNVector3(0,-3,0)
         nodeForGoblinToFace.position = SCNVector3(0,-3,0)
         playerNode!.eulerAngles = SCNVector3(0,0,0)
         playerNode!.addChildNode(nodeForGoblinToFace)
@@ -321,14 +319,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase2 = wrapper.childNode(withName: "monsterChase2", recursively: false)!
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3 ]
-            timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
+           
             
                 for goblin in self.chasingGoblins {
-                    
-                    goblin.look(at: self.nodeForGoblinToFace.position - goblin.position)
+                    goblin.constraints = [SCNBillboardConstraint()]
                     
                 }
-            })
+           
             
         case "6-1","8-1","10-1","11-1":
             let goblinChase1 = wrapper.childNode(withName: "monsterChase1", recursively: false)!
@@ -338,14 +335,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase5 = wrapper.childNode(withName: "monsterChase5", recursively: false)!
             let goblinChase6 = wrapper.childNode(withName: "monsterChase6", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3, goblinChase4, goblinChase5, goblinChase6 ]
-            timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
-               
-                for goblin in self.chasingGoblins {
-                    
-                    goblin.look(at: self.nodeForGoblinToFace.position - goblin.position)
-                    
-                }
-            })
+            for goblin in self.chasingGoblins {
+                goblin.constraints = [SCNBillboardConstraint()]
+                
+            }
         default:
             break
         }
@@ -388,7 +381,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         ringsFound = 0
         chasingGoblins.removeAll()
         foundGun = false
-        dropGun()
+        
         gunPosition.removeAll()
         
         if let playerNode = playerNode {
@@ -426,6 +419,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             //       self.sceneView.session.pause()
             self.isFirstBackFunc = true
             self.chaseTime = 0.0
+            self.dropGun()
         }
         sceneView.removeGestureRecognizer(press)
         
