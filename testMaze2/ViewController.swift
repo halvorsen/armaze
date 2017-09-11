@@ -913,8 +913,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if isFirstInfraction {
                 //isFirstInfraction = false
                 AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-                if ringLabel.bounds.width > 130*sw {
-                    changeLabelSize()
+                DispatchQueue.main.async {
+               
+                if self.ringLabel.bounds.width > 130*self.sw {
+                    self.changeLabelSize()
+                }
                 }
                 for i in 0...4 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
