@@ -22,7 +22,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var level = ""
     let crosshairView = UIImageView()
     var gunPosition = [SCNVector3]()
-    let nodeForGoblinToFace = SCNNode()
+    var nodeForGoblinToFace = SCNNode()
     
     let invisibleCover = UIView()
     let ringLabel = UILabel()
@@ -74,153 +74,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
-    @objc private func backFunc(_ button: UIButton) {
-        if isFirstBackFunc {
-            isFirstBackFunc = false
-            backToVC()
-        }
-    }
     
-    private func backToVC() {
-        print("!!!!!Done!!!!!")
-        sceneView.removeGestureRecognizer(tap)
-        sceneView.removeGestureRecognizer(press)
-        invisibleCover.removeFromSuperview()
-        ringLabel.removeFromSuperview()
-        back.removeFromSuperview()
-        tier.removeFromSuperview()
-        collisionLabel.removeFromSuperview()
-        location.removeFromSuperview()
-        
-        ringsFound = 0
-        chasingGoblins.removeAll()
-        foundGun = false
-        dropGun()
-        gunPosition.removeAll()
-        
-        if let playerNode = playerNode {
-            playerNode.removeFromParentNode()
-        }
-        
-        timer1.invalidate()
-        chasingTimer.invalidate()
-        
-        nodeForGoblinToFace.removeFromParentNode()
-        isFirstInfraction = true
-        isFirstRingTouch = true
-        
-        isFirstGunTouch = true
-        myGameOverView.frame.origin.x = -375*sw
-        view.addSubview(myGameOverView)
-        
-        myGameOverView.thisScoreLabel.text = "\(points)"
-        if points > Global.highScores[level]! {
-            Global.highScores[level] = points
-            UserDefaults.standard.set(points, forKey: level)
-        }
-        myGameOverView.bestScoreLabel.text = "BEST \(Global.highScores[level]!)"
-        if points == 10000 {
-            myGameOverView.bestScoreLabel.text = "Perfect Score!"
-        }
-        points = 0
-        
-        UIView.animate(withDuration: 1.0) {
-            
-            self.myGameOverView.frame.origin.x = 0
-        }
-        Global.delay(bySeconds: 1.0) {
-            self.ringLabel.text = "Analyzing-Pan Camera Around"
-            //       self.sceneView.session.pause()
-            self.isFirstBackFunc = true
-            self.chaseTime = 0.0
-        }
-        sceneView.removeGestureRecognizer(press)
-        
-    }
-    var chaseTime = 0.0
-    @objc private func chasingFunc() {
-        guard let camPos = sceneView.pointOfView?.position else {return}
-        
-        guard playerNode != nil else {return}
-        
-        playerNode!.position.x = camPos.x
-        playerNode!.position.z = camPos.z
-        playerNode!.position.y = camPos.y - 1
-        
-        switch level {
-        case "2-1":
-            if chaseTime == 0.0 {
-                chaseTime = 21.0
-            }
-            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
-            let vectMag = Double(vect.magnitude)
-
-            for goblin in chasingGoblins {
-                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
-              
-                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
-                goblin.runAction(actionChase)
-                
-            }
-            
-        case "6-1":
-            if chaseTime == 0.0 {
-                chaseTime = 180.0
-            }
-            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
-            let vectMag = Double(vect.magnitude)
-
-            if chasingGoblins.count > 0 {
-                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
-                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
-                chasingGoblins[0].runAction(actionChase)
-            }
-            if chasingGoblins.count > 1 {
-                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
-                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
-                chasingGoblins[1].runAction(actionChase)
-            }
-            
-            
-        case "8-1","10-1","11-1":
-            if chaseTime == 0.0 {
-                chaseTime = 21.0
-            }
-            let vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
-            let vectMag = Double(vect.magnitude)
- 
-            for goblin in chasingGoblins {
-                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
-                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
-                goblin.runAction(actionChase)
-            }
-            
-        default:
-            break
-        }
-        if chaseTime > 3.0 {
-            chaseTime -= 3.0
-        }
-    }
-    
-    
-    private func changeLabelSize() {
-        
-        ringLabel.frame = CGRect(x: 115*sw, y: 613*sh, width: 127*sw, height: 30*sh)
-        
-    }
-    
+    var light = SCNNode()
+    var gun = SCNNode()
+    var torus1 = SCNNode()
+    var torus2 = SCNNode()
+    var torus3 = SCNNode()
+    var torus4 = SCNNode()
+    var torus5 = SCNNode()
+    var torus6 = SCNNode()
+    var torus7 = SCNNode()
+    var torus8 = SCNNode()
+    var torus9 = SCNNode()
+    var torus10 = SCNNode()
+    var torusAll = [SCNNode]()
+    var wrapper = SCNNode()
     var maze: String = ""
     let goblinSpeed : Double = 0.1
     @objc private func play(_ button: UIButton) {
-        
-        //        back.frame = CGRect(x: 69*sw, y: 27*sh, width: 219*sw, height: 30*sh)
-        //        back.text = "FORCE TOUCH TO CLOSE"
-        //        back.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
-        //        back.backgroundColor = .black
-        //        back.textColor = .white
-        //        back.textAlignment = .center
-        
+  
         tier.frame = CGRect(x: 115*sw, y: 27*sh, width: 127*sw, height: 30*sh)
         tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
         tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
@@ -274,7 +146,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         
         
-        crosshairView.frame = self.view.bounds
+        crosshairView.frame = CGRect(x: sw*375/4, y: sh*667/4, width: sw*375/2, height: sh*667/2)
         crosshairView.image = #imageLiteral(resourceName: "crosshair")
         sceneView.addSubview(crosshairView)
         
@@ -284,22 +156,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.scene.physicsWorld.contactDelegate = self
         
     }
-    
-    var light = SCNNode()
-    var gun = SCNNode()
-    var torus1 = SCNNode()
-    var torus2 = SCNNode()
-    var torus3 = SCNNode()
-    var torus4 = SCNNode()
-    var torus5 = SCNNode()
-    var torus6 = SCNNode()
-    var torus7 = SCNNode()
-    var torus8 = SCNNode()
-    var torus9 = SCNNode()
-    var torus10 = SCNNode()
-    var torusAll = [SCNNode]()
-    
-    var wrapper = SCNNode()
+ 
     private func startScene(myscene: String) {
         points = 0
         press = DeepPressGestureRecognizer(target: self, action: #selector(ViewController.backFunc(_:)))
@@ -308,30 +165,63 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
-        //potential problem???
-        let localCamPos = sceneView.scene.rootNode.position
+     //   let localCamPos = sceneView.scene.rootNode.position
         
         playerNode?.removeFromParentNode()
-        playerNode = Player.node()
-        playerNode!.position = localCamPos
-        playerNode!.position.y = localCamPos.y - 1
-        nodeForGoblinToFace.position = SCNVector3(0,-3,0)
-        
-        playerNode!.addChildNode(nodeForGoblinToFace)
+
         level = myscene
         currentScene = SCNScene()
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
-        
+        wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
+        light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
         sceneView.scene = currentScene
         
         sceneSetup()
+        
     }
     
     private func sceneSetup() {
-        wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
-        light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
+
         //potential problem???
       //  wrapper.position = sceneView.pointOfView!.position
+ 
+        //ARRIVED AT AND MONSTERS WOULD LOOK AT ME BUT RUN TO DIFFERENT SPOT...
+//        //        sceneView.session.run(configuration)
+//        playerNode = Player.node()
+//        nodeForGoblinToFace = SCNNode()
+//        let localCamPos = sceneView.scene.rootNode.position
+//        playerNode!.position = localCamPos
+//        playerNode!.position.y = localCamPos.y - 1
+//        //   playerNode!.eulerAngles.y = sceneView.scene.rootNode.eulerAngles.y
+//        wrapper.position = sceneView.pointOfView!.position
+//        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+//        nodeForGoblinToFace.position = SCNVector3(0,-3,0)
+//        wrapper.addChildNode(playerNode!)
+//        playerNode!.addChildNode(nodeForGoblinToFace)
+        
+//        guard let camPos = sceneView.pointOfView?.position else {return}
+//          playerNode!.position = camPos
+//          playerNode!.position.y = camPos.y - 1
+        nodeForGoblinToFace = SCNNode()
+        playerNode = Player.node()
+        playerNode!.position = SCNVector3(0,-2,0)
+        nodeForGoblinToFace.position = SCNVector3(0,-3,0)
+        playerNode!.addChildNode(nodeForGoblinToFace)
+        
+        
+        
+        wrapper.position = sceneView.pointOfView!.position
+        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+        sceneView.pointOfView?.addChildNode(playerNode!)
+    
+       // sceneView.scene.rootNode.addChildNode(playerNode!)
+        
+//        sceneView.session.run(configuration)
+        
+        
+        
+        
+        
         
         
         torus1 = wrapper.childNode(withName: "torus1", recursively: false)!
@@ -365,38 +255,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             torus9,
             torus10
         ]
-        //ARRIVED AT AND MONSTERS WOULD LOOK AT ME BUT RUN TO DIFFERENT SPOT...
-//        //        sceneView.session.run(configuration)
-//        playerNode = Player.node()
-//        nodeForGoblinToFace = SCNNode()
-//        let localCamPos = sceneView.scene.rootNode.position
-//        playerNode!.position = localCamPos
-//        playerNode!.position.y = localCamPos.y - 1
-//        //   playerNode!.eulerAngles.y = sceneView.scene.rootNode.eulerAngles.y
-//        wrapper.position = sceneView.pointOfView!.position
-//        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
-//        nodeForGoblinToFace.position = SCNVector3(0,-3,0)
-//        wrapper.addChildNode(playerNode!)
-//        playerNode!.addChildNode(nodeForGoblinToFace)
-
-        
-        
-        
-        wrapper.position = sceneView.pointOfView!.position
-        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
-        sceneView.scene.rootNode.addChildNode(playerNode!)
-        print("playerNode Location")
-        print(playerNode!.position)
-        print(playerNode!.eulerAngles)
-        print("wrapper Location")
-        print(wrapper.position)
-        print(wrapper.eulerAngles)
-        
-//        sceneView.session.run(configuration)
         let action0 = SCNAction.repeat(SCNAction.rotate(by: .pi/2, around: SCNVector3(0, 0, 1), duration: 0), count: 1)
-        
         let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 3))
-        
         for torus in torusAll {
             torus.runAction(action0)
             torus.runAction(action)
@@ -471,6 +331,156 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
+    @objc private func backFunc(_ button: UIButton) {
+        if isFirstBackFunc {
+            isFirstBackFunc = false
+            backToVC()
+        }
+    }
+
+    private func backToVC() {
+        print("!!!!!Done!!!!!")
+        sceneView.removeGestureRecognizer(tap)
+        sceneView.removeGestureRecognizer(press)
+        invisibleCover.removeFromSuperview()
+        ringLabel.removeFromSuperview()
+        back.removeFromSuperview()
+        tier.removeFromSuperview()
+        collisionLabel.removeFromSuperview()
+        location.removeFromSuperview()
+        
+        ringsFound = 0
+        chasingGoblins.removeAll()
+        foundGun = false
+        dropGun()
+        gunPosition.removeAll()
+        
+        if let playerNode = playerNode {
+            playerNode.removeFromParentNode()
+        }
+        
+        timer1.invalidate()
+        chasingTimer.invalidate()
+        
+        nodeForGoblinToFace.removeFromParentNode()
+        isFirstInfraction = true
+        isFirstRingTouch = true
+        
+        isFirstGunTouch = true
+        myGameOverView.frame.origin.x = -375*sw
+        view.addSubview(myGameOverView)
+        
+        myGameOverView.thisScoreLabel.text = "\(points)"
+        if points > Global.highScores[level]! {
+            Global.highScores[level] = points
+            UserDefaults.standard.set(points, forKey: level)
+        }
+        myGameOverView.bestScoreLabel.text = "BEST \(Global.highScores[level]!)"
+        if points == 10000 {
+            myGameOverView.bestScoreLabel.text = "Perfect Score!"
+        }
+        points = 0
+        
+        UIView.animate(withDuration: 1.0) {
+            
+            self.myGameOverView.frame.origin.x = 0
+        }
+        Global.delay(bySeconds: 1.0) {
+            self.ringLabel.text = "Analyzing-Pan Camera Around"
+            //       self.sceneView.session.pause()
+            self.isFirstBackFunc = true
+            self.chaseTime = 0.0
+        }
+        sceneView.removeGestureRecognizer(press)
+        
+    }
+    
+    var chaseTime = 0.0
+    @objc private func chasingFunc() {
+        
+//        let _camPos = sceneView.pointOfView!.position
+//        let camPos = sceneView.scene.rootNode.convertPosition(_camPos, to: wrapper)
+        
+        //        playerNode!.position.x = camPos.x
+        //        playerNode!.position.z = camPos.z
+        //        playerNode!.position.y = camPos.y - 1
+        
+        switch level {
+        case "2-1":
+            if chaseTime == 0.0 {
+                chaseTime = 21.0
+            }
+            
+            
+            for goblin in chasingGoblins {
+                let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
+                let vect = SCNVector3(playerNodePositionInWrapper.x - goblin.position.x,-3.0,playerNodePositionInWrapper.z - goblin.position.z)
+                
+//                let vectMag = Double(vect.magnitude)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+                
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
+                goblin.runAction(actionChase)
+                
+            }
+            
+        case "6-1":
+            if chaseTime == 0.0 {
+                chaseTime = 180.0
+            }
+            //  let _vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
+            // let vect = sceneView.pointOfView!.convertPosition(_vect, to: wrapper)
+            
+            
+            if chasingGoblins.count > 0 {
+                let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
+                let vect = SCNVector3(playerNodePositionInWrapper.x - chasingGoblins[0].position.x,-3.0,playerNodePositionInWrapper.z - chasingGoblins[0].position.z)
+//                let vectMag = Double(vect.magnitude)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
+                chasingGoblins[0].runAction(actionChase)
+            }
+            if chasingGoblins.count > 1 {
+                let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
+                let vect = SCNVector3(playerNodePositionInWrapper.x - chasingGoblins[1].position.x,-3.0,playerNodePositionInWrapper.z - chasingGoblins[1].position.z)
+//                let vectMag = Double(vect.magnitude)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
+                chasingGoblins[1].runAction(actionChase)
+            }
+            
+            
+        case "8-1","10-1","11-1":
+            if chaseTime == 0.0 {
+                chaseTime = 21.0
+            }
+            //            let _vect = SCNVector3(playerNode!.position.x,-3.0,playerNode!.position.z)
+            //            let vect = sceneView.pointOfView!.convertPosition(_vect, to: wrapper)
+            //            let vectMag = Double(vect.magnitude)
+            
+            for goblin in chasingGoblins {
+                let playerNodePositionInWrapper = sceneView!.scene.rootNode.convertPosition(sceneView.pointOfView!.position, to: wrapper)
+                let vect = SCNVector3(playerNodePositionInWrapper.x - goblin.position.x,-3.0,playerNodePositionInWrapper.z - goblin.position.z)
+//                let vectMag = Double(vect.magnitude)
+                let _chaseTime = chaseTime + Double(arc4random_uniform(3)*5)
+                let actionChase = SCNAction.move(to: vect, duration: _chaseTime)
+                goblin.runAction(actionChase)
+            }
+            
+        default:
+            break
+        }
+        if chaseTime > 3.0 {
+            chaseTime -= 3.0
+        }
+    }
+    
+    
+    private func changeLabelSize() {
+        
+        ringLabel.frame = CGRect(x: 115*sw, y: 613*sh, width: 127*sw, height: 30*sh)
+        
+    }
     
     let torusNames = [
         "torus1",
@@ -576,42 +586,53 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         let fireballNode = Fireball.node()
         fireballNode.name = "beachBall"
         
-        fireballNode.opacity = 1.0
+        fireballNode.opacity = 0.0
+        Global.delay(bySeconds: 0.01) {
+            fireballNode.opacity = 1.0
+        }
         
-        fireballNode.scale = SCNVector3(0.5,0.5,0.5)   //playerNode!.position
+        fireballNode.scale = SCNVector3(3,3,3)   //playerNode!.position
+        if level == "1-1" {
+            fireballNode.scale = SCNVector3(2,2,2)
+        }
         // let gunPoint = gun.childNode(withName: "point", recursively: false)!
         let gunPoint = gun.childNode(withName: "point", recursively: false)!
        // fireballNode.position = gun.convertPosition(SCNVector3(gunPoint.position.x,gunPoint.position.y,gunPoint.position.z), to: sceneView.scene.rootNode)
        // fireballNode.runAction(SCNAction.move(by: SCNVector3(0.2,-0.2,0.0), duration: 0.0))
-        sceneView.scene.rootNode.addChildNode(fireballNode)
-
-     
+        fireballNode.position = gun.convertPosition(gunPoint.position, to: wrapper)
+        wrapper.addChildNode(fireballNode)
         
         let currentFrame = sceneView.session.currentFrame!
         
         let n = SCNNode()
-        sceneView.scene.rootNode.addChildNode(n)
+      //  n.position = SCNVector3(0,0,-500)
+        sceneView.pointOfView!.addChildNode(n)
         
         var closeTranslation = matrix_identity_float4x4
         closeTranslation.columns.3.z = -0.5
-        closeTranslation.columns.3.x = 0.12
-        closeTranslation.columns.3.y = 0.06
+        closeTranslation.columns.3.x = 0.02
+        closeTranslation.columns.3.y = -0.06
         
         var translation = matrix_identity_float4x4
         translation.columns.3.z = -100.5
-      //  translation.columns.3.x = -0.08
-      //  translation.columns.3.y = -0.02
+//        translation.columns.3.x = -0.9
+//        translation.columns.3.y = 1.5
         
         n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
         fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
         n.simdTransform = matrix_multiply(pov.simdTransform, translation)
-        
+
         direction = (n.position - fireballNode.position).normalized
         direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
         
+        var velocityMultiplier: Float = 30
+        if level == "1-1" {
+            velocityMultiplier = 60
+        }
         
-        
-        fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * 250, asImpulse: true)
+//        let eulerdirection = SCNVector3()
+        fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * velocityMultiplier, asImpulse: true)
+     //   fireballNode.physicsBody?.applyForce(eulerdirection * Fireball.INITIAL_VELOCITY * 30, asImpulse: true)
         fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
         n.removeFromParentNode()
         
@@ -738,15 +759,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         gun.scale = SCNVector3(0.02,0.02,0.02)
         gun.position = SCNVector3(0.07 - 0.01,-0.12,-0.2)
         gun.eulerAngles = SCNVector3(-70.0.degreesToRadians,20.0.degreesToRadians,10.0.degreesToRadians)
-        
-        //        gun.scale = SCNVector3(0.01,0.01,0.01)
-        //        gun.position = SCNVector3(0.07 - 0.01,-0.25,-0.3)
-        //        gun.eulerAngles = SCNVector3(-60.0.degreesToRadians,0,30.0.degreesToRadians)
-        
-        //        let movePosAction = SCNAction.moveBy(x: 0.02, y: 0, z: 0, duration: 0.7)
-        //        let moveNegAction = SCNAction.moveBy(x: -0.02, y: 0, z: 0, duration: 0.7)
-        //        let sequence = SCNAction.sequence([movePosAction, moveNegAction])
-        //        gun.runAction(SCNAction.repeatForever(sequence))
         sceneView.pointOfView?.addChildNode(gun)
         
     }
