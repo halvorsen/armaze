@@ -102,15 +102,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tier.alpha = 1.0
         
         invisibleCover.isUserInteractionEnabled = false
-        
-        ringLabel.frame = CGRect(x: 67*sw, y: 613*sh, width: 219*sw, height: 30*sh)
+        let startText = "Analyzing-Pan Camera Around"
+        ringLabel.frame = CGRect(x: 48*sw, y: 613*sh, width: 279*sw, height: 30*sh)
         ringLabel.frame.origin.y = sh*617
         ringLabel.backgroundColor = .black
-        ringLabel.text = "Analyzing-Pan Camera Around"
+        ringLabel.textColor = .white
+        ringLabel.text = startText.uppercased()
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
         ringLabel.textAlignment = .center
-        
-        ringLabel.textColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 0.5)
         ringLabel.alpha = 1.0
         collisionLabel.frame = CGRect(x: 0, y: 550, width: 375*sw, height: 100*sh)
         collisionLabel.text = ""
@@ -288,15 +287,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         sceneView.addSubview(back)
         //  sceneView.addSubview(tier)
         invisibleCover.addSubview(ringLabel)
-        sceneView.addSubview(collisionLabel)
+       // sceneView.addSubview(collisionLabel)
        
-        pickUpGun() //hack
+      //  pickUpGun() //hack
         
         
         if level == "1-1" {
             Global.delay(bySeconds: 10.0) {
                 
                 self.ringLabel.text = "FORCE TOUCH TO CLOSE"
+                self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
                 self.tier.alpha = 0.0
                 //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
                 
@@ -305,6 +305,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             Global.delay(bySeconds: 5.0) {
                 
                 self.ringLabel.text = "FORCE TOUCH TO CLOSE"
+                self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
                 self.tier.alpha = 0.0
                 //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
                 
@@ -356,6 +357,18 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         if isFirstBackFunc {
             isFirstBackFunc = false
             backToVC()
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
+    override func motionEnded(_ motion: UIEventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            if !myGameOverView.isDescendant(of: view) {
+            backToVC()
+            }
         }
     }
 
@@ -487,7 +500,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func changeLabelSize() {
         DispatchQueue.main.async {
           
-            self.ringLabel.frame = CGRect(x: 115*self.sw, y: 613*self.sh, width: 127*self.sw, height: 30*self.sh)
+            self.ringLabel.frame = CGRect(x: 275*self.sw/2, y: 613*self.sh, width: 100*self.sw, height: 30*self.sh)
         }
     }
     
@@ -688,7 +701,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     @objc private func pageForward(_ gesture: UIGestureRecognizer) {
-        if tutorialView.frame.origin.x >= 1100*sw {
+        if tutorialView.frame.origin.x <= -1100*sw {
             
             AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
                 if response {
