@@ -162,7 +162,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
-        sceneView.debugOptions = SCNDebugOptions.showPhysicsShapes
+       // sceneView.debugOptions = SCNDebugOptions.showPhysicsShapes
         
         playerNode?.removeFromParentNode()
         
@@ -171,12 +171,15 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
+        sceneView.scene.rootNode.position = sceneView.pointOfView!.position
+        sceneView.scene.rootNode.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
         sceneView.scene = currentScene
-        
-        wrapper.position = sceneView.pointOfView!.position
+        //BEST WAY SO FAR, FENCES DO FuNNY THings
+ /*       wrapper.position = sceneView.pointOfView!.position
         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
         sceneView.scene.rootNode.position = sceneView.pointOfView!.position
-        sceneView.scene.rootNode.eulerAngles = SCNVector3(0,0,0)
+        sceneView.scene.rootNode.eulerAngles = SCNVector3(0,0,0)*/
+        
         
         //make sure goblins have contactbitmask
         
@@ -263,7 +266,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         // sceneView.addSubview(collisionLabel)
         
-        pickUpGun() //hack
+       // pickUpGun() //hack
         
         
         if level == "1-1" {
