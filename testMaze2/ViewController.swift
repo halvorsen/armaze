@@ -178,9 +178,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         wrapper.position = sceneView.pointOfView!.position
         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
         sceneView.scene.rootNode.position = sceneView.pointOfView!.position
-        sceneView.scene.rootNode.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
-        sceneSetup()
+        sceneView.scene.rootNode.eulerAngles = SCNVector3(0,0,0)
         
+        //make sure goblins have contactbitmask
+        
+        for child in wrapper.childNodes {
+            for secondChild  in child.childNodes {
+                if secondChild.name == "goblin" {
+                    print("goblin!!!!")
+                    secondChild.physicsBody?.categoryBitMask = CollisionTypes.monster.rawValue
+                    secondChild.physicsBody?.collisionBitMask = CollisionTypes.fireball.rawValue
+                }
+            }
+        }
+        
+        sceneSetup()
+    
     }
     
     private func sceneSetup() {
@@ -209,6 +222,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode = Player.node()
         playerNode!.position = SCNVector3(0,-2,0)
         nodeForGoblinToFace.position = SCNVector3(0,-3,0)
+        playerNode!.eulerAngles = SCNVector3(0,0,0)
         playerNode!.addChildNode(nodeForGoblinToFace)
         
         
@@ -300,7 +314,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             let goblinChase3 = wrapper.childNode(withName: "monsterChase3", recursively: false)!
             chasingGoblins = [ goblinChase1, goblinChase2, goblinChase3 ]
             timer1 = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true, block: {_ in
-               
+            
                 for goblin in self.chasingGoblins {
                     
                     goblin.look(at: self.nodeForGoblinToFace.position - goblin.position)
@@ -531,36 +545,14 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         if foundGun && didNotGetRing {
             //position gun
-            print("tap2")
+        
             if isGunReady {
-                print("tap3")
-                //  isGunReady = false
-                //    gun.removeAllActions()
-                //  crosshairView.alpha = 0.2
-                //  Global.delay(bySeconds: 0.2, closure: {self.crosshairView.alpha = 0.0})
-                //                let movePosRotationAction = SCNAction.rotateTo(x: CGFloat(-90.0.degreesToRadians), y: 0, z: 0, duration: 0.2)
-                //                let moveNegRotationAction = SCNAction.rotateTo(x: CGFloat(-60.0.degreesToRadians), y: 0, z: CGFloat(30.0.degreesToRadians), duration: 0.5)
-                //                let rotationSequence = SCNAction.sequence([movePosRotationAction, moveNegRotationAction])
-                //                    gun.runAction(rotationSequence)
-                //
-                //                let movePosAction = SCNAction.moveBy(x: -0.1, y: 0.2, z: 0.2, duration: 0.2)
-                //                let moveNegAction = SCNAction.moveBy(x: 0.1, y: -0.2, z: -0.2, duration: 0.8)
-                //                let sequence = SCNAction.sequence([movePosAction, moveNegAction])
-                //                    gun.runAction(sequence, completionHandler: {
-                //
-                //                        self.gun.position = SCNVector3(0.07 - 0.01,-0.25,-0.3)
-                //                        self.gun.eulerAngles = SCNVector3(-60.0.degreesToRadians,0,30.0.degreesToRadians)
-                //                        let movePosAction = SCNAction.moveBy(x: 0.02, y: 0, z: 0, duration: 0.7)
-                //                        let moveNegAction = SCNAction.moveBy(x: -0.02, y: 0, z: 0, duration: 0.7)
-                //                        let sequence = SCNAction.sequence([movePosAction, moveNegAction])
-                //                        self.gun.runAction(SCNAction.repeatForever(sequence))
-                //                        self.isGunReady = true
-                //                    })
-                //
+               
+             
                 
-                Global.delay(bySeconds: 0.2) {
+       //         Global.delay(bySeconds: 0.2) {
                     self.fireBeachBall()
-                }
+        //}
                 
             }
             
@@ -570,44 +562,44 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
     }
     
+    let x:Float = 0.8
+    let y:Float = 0.7
+    let z:Float = 0.8
     private func fireBeachBall() {
         
         let pov = sceneView.pointOfView!
-        // let action = SCNAction.repeatForever(SCNAction.rotate(by: .pi*2, around: SCNVector3(0, 1, 0), duration: 0.5))
+        
         let fireballNode = Fireball.node()
         fireballNode.name = "beachBall"
+
         
-        fireballNode.opacity = 0.0
-        Global.delay(bySeconds: 0.05) {
-            fireballNode.opacity = 1.0
-        }
-        
-        fireballNode.scale = SCNVector3(3,3,3)   //playerNode!.position
+        fireballNode.scale = SCNVector3(50,50,50)
         if level == "1-1" {
-            fireballNode.scale = SCNVector3(2,2,2)
+            fireballNode.scale = SCNVector3(40,40,40)
         }
-        // let gunPoint = gun.childNode(withName: "point", recursively: false)!
+
         let gunPoint = gun.childNode(withName: "point", recursively: false)!
-       // fireballNode.position = gun.convertPosition(SCNVector3(gunPoint.position.x,gunPoint.position.y,gunPoint.position.z), to: sceneView.scene.rootNode)
-       // fireballNode.runAction(SCNAction.move(by: SCNVector3(0.2,-0.2,0.0), duration: 0.0))
-        fireballNode.position = gun.convertPosition(gunPoint.position, to: wrapper)
-        wrapper.addChildNode(fireballNode)
+      
+        gunPoint.addChildNode(fireballNode)
         
         let currentFrame = sceneView.session.currentFrame!
         
         let n = SCNNode()
-      //  n.position = SCNVector3(0,0,-500)
+ 
         sceneView.pointOfView!.addChildNode(n)
+
+        
         
         var closeTranslation = matrix_identity_float4x4
-        closeTranslation.columns.3.z = -0.5
-        closeTranslation.columns.3.x = 0.02
-        closeTranslation.columns.3.y = -0.06
+
+        closeTranslation.columns.3.z = z
+        closeTranslation.columns.3.x = x
+        closeTranslation.columns.3.y = y
+ 
         
         var translation = matrix_identity_float4x4
         translation.columns.3.z = -100.5
-//        translation.columns.3.x = -0.9
-//        translation.columns.3.y = 1.5
+
         
         n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
         fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
@@ -616,9 +608,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         direction = (n.position - fireballNode.position).normalized
         direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
         
-        var velocityMultiplier: Float = 30
+        var velocityMultiplier: Float = 7
         if level == "1-1" {
-            velocityMultiplier = 60
+            velocityMultiplier = 30
         }
         
 
@@ -872,7 +864,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         // killed a monster
         if contactMask == (CollisionTypes.monster.rawValue | CollisionTypes.fireball.rawValue) {
-     
+     print("hitmonster!")
             DispatchQueue.main.async {
                 self.collisionLabel.text = "hit monster!!!"
             }
@@ -885,7 +877,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeA)!)
                     }
                     contact.nodeA.removeAllActions()
-                    contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 3, asImpulse: true)
+                    contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 2, asImpulse: true)
                     contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
                     Global.delay(bySeconds: 3.0) {
                         contact.nodeA.removeFromParentNode()
@@ -897,7 +889,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeB)!)
                     }
                     contact.nodeB.removeAllActions()
-                    contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 10, asImpulse: true)
+                    contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 2, asImpulse: true)
                     contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
                     Global.delay(bySeconds: 3.0) {
                         contact.nodeB.removeFromParentNode()
@@ -914,7 +906,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 self.collisionLabel.text = "monster hit you :("
             }
             if isFirstInfraction {
-                isFirstInfraction = false
+                //isFirstInfraction = false
                 AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                 if ringLabel.bounds.width > 130*sw {
                     changeLabelSize()
