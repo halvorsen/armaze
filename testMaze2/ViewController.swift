@@ -144,7 +144,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
         }
         
-        
+        crosshairView.alpha = 0.0
         crosshairView.frame = CGRect(x: sw*375/4, y: sh*667/4, width: sw*375/2, height: sh*667/2)
         crosshairView.image = #imageLiteral(resourceName: "crosshair")
         sceneView.addSubview(crosshairView)
@@ -162,7 +162,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
-       // sceneView.debugOptions = SCNDebugOptions.showPhysicsShapes
+       // sceneView.debugOptions = SCNDebugOptions.showPhysicsShapes //hack
         
         playerNode?.removeFromParentNode()
         
@@ -729,6 +729,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     private func pickUpGun() {
+        crosshairView.alpha = 1.0
         gun.removeAllActions()
         foundGun = true
         gun.scale = SCNVector3(0.02,0.02,0.02)
@@ -745,6 +746,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         gun.position = gunPosition[1]
         gun.eulerAngles = gunPosition[2]
         gunPosition.removeAll()
+        crosshairView.alpha = 0.0
     }
     
     override func didReceiveMemoryWarning() {
