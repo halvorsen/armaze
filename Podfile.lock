@@ -1,7 +1,7 @@
 PODS:
-  - Crashlytics (3.8.5):
+  - Crashlytics (3.8.6):
     - Fabric (~> 1.6.3)
-  - Fabric (1.6.12)
+  - Fabric (1.6.13)
   - SwiftyStoreKit (0.10.7)
 
 DEPENDENCIES:
@@ -10,8 +10,8 @@ DEPENDENCIES:
   - SwiftyStoreKit
 
 SPEC CHECKSUMS:
-  Crashlytics: dfbae35ef22ca189240d230ad501feea4ee85d2d
-  Fabric: f050464eac45a2ce5a8e6e6a07e977c0df32fe28
+  Crashlytics: 95d05f4e4c19a771250c4bd9ce344d996de32bbf
+  Fabric: 2fb5676bc811af011a04513451f463dac6803206
   SwiftyStoreKit: b13badd58fe138e258d04dec7bc1c9b092351af6
 
 PODFILE CHECKSUM: e7210cfe0cacf596963a45ac29db391f57a495ad

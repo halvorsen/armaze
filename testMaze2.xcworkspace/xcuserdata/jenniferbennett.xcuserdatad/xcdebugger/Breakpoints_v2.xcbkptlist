@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "testMaze2/ViewController.swift"
-            timestampString = "526876357.802842"
+            timestampString = "526947723.392584"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "443"
-            endingLineNumber = "443"
+            startingLineNumber = "442"
+            endingLineNumber = "442"
             landmarkName = "chasingFunc()"
             landmarkType = "7">
          </BreakpointContent>

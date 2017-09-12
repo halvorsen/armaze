@@ -54,16 +54,17 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     }
     
     private func purchaseWeapons(productId: String = "99Mazes.iap.unlockWeapons") {
-        
+        print("entered purchase weapons")
         activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
         activityView.center = self.center
-        //Fix it iOS 11 moving purchase interaction to bottom of screen. Maybe move our activity view?
+     
         activityView.startAnimating()
         activityView.alpha = 0.0
         self.addSubview(activityView)
         SwiftyStoreKit.purchaseProduct(productId) { result in
             switch result {
             case .success( _):
+                print("success")
                 Global.isWeaponsMember = true
                 UserDefaults.standard.set(true, forKey: "isWeaponsMember")
                 self.activityView.removeFromSuperview()

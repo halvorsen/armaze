@@ -48,7 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Global.isWeaponsMember = true //hack
+      //  Global.isWeaponsMember = true //hack
         
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
         
@@ -102,12 +102,12 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tier.alpha = 1.0
         
         invisibleCover.isUserInteractionEnabled = false
-        let startText = "Analyzing-Pan Camera Around"
-        ringLabel.frame = CGRect(x: 48*sw, y: 613*sh, width: 279*sw, height: 30*sh)
+        let startText = "FORCE TOUCH TO EXIT"
+        ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
         ringLabel.frame.origin.y = sh*617
         ringLabel.backgroundColor = .black
         ringLabel.textColor = .white
-        ringLabel.text = startText.uppercased()
+        ringLabel.text = startText
         ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
         ringLabel.textAlignment = .center
         ringLabel.alpha = 1.0
@@ -171,6 +171,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
+//        let myMaze = wrapper.childNode(withName: "maze", recursively: false)!
+//        myMaze.categoryBitMask = 2
+//        
+//        if let path = Bundle.main.path(forResource: "NodeTechnique", ofType: "plist") {
+//            if let dict = NSDictionary(contentsOfFile: path)  {
+//                let dict2 = dict as! [String : AnyObject]
+//                let technique = SCNTechnique(dictionary:dict2)
+//                sceneView.technique = technique
+//            }
+//        }
         print(sceneView.pointOfView!.eulerAngles.y)
         print(sceneView.pointOfView!.position)
 
@@ -235,6 +245,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         gunPosition.append(gun.scale)
         gunPosition.append(gun.position)
         gunPosition.append(gun.eulerAngles)
+      
         
         if !Global.isWeaponsMember {
             gun.removeFromParentNode()
@@ -266,28 +277,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         // sceneView.addSubview(collisionLabel)
         
-       // pickUpGun() //hack
+      //  pickUpGun() //hack
         
         
-        if level == "1-1" {
+        
             Global.delay(bySeconds: 10.0) {
                 
-                self.ringLabel.text = "FORCE TOUCH TO EXIT"
-                self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
                 self.tier.alpha = 0.0
-                //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
                 
             }
-        } else {
-            Global.delay(bySeconds: 5.0) {
-                
-                self.ringLabel.text = "FORCE TOUCH TO EXIT"
-                self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
-                self.tier.alpha = 0.0
-                //  self.ringLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 50)
-                
-            }
-        }
+        
         
         switch level {
         case "2-1":
@@ -392,8 +391,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.myGameOverView.frame.origin.x = 0
         }
         Global.delay(bySeconds: 1.0) {
-            self.ringLabel.text = "Analyzing-Pan Camera Around"
-            //       self.sceneView.session.pause()
+            self.ringLabel.text = "FORCE TOUCH TO EXIT"
+            self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
             self.isFirstBackFunc = true
             self.chaseTime = 0.0
             self.dropGun()
@@ -563,7 +562,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         let fireballNode = Fireball.node()
         fireballNode.name = "beachBall"
-        
+     //   fireballNode.categoryBitMask = 2
         
         fireballNode.scale = SCNVector3(50,50,50)
         if level == "1-1" {
