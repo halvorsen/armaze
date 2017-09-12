@@ -266,7 +266,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         // sceneView.addSubview(collisionLabel)
         
-        pickUpGun() //hack
+       // pickUpGun() //hack
         
         
         if level == "1-1" {
