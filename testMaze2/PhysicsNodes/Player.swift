@@ -10,7 +10,7 @@ import Foundation
 import SceneKit
 
 class Player {
-    static let RADIUS:CGFloat = 0.25
+    static let RADIUS:CGFloat = 0.15
     static let HEIGHT:CGFloat = 1.8
     static let JUMP_ALTITUDE:CGFloat = 1
     

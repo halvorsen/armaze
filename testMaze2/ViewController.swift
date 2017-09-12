@@ -162,7 +162,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         tap = UITapGestureRecognizer(target: self, action: #selector(ViewController.tapFunc(_:)))
         
-       // sceneView.debugOptions = SCNDebugOptions.showPhysicsShapes //hack
+      //  sceneView.debugOptions = SCNDebugOptions.showPhysicsShapes //hack
         
         playerNode?.removeFromParentNode()
         
@@ -171,14 +171,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
-        sceneView.scene.rootNode.position = sceneView.pointOfView!.position
-        sceneView.scene.rootNode.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+        print(sceneView.pointOfView!.eulerAngles.y)
+        print(sceneView.pointOfView!.position)
+
         sceneView.scene = currentScene
-        //BEST WAY SO FAR, FENCES DO FuNNY THings
- /*       wrapper.position = sceneView.pointOfView!.position
-        wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
-        sceneView.scene.rootNode.position = sceneView.pointOfView!.position
-        sceneView.scene.rootNode.eulerAngles = SCNVector3(0,0,0)*/
+         wrapper.position = sceneView.pointOfView!.position
+         wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
+         sceneView.scene.rootNode.position = sceneView.pointOfView!.position
+       
+         sceneView.scene.rootNode.eulerAngles = SCNVector3(0,0,0)
+        
+
         
         
         //make sure goblins have contactbitmask
@@ -206,13 +209,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         nodeForGoblinToFace = SCNNode()
         playerNode = Player.node()
-        playerNode!.position = SCNVector3(0,-3,0)
+        playerNode!.position = SCNVector3(0,-3,-0.5)
         nodeForGoblinToFace.position = SCNVector3(0,-3,0)
         playerNode!.eulerAngles = SCNVector3(0,0,0)
         playerNode!.addChildNode(nodeForGoblinToFace)
-        //        if let fences = wrapper.childNode(withName: "fences", recursively: false) {
-        //        fences.eulerAngles = SCNVector3(0,0,0)
-        //    }
         Global.delay(bySeconds: 3.0) {
             self.isFirstInfraction = true
         }
@@ -266,7 +266,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         // sceneView.addSubview(collisionLabel)
         
-       // pickUpGun() //hack
+        pickUpGun() //hack
         
         
         if level == "1-1" {
@@ -600,7 +600,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         direction = (n.position - fireballNode.position).normalized
         direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
         
-        var velocityMultiplier: Float = 7
+        var velocityMultiplier: Float = 10
         if level == "1-1" {
             velocityMultiplier = 30
         }
@@ -866,25 +866,25 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if let nameA = contact.nodeA.name,
                 let nameB = contact.nodeB.name {
                 if nameA == "goblin" {
-                    
+                    contact.nodeA.parent!.constraints = []
                     if chasingGoblins.contains(contact.nodeA) {
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeA)!)
                     }
                     contact.nodeA.removeAllActions()
-                    contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 2, asImpulse: true)
-                    contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
+                    contact.nodeA.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 0.5, asImpulse: true)
+                    contact.nodeA.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -6.0), asImpulse: true)
                     Global.delay(bySeconds: 3.0) {
                         contact.nodeA.removeFromParentNode()
                     }
                 }
                 if nameB == "goblin" {
-                    
+                    contact.nodeB.parent!.constraints = []
                     if chasingGoblins.contains(contact.nodeB) {
                         chasingGoblins.remove(at: chasingGoblins.index(of: contact.nodeB)!)
                     }
                     contact.nodeB.removeAllActions()
-                    contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 2, asImpulse: true)
-                    contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -8.0), asImpulse: true)
+                    contact.nodeB.physicsBody?.applyForce(direction2 * Fireball.INITIAL_VELOCITY * 0.5, asImpulse: true)
+                    contact.nodeB.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: -6.0), asImpulse: true)
                     Global.delay(bySeconds: 3.0) {
                         contact.nodeB.removeFromParentNode()
                     }
