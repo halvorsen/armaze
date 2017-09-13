@@ -167,6 +167,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode?.removeFromParentNode()
         
         level = myscene
+        
         currentScene = SCNScene()
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
@@ -182,7 +183,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
        
          sceneView.scene.rootNode.eulerAngles = SCNVector3(0,0,0)
         
-
+        
         
         
         //make sure goblins have contactbitmask
@@ -268,7 +269,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         // sceneView.addSubview(collisionLabel)
         
-    //    pickUpGun() //hack
+        pickUpGun() //hack
         
         
         
@@ -336,6 +337,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func backToVC() {
         print("!!!!!Done!!!!!")
+        
+        myGameOverView.frame.origin.x = -375*sw
+        view.addSubview(myGameOverView)
+        pause()
+        UIView.animate(withDuration: 1.0) {
+            
+            self.myGameOverView.frame.origin.x = 0
+            
+        }
+        Global.delay(bySeconds: 0.8, closure: {self.run()})
         sceneView.removeGestureRecognizer(tap)
         sceneView.removeGestureRecognizer(press)
         invisibleCover.removeFromSuperview()
@@ -363,8 +374,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         isFirstRingTouch = true
         
         isFirstGunTouch = true
-        myGameOverView.frame.origin.x = -375*sw
-        view.addSubview(myGameOverView)
+        
+
         
         myGameOverView.thisScoreLabel.text = "\(points)"
         if points > Global.highScores[level]! {
@@ -377,11 +388,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         points = 0
         
-        UIView.animate(withDuration: 1.0) {
-            
-            self.myGameOverView.frame.origin.x = 0
-        }
-        Global.delay(bySeconds: 1.0) {
+                Global.delay(bySeconds: 1.0) {
             self.ringLabel.text = "FORCE TOUCH TO EXIT"
             self.ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
             self.isFirstBackFunc = true
@@ -550,19 +557,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func fireBeachBall() {
         
         let pov = sceneView.pointOfView!
-        
-        let fireballNode = Fireball.node()
-        fireballNode.name = "beachBall"
-     //   fireballNode.categoryBitMask = 2
-        
-        fireballNode.scale = SCNVector3(50,50,50)
-        if level == "1-1" {
-            fireballNode.scale = SCNVector3(40,40,40)
-        }
-        
         let gunPoint = gun.childNode(withName: "point", recursively: false)!
+        let fireballNode = Fireball.node()
         
-        gunPoint.addChildNode(fireballNode)
+        fireballNode.name = "beachBall"
+        
+        fireballNode.scale = SCNVector3(2.5,2.5,2.5)
+        if level == "1-1" {
+            fireballNode.scale = SCNVector3(1.6,1.6,1.6)
+        }
+        fireballNode.position = SCNVector3(0.05,-0.05,-1)
+            sceneView.pointOfView!.addChildNode(fireballNode)
         
         let currentFrame = sceneView.session.currentFrame!
         
@@ -584,20 +589,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         
         n.simdTransform = matrix_multiply(currentFrame.camera.transform, translation)
-        fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
+     //   fireballNode.simdTransform = matrix_multiply(currentFrame.camera.transform, closeTranslation)
         n.simdTransform = matrix_multiply(pov.simdTransform, translation)
         
         direction = (n.position - fireballNode.position).normalized
         direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
         
-        var velocityMultiplier: Float = 10
+        var velocityMultiplier: Float = 20
         if level == "1-1" {
-            velocityMultiplier = 30
+            velocityMultiplier = 60
         }
         
-        
+
         fireballNode.physicsBody?.applyForce(direction * Fireball.INITIAL_VELOCITY * velocityMultiplier, asImpulse: true)
-        
+
         fireballNode.physicsBody?.applyTorque(SCNVector4(x: 1, y: 0, z: 0, w: 8.0), asImpulse: true)
         n.removeFromParentNode()
         
@@ -713,7 +718,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         // Pause the view's session
         
-        //  sceneView.session.pause()
+         // sceneView.session.pause()
         
         
     }
@@ -783,8 +788,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             if isFirstInfraction {
                 isFirstInfraction = false
                 AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-                if ringLabel.bounds.width > 130*sw {
-                    changeLabelSize()
+                DispatchQueue.main.async {
+                    
+                    if self.ringLabel.bounds.width > 130*self.sw {
+                        self.changeLabelSize()
+                    }
                 }
                 for i in 0...4 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
@@ -959,6 +967,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         self.sceneView.session.pause()
     }
     func run() {
-        sceneView.session.run(configuration)
+        sceneView.session.run(configuration, options: .resetTracking)
     }
 }

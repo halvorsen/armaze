@@ -17,29 +17,7 @@ class Fireball {
     private static var sphere:SCNGeometry?
     
     class func node() -> SCNNode {
-        
-//        if sphere == nil {
-//            //sphere = SCNSphere(radius: RADIUS)
-//            //sphere!.materials = [Wand.sphereMaterial(lavaType: .fast)]
-//
-//
-//            if let filePath = Bundle.main.path(forResource: "ball", ofType: "dae", inDirectory: "art.scnassets") {
-//                // ReferenceNode path -> ReferenceNode URL
-//                let referenceURL = NSURL(fileURLWithPath: filePath)
-//
-//
-//                // Create reference node
-//                let referenceNode = SCNReferenceNode(url: referenceURL as URL)
-//                referenceNode?.load()
-//                sphere = referenceNode!
-//              //  scene.rootNode.addChildNode(referenceNode!)
-//
-//            }
-//        }
-        /*
-         let fireSys = SCNParticleSystem(named: "FireSys.scnp", inDirectory: nil)!
-         fireSys.emitterShape = sphere
-         */
+
         var node = SCNNode()
         if let filePath = Bundle.main.path(forResource: "ball", ofType: "dae", inDirectory: "art.scnassets") {
             // ReferenceNode path -> ReferenceNode URL
@@ -55,10 +33,6 @@ class Fireball {
             //  scene.rootNode.addChildNode(referenceNode!)
             
         }
-        
-        
-        //let node = SCNNode()
-        // node.addParticleSystem(fireSys)
         
         let body = SCNPhysicsBody(type: SCNPhysicsBodyType.dynamic,
                                   shape: nil)
