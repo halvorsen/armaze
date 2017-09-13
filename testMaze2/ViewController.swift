@@ -48,7 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      //  Global.isWeaponsMember = true //hack
+        Global.isWeaponsMember = true //hack
         
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
         
@@ -171,16 +171,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
         light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
-//        let myMaze = wrapper.childNode(withName: "maze", recursively: false)!
-//        myMaze.categoryBitMask = 2
-//        
-//        if let path = Bundle.main.path(forResource: "NodeTechnique", ofType: "plist") {
-//            if let dict = NSDictionary(contentsOfFile: path)  {
-//                let dict2 = dict as! [String : AnyObject]
-//                let technique = SCNTechnique(dictionary:dict2)
-//                sceneView.technique = technique
-//            }
-//        }
+
         print(sceneView.pointOfView!.eulerAngles.y)
         print(sceneView.pointOfView!.position)
 
@@ -221,7 +212,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         playerNode = Player.node()
         playerNode!.position = SCNVector3(0,-3,-0.5)
         nodeForGoblinToFace.position = SCNVector3(0,-3,0)
-        playerNode!.eulerAngles = SCNVector3(0,0,0)
+       // playerNode!.eulerAngles = SCNVector3(0,0,0)
         playerNode!.addChildNode(nodeForGoblinToFace)
         Global.delay(bySeconds: 3.0) {
             self.isFirstInfraction = true
@@ -277,7 +268,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         // sceneView.addSubview(collisionLabel)
         
-      //  pickUpGun() //hack
+    //    pickUpGun() //hack
         
         
         
@@ -353,7 +344,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tier.removeFromSuperview()
         collisionLabel.removeFromSuperview()
         location.removeFromSuperview()
-        
+        gun.physicsBody?.collisionBitMask = CollisionTypes.weapon.rawValue
         ringsFound = 0
         chasingGoblins.removeAll()
         foundGun = false
@@ -728,13 +719,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     private func pickUpGun() {
-        crosshairView.alpha = 1.0
+        DispatchQueue.main.async {
+            self.crosshairView.alpha = 1.0
+        }
+        
         gun.removeAllActions()
         foundGun = true
         gun.scale = SCNVector3(0.02,0.02,0.02)
         gun.position = SCNVector3(0.07 - 0.01,-0.12,-0.2)
         gun.eulerAngles = SCNVector3(-70.0.degreesToRadians,20.0.degreesToRadians,10.0.degreesToRadians)
         sceneView.pointOfView?.addChildNode(gun)
+        gun.physicsBody?.collisionBitMask = 0
         
     }
     
@@ -821,8 +816,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 
                 n.runAction(action)
                 n.runAction(action1)
-                if ringLabel.bounds.width > 130*sw {
-                    changeLabelSize()
+                DispatchQueue.main.async {
+                 
+                    if self.ringLabel.bounds.width > 130*self.sw {
+                    self.changeLabelSize()
+                }
                 }
                 for i in 0...9 {
                     Global.delay(bySeconds: 0.3*Double(i)) {
@@ -842,14 +840,17 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
         }
         // touched gun
+        print("touchedgun1")
         if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.weapon.rawValue) && isFirstGunTouch {
-            
+            print("touchedgun2")
+            pickUpGun()
+            playerNode!.physicsBody!.contactTestBitMask = CollisionTypes.coin.rawValue|CollisionTypes.monster.rawValue|CollisionTypes.fence.rawValue
             isFirstGunTouch = false
             DispatchQueue.main.async {
                 self.collisionLabel.text = "touched gun!!!"
             }
             
-            pickUpGun()
+            
             
             
             
