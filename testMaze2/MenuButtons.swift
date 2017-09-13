@@ -23,6 +23,9 @@ class SubscribeToPremiumButton: UIButton, BrothersUIAutoLayout {
         self.setTitleColor(.white, for: .normal)
         self.backgroundColor = color
         self.frame.size = CGSize(width: 243*sw, height: 42*sh)
+        if UIScreen.main.bounds.height == 812 {
+            self.frame.size = CGSize(width: 243*sw, height: 42*sw)
+        }
         self.frame.origin = origin
         self.addTextSpacing(spacing: 1.46*fontSizeMultiplier)
         
@@ -44,6 +47,9 @@ class PlayButton: UIButton, BrothersUIAutoLayout {
         self.setTitleColor(.black, for: .normal)
         self.backgroundColor = color
         self.frame.size = CGSize(width: 72*sw, height: 42*sh)
+        if UIScreen.main.bounds.height == 812 {
+            self.frame.size = CGSize(width: 72*sw, height: 42*sw)
+        }
         self.frame.origin = origin
     }
     
@@ -63,6 +69,9 @@ class ReplayButton: UIButton, BrothersUIAutoLayout {
         self.setTitleColor(.white, for: .normal)
         self.backgroundColor = color
         self.frame.size = CGSize(width: 173*sw, height: 42*sh)
+        if UIScreen.main.bounds.height == 812 {
+            self.frame.size = CGSize(width: 173*sw, height: 42*sw)
+        }
         self.frame.origin = origin
         self.addTextSpacing(spacing: 1.46*fontSizeMultiplier)
     }
@@ -83,6 +92,9 @@ class GameCenterButton: UIButton, BrothersUIAutoLayout {
         self.setTitleColor(.white, for: .normal)
         self.backgroundColor = color
         self.frame.size = CGSize(width: 203*sw, height: 42*sh)
+        if UIScreen.main.bounds.height == 812 {
+            self.frame.size = CGSize(width: 203*sw, height: 42*sw)
+        }
         self.frame.origin = origin
         self.addTextSpacing(spacing: 1.46*fontSizeMultiplier)
     }
@@ -103,6 +115,9 @@ class MenuButton: UIButton, BrothersUIAutoLayout {
         self.setTitleColor(.black, for: .normal)
         self.backgroundColor = color
         self.frame.size = CGSize(width: 77*sw, height: 42*sh)
+        if UIScreen.main.bounds.height == 812 {
+            self.frame.size = CGSize(width: 77*sw, height: 42*sw)
+        }
         self.frame.origin = origin
     }
     
@@ -125,6 +140,9 @@ class OneMoreLife: UIButton, BrothersUIAutoLayout {
         self.layer.borderWidth = 2
         self.backgroundColor = .clear
         self.frame.size = CGSize(width: 243*sw, height: 42*sh)
+        if UIScreen.main.bounds.height == 812 {
+            self.frame.size = CGSize(width: 243*sw, height: 42*sw)
+        }
         self.frame.origin = origin
     }
     

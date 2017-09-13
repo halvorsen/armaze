@@ -48,7 +48,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Global.isWeaponsMember = true //hack
+    //    Global.isWeaponsMember = true //hack
         
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
         
@@ -61,8 +61,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         myGameOverView.dropMaze.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
         myGameOverView.instructions.addTarget(self, action: #selector(ViewController.runTutorial), for: .touchUpInside)
         
-        if !UserDefaults.standard.bool(forKey: "has99LaunchedBefore") {
-            UserDefaults.standard.set(true, forKey: "has99LaunchedBefore")
+        if !UserDefaults.standard.bool(forKey: "hasMaze99LaunchedBefore") {
+            UserDefaults.standard.set(true, forKey: "hasMaze99LaunchedBefore")
             runTutorial()
             
         }
@@ -93,7 +93,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     let goblinSpeed : Double = 0.1
     @objc private func play(_ button: UIButton) {
         
-        tier.frame = CGRect(x: 115*sw, y: 27*sh, width: 127*sw, height: 30*sh)
+        tier.frame = CGRect(x: CGFloat(Int(115*sw)), y: CGFloat(Int(27*sh)), width: CGFloat(Int(127*sw)), height: CGFloat(Int(30*sh)))
         tier.text = "TIER \(myGameOverView.currentDotIndex + 1)"
         tier.font = UIFont(name: "HelveticaNeue-Bold", size: 13*fontSizeMultiplier)
         tier.backgroundColor = .black
@@ -103,8 +103,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         invisibleCover.isUserInteractionEnabled = false
         let startText = "FORCE TOUCH TO EXIT"
-        ringLabel.frame = CGRect(x: 78*self.sw, y: 613*self.sh, width: 219*self.sw, height: 30*self.sh)
-        ringLabel.frame.origin.y = sh*617
+        ringLabel.frame = CGRect(x: CGFloat(Int(78*self.sw)), y: CGFloat(Int(613*self.sh)), width: CGFloat(Int(219*self.sw)), height: CGFloat(Int(30*self.sh)))
+        ringLabel.frame.origin.y = CGFloat(Int(sh*617))
         ringLabel.backgroundColor = .black
         ringLabel.textColor = .white
         ringLabel.text = startText
@@ -145,7 +145,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         
         crosshairView.alpha = 0.0
-        crosshairView.frame = CGRect(x: sw*375/4, y: sh*667/4, width: sw*375/2, height: sh*667/2)
+        crosshairView.frame = CGRect(x: CGFloat(Int(sw*375/4)), y: CGFloat(Int(sh*667/4)), width: CGFloat(Int(sw*375/2)), height: CGFloat(Int(sh*667/2)))
         crosshairView.image = #imageLiteral(resourceName: "crosshair")
         sceneView.addSubview(crosshairView)
         
@@ -269,7 +269,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         invisibleCover.addSubview(ringLabel)
         // sceneView.addSubview(collisionLabel)
         
-        pickUpGun() //hack
+       // pickUpGun() //hack
         
         
         
@@ -471,7 +471,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func changeLabelSize() {
         DispatchQueue.main.async {
             
-            self.ringLabel.frame = CGRect(x: 275*self.sw/2, y: 613*self.sh, width: 100*self.sw, height: 30*self.sh)
+            self.ringLabel.frame = CGRect(x: CGFloat(Int(275*self.sw/2)), y: CGFloat(Int(613*self.sh)), width: CGFloat(Int(100*self.sw)), height: CGFloat(Int(30*self.sh)))
         }
     }
     
@@ -595,7 +595,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         direction = (n.position - fireballNode.position).normalized
         direction2 = (direction + SCNVector3(x: 0, y: 1, z: 0)).normalized
         
-        var velocityMultiplier: Float = 20
+        var velocityMultiplier: Float = 30
         if level == "1-1" {
             velocityMultiplier = 60
         }
@@ -638,16 +638,22 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         tutorialView3.image = #imageLiteral(resourceName: "Tutorial 3")
         tutorialView4.image = #imageLiteral(resourceName: "Tutorial 4")
         if UIScreen.main.bounds.width == 375 {
-            tutorialView1.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 667*sh)
-            tutorialView2.frame = CGRect(x: 375*sw, y: 0, width: 375*sw, height: 667*sh)
-            tutorialView3.frame = CGRect(x: 750*sw, y: 0, width: 375*sw, height: 667*sh)
-            tutorialView4.frame = CGRect(x: 1125*sw, y: 0, width: 375*sw, height: 667*sh)
+           
+            var marginTop = CGFloat(0)
+            if UIScreen.main.bounds.height > 667 {
+                marginTop = CGFloat(Int(4*(UIScreen.main.bounds.height - 667)/5))
+            }
+            tutorialView1.frame = CGRect(x: 0, y: marginTop, width: 375, height: 667)
+            tutorialView2.frame = CGRect(x: CGFloat(Int(375*sw)), y: marginTop, width: 375, height: 667)
+            tutorialView3.frame = CGRect(x: CGFloat(Int(750*sw)), y: marginTop, width: 375, height: 667)
+            tutorialView4.frame = CGRect(x: CGFloat(Int(1125*sw)), y: marginTop, width: 375, height: 667)
         } else {
             let margin = (UIScreen.main.bounds.width - 375)/2
-            tutorialView1.frame = CGRect(x: margin, y: 0, width: 375*sw, height: 667*sh)
-            tutorialView2.frame = CGRect(x: 375*sw + margin, y: 0, width: 375, height: 667*sh)
-            tutorialView3.frame = CGRect(x: 750*sw + margin, y: 0, width: 375, height: 667*sh)
-            tutorialView4.frame = CGRect(x: 1125*sw + margin, y: 0, width: 375, height: 667*sh)
+            let marginTop = CGFloat(Int((UIScreen.main.bounds.height - 667)/2))
+            tutorialView1.frame = CGRect(x: margin, y: marginTop, width: 375, height: 667)
+            tutorialView2.frame = CGRect(x: CGFloat(Int(375*sw + margin)), y: marginTop, width: 375, height: 667)
+            tutorialView3.frame = CGRect(x: CGFloat(Int(750*sw + margin)), y: marginTop, width: 375, height: 667)
+            tutorialView4.frame = CGRect(x: CGFloat(Int(1125*sw + margin)), y: marginTop, width: 375, height: 667)
         }
         tutorialView.frame = CGRect(x: 0, y: 0, width: 375*4*sw, height: 667*sh)
         tutorialView.backgroundColor = .white

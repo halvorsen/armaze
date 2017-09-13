@@ -139,11 +139,17 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         self.frame.origin.x = 375*sw
         self.backgroundColor = backgroundColor
         myColorScheme = colorScheme
-        dropMaze = ReplayButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 158*sh))
+        dropMaze = ReplayButton(color: buttonsColor, origin: CGPoint(x: CGFloat(Int(42*sw)), y: CGFloat(Int(158*sh))))
         //   menu = MenuButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
-        instructions = GameCenterButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 211*sh))
-        weapon = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 264*sh))
+        instructions = GameCenterButton(color: buttonsColor, origin: CGPoint(x: CGFloat(Int(42*sw)), y: CGFloat(Int(211*sh))))
+        weapon = SubscribeToPremiumButton(color: buttonsColor, origin: CGPoint(x: CGFloat(Int(42*sw)), y: CGFloat(Int(264*sh))))
         weapon.addTarget(self, action: #selector(GameOverView.buyWeapons(_:)), for: .touchUpInside)
+        
+        if UIScreen.main.bounds.height == 812 {
+            dropMaze.frame.origin.y = CGFloat(Int(188*sh))
+            instructions.frame.origin.y = CGFloat(Int(236*sh))
+            weapon.frame.origin.y = CGFloat(Int(284*sh))
+        }
         
         //      extraLife = OneMoreLife(color: buttonsColor, origin: CGPoint(x: 42*sw, y: 317*sh))
         self.addSubview(dropMaze)
@@ -180,7 +186,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         ]
         var count = 0
         for scheme in schemeArray {
-            let myDot = Dot(color: CustomColor.colorDictionary[scheme]!, origin: CGPoint(x:45*CGFloat(count)*sw,y:0), colorScheme: scheme)
+            let myDot = Dot(color: CustomColor.colorDictionary[scheme]!, origin: CGPoint(x:CGFloat(Int(45*CGFloat(count)*sw)),y:0), colorScheme: scheme)
             scrollView.addSubview(myDot)
             myDot.tapDelegate = self
             dotsContainer.append(myDot)
@@ -194,19 +200,26 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
         scrollView.contentOffset.x = sw*22.5
         
         tierLabel.text = "TIER 1"
-        tierLabel.frame = CGRect(x: 37*sw, y: 557*sh, width: 100*sw, height: 28*sh)
+        tierLabel.frame = CGRect(x: CGFloat(Int(37*sw)), y: CGFloat(Int(557*sh)), width: CGFloat(Int(100*sw)), height: CGFloat(Int(28*sh)))
         tierLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 24*fontSizeMultiplier)
         
         addSubview(tierLabel)
         
-        bestScoreLabel.frame = CGRect(x: 43*sw, y: 106*sh, width: 200*sw, height: 31*sh)
+        bestScoreLabel.frame = CGRect(x: CGFloat(Int(43*sw)), y: CGFloat(Int(106*sh)), width: CGFloat(Int(200*sw)), height: CGFloat(Int(31*sh)))
         bestScoreLabel.text = "BEST \(Global.topScore)"
         bestScoreLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 24*fontSizeMultiplier)
         bestScoreLabel.textColor = buttonsColor
         bestScoreLabel.addTextSpacing(spacing: 1.85*fontSizeMultiplier)
+        if UIScreen.main.bounds.height == 812 {
+            bestScoreLabel.frame.origin.y = CGFloat(Int(142*sh))
+            tierLabel.frame.origin.y = CGFloat(Int(564*sh))
+        }
         self.addSubview(bestScoreLabel)
         
-        thisScoreLabel.frame = CGRect(x: 43*sw, y: 29*sh, width: 200*sw, height: 84*sh)
+        thisScoreLabel.frame = CGRect(x: CGFloat(Int(43*sw)), y: CGFloat(Int(29*sh)), width: CGFloat(Int(200*sw)), height: CGFloat(Int(84*sh)))
+        if UIScreen.main.bounds.height == 812 {
+            thisScoreLabel.frame.origin.y = CGFloat(Int(73*sh))
+        }
         thisScoreLabel.text = "\(Global.points)"
         thisScoreLabel.font = UIFont(name: "HelveticaNeue-Bold", size: 68*fontSizeMultiplier)
         thisScoreLabel.textColor = buttonsColor
