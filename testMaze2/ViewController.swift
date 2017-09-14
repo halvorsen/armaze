@@ -79,7 +79,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     
-    var light = SCNNode()
     var gun = SCNNode()
     var torus1 = SCNNode()
     var torus2 = SCNNode()
@@ -175,7 +174,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         currentScene = SCNScene()
         currentScene = SCNScene(named: "art.scnassets/\(myscene).scn")!
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
-        light = currentScene.rootNode.childNode(withName: "directional", recursively: false)!
+    
 
         print(sceneView.pointOfView!.eulerAngles.y)
         print(sceneView.pointOfView!.position)
