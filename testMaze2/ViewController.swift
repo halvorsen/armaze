@@ -557,7 +557,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     private func fireBeachBall() {
         
         let pov = sceneView.pointOfView!
-        let gunPoint = gun.childNode(withName: "point", recursively: false)!
+   
         let fireballNode = Fireball.node()
         
         fireballNode.name = "beachBall"
