@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let viewController = self.window?.rootViewController as! ViewController
         viewController.pause()
+        
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
@@ -63,11 +64,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         
-        
-        
+        print("userdefault:: \(UserDefaults.standard.bool(forKey: "LaunchedBefore99Mazes2"))")
+        if UserDefaults.standard.bool(forKey: "LaunchedBefore99Maze2") {
+            UserDefaults.standard.set(true, forKey: "LaunchedBefore99Mazes2")
         let viewController = self.window?.rootViewController as! ViewController
         viewController.run()
-        
+        }
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

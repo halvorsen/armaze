@@ -61,16 +61,20 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         myGameOverView.dropMaze.addTarget(self, action: #selector(ViewController.play(_:)), for: .touchUpInside)
         myGameOverView.instructions.addTarget(self, action: #selector(ViewController.runTutorial), for: .touchUpInside)
         
-        if !UserDefaults.standard.bool(forKey: "hasMaze99LaunchedBefore") {
-            UserDefaults.standard.set(true, forKey: "hasMaze99LaunchedBefore")
+        if !UserDefaults.standard.bool(forKey: "LaunchedBefore99Mazes1") {
+            UserDefaults.standard.set(true, forKey: "LaunchedBefore99Mazes1")
             runTutorial()
             
+        } else {
+            
+          sceneView.session.run(configuration)
         }
     }
     let configuration = ARWorldTrackingConfiguration()
     override func viewDidAppear(_ animated: Bool) {
+       
         
-        sceneView.session.run(configuration)
+        
         
     }
     
@@ -680,9 +684,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
             AVCaptureDevice.requestAccess(for: AVMediaType.video) { response in
                 if response {
-                    //access granted, do nothing
+                    self.sceneView.session.run(self.configuration)
                 } else {
-                    
+                    self.sceneView.session.run(self.configuration)
                 }
             }
             
