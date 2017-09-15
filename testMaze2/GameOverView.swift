@@ -134,6 +134,7 @@ class GameOverView: UIView, BrothersUIAutoLayout, DotTap {
     
     init(backgroundColor: UIColor, buttonsColor: UIColor, colorScheme: ColorScheme, vc: UIViewController, bestScore: Int, thisScore: Int) {
         super.init(frame: .zero)
+        
         viewC = vc
         self.frame = CGRect(x: 0, y: 0, width: 375*sw, height: 667*sh)
         self.frame.origin.x = 375*sw

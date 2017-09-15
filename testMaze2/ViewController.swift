@@ -21,7 +21,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var foundGun = false
     var level = ""
     let crosshairView = UIImageView()
-    var gunPosition = [SCNVector3]()
+//    var gunPosition = [SCNVector3]()
     var nodeForGoblinToFace = SCNNode()
     
     let invisibleCover = UIView()
@@ -48,10 +48,30 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let mazes = ["1-1","1-2","1-3","1-4","1-5","1-6","1-7","1-8","1-9",
+                     "2-1","2-2","2-3","2-4","2-5","2-6","2-7","2-8","2-9",
+                     "3-1","3-2","3-3","3-4","3-5","3-6","3-7","3-8","3-9",
+                     "4-1","4-2","4-3","4-4","4-5","4-6","4-7","4-8","4-9",
+                     "5-1","5-2","5-3","5-4","5-5","5-6","5-7","5-8","5-9",
+                     "6-1","6-2","6-3","6-4","6-5","6-6","6-7","6-8","6-9",
+                     "7-1","7-2","7-3","7-4","7-5","7-6","7-7","7-8","7-9",
+                     "8-1","8-2","8-3","8-4","8-5","8-6","8-7","8-8","8-9",
+                     "9-1","9-2","9-3","9-4","9-5","9-6","9-7","9-8","9-9",
+                     "10-1","10-2","10-3","10-4","10-5","10-6","10-7","10-8","10-9",
+                     "11-1","11-2","11-3","11-4","11-5","11-6","11-7","11-8","11-9"
+        ]
+        for items in mazes {
+            Global.highScores[items] = UserDefaults.standard.integer(forKey: items)
+        }
+        print("highscores dictionary: \(Global.highScores)")
+        if UserDefaults.standard.bool(forKey: "isWeaponsMember") {
+            Global.isWeaponsMember = true
+        }
+        
     //    Global.isWeaponsMember = true //hack
         
         myGameOverView = GameOverView(backgroundColor: .white, buttonsColor: CustomColor.purple, colorScheme: .tier1, vc: self, bestScore: 10000, thisScore: 0)
-        
+        myGameOverView.bestScoreLabel.text = "BEST \(Global.highScores["1-1"]!)"
         sceneView.delegate = self
     }
     
@@ -234,9 +254,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         torus9 = wrapper.childNode(withName: "torus9", recursively: false)!
         torus10 = wrapper.childNode(withName: "torus10", recursively: false)!
         gun = wrapper.childNode(withName: "gun", recursively: false)!
-        gunPosition.append(gun.scale)
-        gunPosition.append(gun.position)
-        gunPosition.append(gun.eulerAngles)
+//        gunPosition.append(gun.scale)
+//        gunPosition.append(gun.position)
+//        gunPosition.append(gun.eulerAngles)
       
         
         if !Global.isWeaponsMember {
@@ -375,16 +395,21 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         isFirstGunTouch = true
         
-
-        
         myGameOverView.thisScoreLabel.text = "\(points)"
+        print("globalHighScores: \(Global.highScores[level])")
         if let globalHighScoresLevel = Global.highScores[level] {
+            print("globalHighScores: \(globalHighScoresLevel)")
+            print("points: \(points)")
         if points > globalHighScoresLevel {
+            myGameOverView.bestScoreLabel.text = "BEST \(points)"
             Global.highScores[level] = points
+            print("points: \(points)")
+            print("level: \(level)")
             UserDefaults.standard.set(points, forKey: level)
+        } else {
+            myGameOverView.bestScoreLabel.text = "BEST \(globalHighScoresLevel)"
         }
         
-        myGameOverView.bestScoreLabel.text = "BEST \(globalHighScoresLevel)"
         }
         if points == 10000 {
             myGameOverView.bestScoreLabel.text = "PERFECT!"
@@ -397,7 +422,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             self.isFirstBackFunc = true
             self.chaseTime = 0.0
             self.dropGun()
-            self.gunPosition.removeAll()
+//            self.gunPosition.removeAll()
         }
         sceneView.removeGestureRecognizer(press)
         
@@ -513,7 +538,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                     changeLabelSize()
                 }
                 for i in 0...9 {
-                    Global.delay(bySeconds: 0.3*Double(i)) {
+                    Global.delay(bySeconds: 0.1*Double(i)) {
                         self.points += 100
                         self.ringLabel.text = "\(self.points)"
                     }
@@ -616,10 +641,10 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     
     private func endGameSequence() {
-        let currentHighScore = Global.highScores[maze] ?? 0
-        if points > currentHighScore {
-            Global.highScores[maze] = points
-        }
+//        let currentHighScore = Global.highScores[maze] ?? 0
+//        if points > currentHighScore {
+//            Global.highScores[maze] = points
+//        }
         
         backToVC()
     }
@@ -749,11 +774,11 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     private func dropGun() {
         gun.removeAllActions()
-        wrapper.addChildNode(gun)
-        gun.scale = gunPosition[0]
-        gun.position = gunPosition[1]
-        gun.eulerAngles = gunPosition[2]
-        gunPosition.removeAll()
+//        wrapper.addChildNode(gun)
+//        gun.scale = gunPosition[0]
+//        gun.position = gunPosition[1]
+//        gun.eulerAngles = gunPosition[2]
+//        gunPosition.removeAll()
         crosshairView.alpha = 0.0
     }
     
@@ -840,13 +865,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
                 }
                 }
                 for i in 0...9 {
-                    Global.delay(bySeconds: 0.3*Double(i)) {
+                    Global.delay(bySeconds: 0.1*Double(i)) {
                         self.points += 100
                         self.ringLabel.text = "\(self.points)"
                     }
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     n.removeFromParentNode()
                     if n.name! == "torus10" {
                         self.endGameSequence()
