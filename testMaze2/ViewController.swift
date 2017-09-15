@@ -72,10 +72,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     }
     let configuration = ARWorldTrackingConfiguration()
     override func viewDidAppear(_ animated: Bool) {
-       
-        
-        
-        
+ 
     }
     
     
@@ -381,13 +378,16 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
 
         
         myGameOverView.thisScoreLabel.text = "\(points)"
-        if points > Global.highScores[level]! {
+        if let globalHighScoresLevel = Global.highScores[level] {
+        if points > globalHighScoresLevel {
             Global.highScores[level] = points
             UserDefaults.standard.set(points, forKey: level)
         }
-        myGameOverView.bestScoreLabel.text = "BEST \(Global.highScores[level]!)"
+        
+        myGameOverView.bestScoreLabel.text = "BEST \(globalHighScoresLevel)"
+        }
         if points == 10000 {
-            myGameOverView.bestScoreLabel.text = "Perfect Score!"
+            myGameOverView.bestScoreLabel.text = "PERFECT!"
         }
         points = 0
         

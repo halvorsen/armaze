@@ -7,7 +7,7 @@
 		<key>Pods-testMaze2.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</dict>
 		<key>Pods-testMaze2Tests.xcscheme</key>
 		<dict>
