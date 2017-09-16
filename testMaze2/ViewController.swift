@@ -63,7 +63,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         for items in mazes {
             Global.highScores[items] = UserDefaults.standard.integer(forKey: items)
         }
-        print("highscores dictionary: \(Global.highScores)")
+
         if UserDefaults.standard.bool(forKey: "isWeaponsMember") {
             Global.isWeaponsMember = true
         }
@@ -193,9 +193,6 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         wrapper = currentScene.rootNode.childNode(withName: "empty", recursively: false)!
     
 
-        print(sceneView.pointOfView!.eulerAngles.y)
-        print(sceneView.pointOfView!.position)
-
         sceneView.scene = currentScene
          wrapper.position = sceneView.pointOfView!.position
          wrapper.eulerAngles.y = sceneView.pointOfView!.eulerAngles.y
@@ -211,7 +208,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         for child in wrapper.childNodes {
             for secondChild  in child.childNodes {
                 if secondChild.name == "goblin" {
-                    print("goblin!!!!")
+                  
                     secondChild.physicsBody?.categoryBitMask = CollisionTypes.monster.rawValue
                     secondChild.physicsBody?.collisionBitMask = CollisionTypes.fireball.rawValue
                 }
@@ -396,15 +393,13 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         isFirstGunTouch = true
         
         myGameOverView.thisScoreLabel.text = "\(points)"
-        print("globalHighScores: \(Global.highScores[level])")
+      
         if let globalHighScoresLevel = Global.highScores[level] {
-            print("globalHighScores: \(globalHighScoresLevel)")
-            print("points: \(points)")
+     
         if points > globalHighScoresLevel {
             myGameOverView.bestScoreLabel.text = "BEST \(points)"
             Global.highScores[level] = points
-            print("points: \(points)")
-            print("level: \(level)")
+    
             UserDefaults.standard.set(points, forKey: level)
         } else {
             myGameOverView.bestScoreLabel.text = "BEST \(globalHighScoresLevel)"
@@ -522,7 +517,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     
     
     @objc private func tapFunc(_ gesture: UITapGestureRecognizer) {
-        print("tap")
+    
         var didNotGetRing = true
         var hitTestOptions = [SCNHitTestOption: Any]()
         hitTestOptions[SCNHitTestOption.boundingBoxOnly] = true
@@ -882,9 +877,9 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
         }
         // touched gun
-        print("touchedgun1")
+   
         if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.weapon.rawValue) && isFirstGunTouch {
-            print("touchedgun2")
+        
             pickUpGun()
             playerNode!.physicsBody!.contactTestBitMask = CollisionTypes.coin.rawValue|CollisionTypes.monster.rawValue|CollisionTypes.fence.rawValue
             isFirstGunTouch = false
@@ -900,7 +895,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         }
         // killed a monster
         if contactMask == (CollisionTypes.monster.rawValue | CollisionTypes.fireball.rawValue) {
-            print("hitmonster!")
+         
             DispatchQueue.main.async {
                 self.collisionLabel.text = "hit monster!!!"
             }
@@ -989,13 +984,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
             
             
         }
-        //        if contact.nodeA.physicsBody!.categoryBitMask == CollisionTypes.coin.rawValue && contact.nodeB.physicsBody!.categoryBitMask == CollisionTypes.fireball.rawValue {
-        //            print("fireball Hit ring")
-        //            DispatchQueue.main.async {
-        //            self.collisionLabel.text = "Fireball hit ring"
-        //            }
-        //        }
-        
+
     }
     func pause() {
         self.sceneView.session.pause()
