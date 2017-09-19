@@ -655,7 +655,8 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
     var tutorialSwipeRight = UISwipeGestureRecognizer()
     var tutorialSwipeLeft = UISwipeGestureRecognizer()
     @objc private func runTutorial() {
-        
+        print("runtutorial")
+        self.tutorialView.alpha = 1.0
         tutorialView1.image = #imageLiteral(resourceName: "Tutorial")
         tutorialView2.image = #imageLiteral(resourceName: "Tutorial 2")
         tutorialView3.image = #imageLiteral(resourceName: "Tutorial 3")
