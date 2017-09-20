@@ -807,8 +807,7 @@ class ViewController: UIViewController, ARSCNViewDelegate, BrothersUIAutoLayout,
         
         let contactMask = contact.nodeA.physicsBody!.categoryBitMask | contact.nodeB.physicsBody!.categoryBitMask
         guard contact.nodeA.physicsBody != nil || contact.nodeB.physicsBody != nil else {return}
-        print("\(contact.nodeA.physicsBody?.categoryBitMask)")
-        print("\(contact.nodeB.physicsBody?.categoryBitMask)")
+
         
         //went through a wall
         if contactMask == (CollisionTypes.player.rawValue | CollisionTypes.fence.rawValue)  {

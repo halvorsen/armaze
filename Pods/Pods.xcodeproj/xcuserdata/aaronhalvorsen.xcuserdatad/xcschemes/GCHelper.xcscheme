@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "F1CBC58A4E22CFC6BE899DF13767B768"
-               BuildableName = "SwiftyStoreKit.framework"
-               BlueprintName = "SwiftyStoreKit"
+               BlueprintIdentifier = "FA4A8A52A244CA0C34968D86876C9E35"
+               BuildableName = "GCHelper.framework"
+               BlueprintName = "GCHelper"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "F1CBC58A4E22CFC6BE899DF13767B768"
-            BuildableName = "SwiftyStoreKit.framework"
-            BlueprintName = "SwiftyStoreKit"
+            BlueprintIdentifier = "FA4A8A52A244CA0C34968D86876C9E35"
+            BuildableName = "GCHelper.framework"
+            BlueprintName = "GCHelper"
             ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

@@ -6,7 +6,7 @@ target 'testMaze2' do
   use_frameworks!
 
   # Pods for testMaze2
-
+    pod ‘GCHelper’
     pod 'SwiftyStoreKit'
     pod 'Fabric'
     pod 'Crashlytics'
